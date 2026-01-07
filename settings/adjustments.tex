@@ -16,7 +16,7 @@
 
 %%% Erstellung von Literaturverzeichnissen mit Biblatex (Biber/Bibtex)
 % wählen Sie hier die für Ihr Latex-System nötige Literaturverarbeitung:
-\usepackage[style=alphabetic, backend=biber,   natbib=true]{biblatex}  % Verarbeitung mit biber
+\usepackage[style=ieee, backend=biber,   natbib=true]{biblatex}  % Verarbeitung mit biber
 %\usepackage[style=alphabetic, backend=bibtex, natbib=true]{biblatex}  % Verarbeitung mit bibtex
 %
 % Bibtex-Datei mit den Quellenangaben zur Arbeit
@@ -62,6 +62,16 @@
 
 %%% Darstellung von Quellcode incl. Syntax-Highlighting
 \usepackage{listings}
+
+\lstdefinelanguage{Rust}{
+	keywords={true,false,auth,use,let,mut,if,else,fn,str,String,impl,struct,enum,match,mod,pub,crate,return,where,for,while,loop,break,continue,type,ref,self,super,extern,const,static,trait,unsafe,as,in},
+	ndkeywords={u8,u16,u32,u64,i8,i16,i32,i64,f32,f64,bool,char,usize,isize,Option,Result,Self,Box,Vec,Rc,Arc,Cell,RefCell,HashMap,BTreeMap,HashSet,BTreeSet},
+	sensitive=true,
+	comment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	morestring=[b]"
+}
+
 \renewcommand{\lstlistlistingname}{\babel{Quelltextverzeichnis}{Listings}}
 %Anpassungen zur Quellcodedarstellung
 % muss bei Bedarf überschrieben werden (z.B. wenn unterschiedliche Sprachen zum Einsatz kommen)

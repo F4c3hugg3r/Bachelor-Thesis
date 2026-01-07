@@ -8,23 +8,48 @@
 
 \chapter{Einleitung} \label{Einleitung}
 
-\section{Aufgabenbeschreibung} \label{Aufgabenbeschreibung}
+\section{Motivation und Einführung in das Themengebiet} \label{Einführung}
 
-Im Zuge dieser Masterarbeit soll eine Lösung erarbeitet und entwickelt werden, mit der ein beliebiger elektrischer Verbraucher über einen Fernzugriff gesteuert werden kann. Eine im Handel erhältliche Steckdose soll so modifiziert werden, dass die Stromzufuhr des Verbrauchers über das Internet ein- und ausschaltbar ist. Für den Zugriff auf die Steckdose soll keine zusätzliche Verkabelung notwendig sein. Das vorhandene Steuergerät der Steckdose soll durch eine selbst entwickelte Mikrocontrollerschaltung ersetzt werden. Der Mikrocontroller soll eine Applikation bereitstellen, damit menschliche Benutzer möglichst einfach auf die Steckdose zugreifen können.
+Netzwerkscanning macht einen großen Teil des Internet Traffics im IPv4 Adressraumes aus. So ist 98 Prozent des gesamten TCP Verkehrs weltweit auf SYN-Scans zurückzuführen \cite{griffioen2024have}. 
+Bekannte Tools wie Zmap werden stetig weiterentwickelt \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024} und sind seit der Entwicklung von hochperformanten Open-Source Scannern wie Zmap oder Masscan \cite{Durumeric_Wustrow_Halderman}\cite{Graham_2026} dazu fähig,
+den gesamten IPv4 Addressraum in unter einer Stunde zu scannen. Das Scannen von Netzwerken nach offenen Ports ermöglicht es Organisationen Schwachstellen ausfindig zu machen, 
+bevor Angreifer es tun. Außerdem lassen sich durch das breitflächige Scannen von ausgewählten Addressräumen oder dem gesamten IPv4 Raum Informationen über Trends und Veränderungen 
+dieser ableiten. Cyberangriffe haben Auswirkungen auf den Ruf und die finanzielle Stabilität von Unternehmen \cite{Rudnev_Zolkin_Artemyev_Tychkov_2024}. Die gegenwärtig hohen Angriffszahlen zum Beispiel bei Denial-of-Service Angriffen \cite{Falowo_Okpala_Kojo_Azumah_Li_2023} unterstreichen die Wichtigkeit.
 
-Es sollen verschiedene existierende Technologien, die für diese Anwendung in Frage kommen, recherchiert und bewertet werden.  Eine Lösung soll beispielhaft implementiert und nach einem Funktionstest kritisch begutachtet werden. Dadurch soll gezeigt werden, in wie weit es möglich ist sehr kleine Geräte mit besonders limitierten Ressourcen an ein lokales Netzwerk und an das Internet anzubinden.
+Bisherige hochleistungsscanner wie die soeben genannten, wurden überwiegend in C entwickelt \cite{Durumeric_Wustrow_Halderman}\cite{Graham_2026}\cite{Li_2026}. C ist häufig die Standard Wahl für maschinennahe Anwendungen, da sie zum Einen ein 
+niedriges Level an Abstraktion und zum Anderen hoch performant sein kann []. Allerdings ist C anfällig für menschengemachte Fehler \cite{Al-Boghdady_Wassif_El-Ramly_Al-Boghdady_Wassif_El-Ramly_2021} wie ..... [], von welchen
+die meisten sicherheitsrelevanten aus der Fraktion der Speicherverwaltung stammen \cite{bugden2022safety}. Andere Sprachen wie Go oder Python lösen einige dieser Probleme durch die Nutzung einer 
+automatischen Speicherverwaltung []. Diese Sprachen sind allerdings im Vergleich zu Sprachen wie C weniger Performant \cite{bugden2022safety}. 
 
-\section{Herangehensweise}
+Rust hingegen schneidet in Vergleichen bezüglich der Performance auf ähnlichem Niveau wie C ab \cite{Costanzo_Rucci_Naiouf_Giusti_2021}, bringt gleichzeitig aber das höchste Sicherheitsniveau der gennanten 
+Sprachen mit \cite{bugden2022safety}. Außerdem unterstützt Rust Konzepte von Sprachen hoher Abstaraktionsebene, wie beispielsweise die der Funktionalen Programmierung oder Objektorientierung \cite{Costanzo_Rucci_Naiouf_Giusti_2021}, während zudem in der
+zuletzt zitierten Untersuchung, auch die Anzahl der Zeilen niedriger als im Vergleich zu dem in C geschriebenen Code ist.
 
-In Kapitel \ref{Grundlagen} werden zuerst zentrale Begriffe, wie Smart Objects und Internet"=of"=Things, erläutert. Verschiedenen Technologien und Standards, die im Zusammenhang mit der Aufgabenstellung verwendet werden, werden vorgestellt. Diese Technologien werden eingeteilt in Übertragungstechniken und Kommunikationstechnologien. Eine Auswahl an Applikationen wird erläutert, die für den Zugriff auf die zu implementierende Lösung verwendet werden können. Betriebssysteme und Softwareumgebungen werden vorgestellt, die für die Bearbeitung der Aufgabenstellung in Frage kommen. Im Abschluss werden allgemein technische und nicht"=technische Herausforderungen behandelt.
+Bisher fehlt eine fundierte Untersuchung darüber, ob Rust als moderne Sprache, welche Sicherheitsgarantien, \textit{high-level} \footnote{\textit{high-level}: Auf hoher Abstraktionsebene} Konzepte und Performance vereint,
+in Kombination mit aktuellen Linux-Schnittstellen, in der Lage ist, eine konkurrenzfähige Alternative zu gängigen Hochleistungsscannern, welche überwiegend in C geschrieben sind, darzustellen.
+Es ist ungeklärt, ob der potentielle Performance Unterschied gering genug ist, um durch die gewonnene Sicherheit kompensiert zu werden, weshalb
+diese Arbeit an diesem Punkt ansetzt.
 
-Im Kapitel \ref{Konzept} wird anhand einer Nutzwertanalyse die Komplettlösung ermittelt, die für die Aufgabenstellung am geeignetsten ist.  Dazu werden zuerst, unabhängig von bestimmten Technologien, Anforderungen beschrieben, die an eine implementierte Lösung gestellt werden. Die Erfüllung dieser Anforderungen wird am Ende dieser Arbeit geprüft.  Am Ende wird die Entscheidung hergeleitet, welche Lösung beispielhaft implementiert wird.
+\section{Zielsetzung und Forschungsfrage} \label{Zielsetzung}
 
-Die Beschreibung der eigentlichen Implementierung findet sich in Kapitel \ref{Implementierung}.
+In dieser Arbeit wird ein prototypischer SYN-Portscanner zum breitflächigen Scannen von Netzwerken in Rust entwickelt. 
+Der Fokus des Scanners liegt auf einer hohen Performance, weshalb die Architektur teilweise asynchron gestaltet und leistungsfähige Linux-
+Schnittstellen wie AF\_PACKET und XDP verwendet werden. Anschließend wird dieser bezüglich ausgewählter Performance Metriken
+mit einer repräsentativen Auswahl an bestehenden Scannern verglichen und die Ergebnisse daraufhin evaluiert.
 
-Nach Abschluss der Implementierung wurden Funktionstests der implementierten Applikationen durchgeführt. Der Testaufbau und die Funktionstests werden in Kapitel \ref{Tests} behandelt.
+Es ergibt sich folgende Forschungsfrage: Inwieweit kann ein in Rust implementierter asynchroner SYN-Scanner hinsichtlich des Durchsatzes und der Ressourceneffizienz mit etablierten Hochleistungsscannern konkurrieren und durch spracheigene Sicherheitsgarantien eine tragfähige Alternative für den produktiven Einsatz darstellen?
 
-Zum Ende der Arbeit wird die implementierte Lösung kritisch begutachtet. In Kapitel \ref{Fazit} wird geprüft, welche vorher beschriebenen Anforderungen erfüllt wurden. Der Nutzwert der implementierten Lösung wird ermittelt und mit dem Ergebnis der vorherigen Nutzwertanalyse verglichen. Verschiedene Anwendungsmöglichkeiten für die Implementierung und ähnliche Lösungsansätze werden behandelt. Ein Resümee der Arbeit wird gezogen.
+\section{Abgrenzung des Themas} \label{Abgrenzung}
+
+Als Scanmethode wird ausschließlich der SYN-Scan behandelt. Dabei handelt es sich nicht um den SYN-Connect-Scan, welcher den \textit{TCP-Handshake}
+komplett ausführen würde (siehe nächstes Kapitel). Außerdem ist das Ziel des Scanners sehr viele IP Adressen aber für jede IP Adresse nur wenige Ports zu 
+scannen, anders als beispielsweise der reguläre SYM-Scan des Tools NMap [], welches eher für das Penetrationtesting geeignet ist, da dort der Fokus auf das 
+Scannen vieler verschiedener Ports statt vieler IP Adressen liegt. 
+
+Mechanismen zur Erkennungsvermeidung des Scans werden in dieser Implementierung nur rudimentär behandelt.
+Der Fokus liegt klar auf der Performance und Ressourceneffizienz der Anwendung. 
+
+
 
 
 
