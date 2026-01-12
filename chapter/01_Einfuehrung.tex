@@ -11,18 +11,18 @@
 \section{Motivation und Einführung in das Themengebiet} \label{Einführung}
 
 Netzwerkscanning macht einen großen Teil des Internet Traffics im IPv4 Adressraumes aus. So ist 98 Prozent des gesamten TCP Verkehrs weltweit auf SYN-Scans zurückzuführen \cite{griffioen2024have}. 
-Bekannte Tools wie Zmap werden stetig weiterentwickelt \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024} und sind seit der Entwicklung von hochperformanten Open-Source Scannern wie Zmap oder Masscan \cite{Durumeric_Wustrow_Halderman}\cite{Graham_2026} dazu fähig,
+Bekannte Tools wie Zmap werden stetig weiterentwickelt \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024} und sind seit der Entwicklung von performanten Open-Source Scannern wie Zmap oder Masscan \cite{Durumeric_Wustrow_Halderman}\cite{Graham_2026} dazu fähig,
 den gesamten IPv4 Addressraum in unter einer Stunde zu scannen. Das Scannen von Netzwerken nach offenen Ports ermöglicht es Organisationen Schwachstellen ausfindig zu machen, 
 bevor Angreifer es tun. Außerdem lassen sich durch das breitflächige Scannen von ausgewählten Addressräumen oder dem gesamten IPv4 Raum Informationen über Trends und Veränderungen 
 dieser ableiten. Cyberangriffe haben Auswirkungen auf den Ruf und die finanzielle Stabilität von Unternehmen \cite{Rudnev_Zolkin_Artemyev_Tychkov_2024}. Die gegenwärtig hohen Angriffszahlen zum Beispiel bei Denial-of-Service Angriffen \cite{Falowo_Okpala_Kojo_Azumah_Li_2023} unterstreichen die Wichtigkeit.
 
 Bisherige hochleistungsscanner wie die soeben genannten, wurden überwiegend in C entwickelt \cite{Durumeric_Wustrow_Halderman}\cite{Graham_2026}\cite{Li_2026}. C ist häufig die Standard Wahl für maschinennahe Anwendungen, da sie zum Einen ein 
-niedriges Level an Abstraktion und zum Anderen hoch performant sein kann []. Allerdings ist C anfällig für menschengemachte Fehler \cite{Al-Boghdady_Wassif_El-Ramly_Al-Boghdady_Wassif_El-Ramly_2021} wie ..... [], von welchen
+niedriges Level an Abstraktion und zum Anderen hoch performant sein kann [TODO]. Allerdings ist C anfällig für menschengemachte Fehler \cite{Al-Boghdady_Wassif_El-Ramly_Al-Boghdady_Wassif_El-Ramly_2021} wie ..TODO.. [TODO], von welchen
 die meisten sicherheitsrelevanten aus der Fraktion der Speicherverwaltung stammen \cite{bugden2022safety}. Andere Sprachen wie Go oder Python lösen einige dieser Probleme durch die Nutzung einer 
-automatischen Speicherverwaltung []. Diese Sprachen sind allerdings im Vergleich zu Sprachen wie C weniger Performant \cite{bugden2022safety}. 
+automatischen Speicherverwaltung [TODO]. Diese Sprachen sind allerdings im Vergleich zu Sprachen wie C weniger Performant \cite{bugden2022safety}. 
 
-Rust hingegen schneidet in Vergleichen bezüglich der Performance auf ähnlichem Niveau wie C ab \cite{Costanzo_Rucci_Naiouf_Giusti_2021}, bringt gleichzeitig aber das höchste Sicherheitsniveau der gennanten 
-Sprachen mit \cite{bugden2022safety}. Außerdem unterstützt Rust Konzepte von Sprachen hoher Abstaraktionsebene, wie beispielsweise die der Funktionalen Programmierung oder Objektorientierung \cite{Costanzo_Rucci_Naiouf_Giusti_2021}, während zudem in der
+Rust hingegen schneidet in Vergleichen bezüglich der Performance auf ähnlichem Niveau wie C ab, bringt gleichzeitig aber das höchste Sicherheitsniveau der gennanten 
+Sprachen mit \cite{bugden2022safety}\cite{Costanzo_Rucci_Naiouf_Giusti_2021}. Außerdem unterstützt Rust Konzepte von Sprachen hoher Abstaraktionsebene, wie beispielsweise die der Funktionalen Programmierung oder Objektorientierung \cite{Costanzo_Rucci_Naiouf_Giusti_2021}, während zudem in der
 zuletzt zitierten Untersuchung, auch die Anzahl der Zeilen niedriger als im Vergleich zu dem in C geschriebenen Code ist.
 
 Bisher fehlt eine fundierte Untersuchung darüber, ob Rust als moderne Sprache, welche Sicherheitsgarantien, \textit{high-level} \footnote{\textit{high-level}: Auf hoher Abstraktionsebene} Konzepte und Performance vereint,
@@ -39,15 +39,6 @@ mit einer repräsentativen Auswahl an bestehenden Scannern verglichen und die Er
 
 Es ergibt sich folgende Forschungsfrage: Inwieweit kann ein in Rust implementierter asynchroner SYN-Scanner hinsichtlich des Durchsatzes und der Ressourceneffizienz mit etablierten Hochleistungsscannern konkurrieren und durch spracheigene Sicherheitsgarantien eine tragfähige Alternative für den produktiven Einsatz darstellen?
 
-\section{Abgrenzung des Themas} \label{Abgrenzung}
-
-Als Scanmethode wird ausschließlich der SYN-Scan behandelt. Dabei handelt es sich nicht um den SYN-Connect-Scan, welcher den \textit{TCP-Handshake}
-komplett ausführen würde (siehe nächstes Kapitel). Außerdem ist das Ziel des Scanners sehr viele IP Adressen aber für jede IP Adresse nur wenige Ports zu 
-scannen, anders als beispielsweise der reguläre SYM-Scan des Tools NMap [], welches eher für das Penetrationtesting geeignet ist, da dort der Fokus auf das 
-Scannen vieler verschiedener Ports statt vieler IP Adressen liegt. 
-
-Mechanismen zur Erkennungsvermeidung des Scans werden in dieser Implementierung nur rudimentär behandelt.
-Der Fokus liegt klar auf der Performance und Ressourceneffizienz der Anwendung. 
 
 
 

@@ -1,8 +1,10 @@
 \babel@toc {ngerman}{}\relax 
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {2.1}{\ignorespaces Aufbau eines drahtlosen Sensornetzwerkes}}{4}{figure.14}%
-\contentsline {figure}{\numberline {2.2}{\ignorespaces Die Internet-of-Things Vision \blx@tocontentsinit {0}\cite [Figure 1.2]{Bormann:6LoWPAN}}}{6}{figure.17}%
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Der TCP Three-Way-Handshake. Entscheidend für die Zuordnung ist, dass die \textit {Acknowledgment Number} im zweiten Schritt dem Wert der initialen \textit {Sequence Number} + 1 entspricht ($x+1$).}}{4}{figure.11}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Aufbau des TCP-Headers (ohne Nutzdaten). Für SYN-Scans sind insbesondere die \textit {Control Bits} (z.\,B. SYN, RST, ACK) relevant.}}{5}{figure.12}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Aufbau eines drahtlosen Sensornetzwerkes}}{9}{figure.23}%
+\contentsline {figure}{\numberline {2.4}{\ignorespaces Die Internet-of-Things Vision \blx@tocontentsinit {0}\cite [Figure 1.2]{Bormann:6LoWPAN}}}{11}{figure.26}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
