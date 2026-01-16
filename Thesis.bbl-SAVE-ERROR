@@ -1,0 +1,1078 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global/global}
+    \entry{griffioen2024have}{inproceedings}{}{}
+      \name{author}{4}{}{%
+        {{hash=40768e62c0f7e8b448a0fb9612571388}{%
+           family={Griffioen},
+           familyi={G\bibinitperiod},
+           given={Harm},
+           giveni={H\bibinitperiod}}}%
+        {{hash=b46c7ee36cf61672101afdbd9b9d019e}{%
+           family={Koursiounis},
+           familyi={K\bibinitperiod},
+           given={Georgios},
+           giveni={G\bibinitperiod}}}%
+        {{hash=56fded7befb3875729495204823feadf}{%
+           family={Smaragdakis},
+           familyi={S\bibinitperiod},
+           given={Georgios},
+           giveni={G\bibinitperiod}}}%
+        {{hash=43a84e3f41520bd2f0d85ccb9f83b376}{%
+           family={Doerr},
+           familyi={D\bibinitperiod},
+           given={Christian},
+           giveni={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{1788b2fcb95169fc65ff705ceac363a0}
+      \strng{fullhash}{5cb44b3f07870a81a883c18a6d051265}
+      \strng{fullhashraw}{5cb44b3f07870a81a883c18a6d051265}
+      \strng{bibnamehash}{5cb44b3f07870a81a883c18a6d051265}
+      \strng{authorbibnamehash}{5cb44b3f07870a81a883c18a6d051265}
+      \strng{authornamehash}{1788b2fcb95169fc65ff705ceac363a0}
+      \strng{authorfullhash}{5cb44b3f07870a81a883c18a6d051265}
+      \strng{authorfullhashraw}{5cb44b3f07870a81a883c18a6d051265}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 2024 ACM on Internet Measurement Conference}
+      \field{title}{Have you syn me? characterizing ten years of internet scanning}
+      \field{year}{2024}
+      \field{pages}{149\bibrangedash 164}
+      \range{pages}{16}
+    \endentry
+    \entry{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024}{inproceedings}{}{}
+      \name{author}{5}{}{%
+        {{hash=daebddaacc5baf61c90307ca461e704b}{%
+           family={Durumeric},
+           familyi={D\bibinitperiod},
+           given={Zakir},
+           giveni={Z\bibinitperiod}}}%
+        {{hash=916ddf9a8ba6f52e9a7ad3f20f364500}{%
+           family={Adrian},
+           familyi={A\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+        {{hash=aa66ab004a2e60cb573c301c7f7604da}{%
+           family={Stephens},
+           familyi={S\bibinitperiod},
+           given={Phillip},
+           giveni={P\bibinitperiod}}}%
+        {{hash=fd98bf3c8c1643d7c194e10728c4c7ec}{%
+           family={Wustrow},
+           familyi={W\bibinitperiod},
+           given={Eric},
+           giveni={E\bibinitperiod}}}%
+        {{hash=6cba604de51e7ad2b27a90bc7f4ce019}{%
+           family={Halderman},
+           familyi={H\bibinitperiod},
+           given={J.\bibnamedelimi Alex},
+           giveni={J\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \list{location}{1}{%
+        {Madrid Spain}%
+      }
+      \list{publisher}{1}{%
+        {ACM}%
+      }
+      \strng{namehash}{d0d78b05a803c6a69d975f7663c1966c}
+      \strng{fullhash}{120e51a5ad277a835801709715d685ac}
+      \strng{fullhashraw}{120e51a5ad277a835801709715d685ac}
+      \strng{bibnamehash}{120e51a5ad277a835801709715d685ac}
+      \strng{authorbibnamehash}{120e51a5ad277a835801709715d685ac}
+      \strng{authornamehash}{d0d78b05a803c6a69d975f7663c1966c}
+      \strng{authorfullhash}{120e51a5ad277a835801709715d685ac}
+      \strng{authorfullhashraw}{120e51a5ad277a835801709715d685ac}
+      \field{extraname}{1}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 2024 ACM on Internet Measurement Conference}
+      \field{isbn}{979-8-4007-0592-2}
+      \field{month}{11}
+      \field{title}{Ten Years of ZMap}
+      \field{year}{2024}
+      \field{pages}{139\bibrangedash 148}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.1145/3646547.3689012
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/3646547.3689012
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/3646547.3689012
+      \endverb
+    \endentry
+    \entry{Durumeric_Wustrow_Halderman}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=daebddaacc5baf61c90307ca461e704b}{%
+           family={Durumeric},
+           familyi={D\bibinitperiod},
+           given={Zakir},
+           giveni={Z\bibinitperiod}}}%
+        {{hash=fd98bf3c8c1643d7c194e10728c4c7ec}{%
+           family={Wustrow},
+           familyi={W\bibinitperiod},
+           given={Eric},
+           giveni={E\bibinitperiod}}}%
+        {{hash=6cba604de51e7ad2b27a90bc7f4ce019}{%
+           family={Halderman},
+           familyi={H\bibinitperiod},
+           given={J\bibnamedelima Alex},
+           giveni={J\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \strng{namehash}{d0d78b05a803c6a69d975f7663c1966c}
+      \strng{fullhash}{066cc6707cdfca48a9cf4d923c9ad962}
+      \strng{fullhashraw}{066cc6707cdfca48a9cf4d923c9ad962}
+      \strng{bibnamehash}{066cc6707cdfca48a9cf4d923c9ad962}
+      \strng{authorbibnamehash}{066cc6707cdfca48a9cf4d923c9ad962}
+      \strng{authornamehash}{d0d78b05a803c6a69d975f7663c1966c}
+      \strng{authorfullhash}{066cc6707cdfca48a9cf4d923c9ad962}
+      \strng{authorfullhashraw}{066cc6707cdfca48a9cf4d923c9ad962}
+      \field{extraname}{2}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{ZMap: Fast Internet-wide Scanning and Its Security Applications}
+    \endentry
+    \entry{Graham_2026}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=8ee2e6b97c14141f3c3e27288ec11120}{%
+           family={Graham},
+           familyi={G\bibinitperiod},
+           given={Robert\bibnamedelima David},
+           giveni={R\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+      }
+      \strng{namehash}{8ee2e6b97c14141f3c3e27288ec11120}
+      \strng{fullhash}{8ee2e6b97c14141f3c3e27288ec11120}
+      \strng{fullhashraw}{8ee2e6b97c14141f3c3e27288ec11120}
+      \strng{bibnamehash}{8ee2e6b97c14141f3c3e27288ec11120}
+      \strng{authorbibnamehash}{8ee2e6b97c14141f3c3e27288ec11120}
+      \strng{authornamehash}{8ee2e6b97c14141f3c3e27288ec11120}
+      \strng{authorfullhash}{8ee2e6b97c14141f3c3e27288ec11120}
+      \strng{authorfullhashraw}{8ee2e6b97c14141f3c3e27288ec11120}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{month}{1}
+      \field{title}{robertdavidgraham/masscan}
+      \field{type}{C}
+      \field{year}{2026}
+      \verb{urlraw}
+      \verb https://github.com/robertdavidgraham/masscan
+      \endverb
+      \verb{url}
+      \verb https://github.com/robertdavidgraham/masscan
+      \endverb
+    \endentry
+    \entry{Rudnev_Zolkin_Artemyev_Tychkov_2024}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=b7fad08f1acaf5c0a322b391c123dfde}{%
+           family={Rudnev},
+           familyi={R\bibinitperiod},
+           given={Sergey},
+           giveni={S\bibinitperiod}}}%
+        {{hash=2d527533ce13a094a2cd5ae1a98522a2}{%
+           family={Zolkin},
+           familyi={Z\bibinitperiod},
+           given={Alexander},
+           giveni={A\bibinitperiod}}}%
+        {{hash=3b0db5d8880b52142c387c1ee499f21e}{%
+           family={Artemyev},
+           familyi={A\bibinitperiod},
+           given={Nikolay},
+           giveni={N\bibinitperiod}}}%
+        {{hash=485e341a3976cc2c38f6fe648aedb354}{%
+           family={Tychkov},
+           familyi={T\bibinitperiod},
+           given={Alexander},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{d86d80dc410fd30dcb28e573a16d8b10}
+      \strng{fullhash}{29d34a16f47f169bd7012d8cdc29909a}
+      \strng{fullhashraw}{29d34a16f47f169bd7012d8cdc29909a}
+      \strng{bibnamehash}{29d34a16f47f169bd7012d8cdc29909a}
+      \strng{authorbibnamehash}{29d34a16f47f169bd7012d8cdc29909a}
+      \strng{authornamehash}{d86d80dc410fd30dcb28e573a16d8b10}
+      \strng{authorfullhash}{29d34a16f47f169bd7012d8cdc29909a}
+      \strng{authorfullhashraw}{29d34a16f47f169bd7012d8cdc29909a}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{EKONOMIKA I UPRAVLENIE: PROBLEMY, RESHENIYA}
+      \field{month}{1}
+      \field{title}{THE ECONOMIC IMPORTANCE OF CYBERSECURITY FOR ENTERPRISES IN THE CONTEXT OF DIGITAL TRANSFORMATION}
+      \field{volume}{11/2}
+      \field{year}{2024}
+      \field{pages}{46\bibrangedash 55}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.36871/ek.up.p.r.2024.11.02.006
+      \endverb
+    \endentry
+    \entry{Falowo_Okpala_Kojo_Azumah_Li_2023}{inproceedings}{}{}
+      \name{author}{5}{}{%
+        {{hash=94359baa318406290b20f80c45ee0be4}{%
+           family={Falowo},
+           familyi={F\bibinitperiod},
+           given={Olufunsho\bibnamedelima I.},
+           giveni={O\bibinitperiod\bibinitdelim I\bibinitperiod}}}%
+        {{hash=a23643984be027ed07815d0b0bb0a052}{%
+           family={Okpala},
+           familyi={O\bibinitperiod},
+           given={Izunna},
+           giveni={I\bibinitperiod}}}%
+        {{hash=084ece046656a371b9727dd24bccd00c}{%
+           family={Kojo},
+           familyi={K\bibinitperiod},
+           given={Emmanuel},
+           giveni={E\bibinitperiod}}}%
+        {{hash=b453ee1249760b5219f21831284ff086}{%
+           family={Azumah},
+           familyi={A\bibinitperiod},
+           given={Sylvia},
+           giveni={S\bibinitperiod}}}%
+        {{hash=f4f979a46aba6a586f0d34301ad05164}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Chengcheng},
+           giveni={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{5d47303c40f6c52d5ebab240f7e0468a}
+      \strng{fullhash}{2436143a4c5f6f4c51a0d5df87439b97}
+      \strng{fullhashraw}{2436143a4c5f6f4c51a0d5df87439b97}
+      \strng{bibnamehash}{2436143a4c5f6f4c51a0d5df87439b97}
+      \strng{authorbibnamehash}{2436143a4c5f6f4c51a0d5df87439b97}
+      \strng{authornamehash}{5d47303c40f6c52d5ebab240f7e0468a}
+      \strng{authorfullhash}{2436143a4c5f6f4c51a0d5df87439b97}
+      \strng{authorfullhashraw}{2436143a4c5f6f4c51a0d5df87439b97}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2023 20th Annual International Conference on Privacy, Security and Trust (PST)}
+      \field{issn}{2643-4202}
+      \field{month}{8}
+      \field{title}{Exploration of Various Machine Learning Techniques for Identifying and Mitigating DDoS Attacks}
+      \field{year}{2023}
+      \field{pages}{1\bibrangedash 7}
+      \range{pages}{7}
+      \verb{doi}
+      \verb 10.1109/PST58708.2023.10320151
+      \endverb
+      \verb{urlraw}
+      \verb https://ieeexplore.ieee.org/document/10320151/
+      \endverb
+      \verb{url}
+      \verb https://ieeexplore.ieee.org/document/10320151/
+      \endverb
+    \endentry
+    \entry{Li_2026}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=09e1a64c667557dd7866bc4e66d193ce}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Xiang},
+           giveni={X\bibinitperiod}}}%
+      }
+      \strng{namehash}{09e1a64c667557dd7866bc4e66d193ce}
+      \strng{fullhash}{09e1a64c667557dd7866bc4e66d193ce}
+      \strng{fullhashraw}{09e1a64c667557dd7866bc4e66d193ce}
+      \strng{bibnamehash}{09e1a64c667557dd7866bc4e66d193ce}
+      \strng{authorbibnamehash}{09e1a64c667557dd7866bc4e66d193ce}
+      \strng{authornamehash}{09e1a64c667557dd7866bc4e66d193ce}
+      \strng{authorfullhash}{09e1a64c667557dd7866bc4e66d193ce}
+      \strng{authorfullhashraw}{09e1a64c667557dd7866bc4e66d193ce}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{month}{1}
+      \field{title}{idealeer/xmap}
+      \field{type}{C}
+      \field{year}{2026}
+      \verb{urlraw}
+      \verb https://github.com/idealeer/xmap
+      \endverb
+      \verb{url}
+      \verb https://github.com/idealeer/xmap
+      \endverb
+    \endentry
+    \entry{bugden2022safety}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=5c0a6597e8b9f132f7b4983df52101ba}{%
+           family={Bugden},
+           familyi={B\bibinitperiod},
+           given={William},
+           giveni={W\bibinitperiod}}}%
+        {{hash=44a6d2b412a7f413aedd690a93f8ded7}{%
+           family={Alahmar},
+           familyi={A\bibinitperiod},
+           given={Ayman},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {World Scientific}%
+      }
+      \strng{namehash}{94e79fe87be463037842d65fb60739f8}
+      \strng{fullhash}{94e79fe87be463037842d65fb60739f8}
+      \strng{fullhashraw}{94e79fe87be463037842d65fb60739f8}
+      \strng{bibnamehash}{94e79fe87be463037842d65fb60739f8}
+      \strng{authorbibnamehash}{94e79fe87be463037842d65fb60739f8}
+      \strng{authornamehash}{94e79fe87be463037842d65fb60739f8}
+      \strng{authorfullhash}{94e79fe87be463037842d65fb60739f8}
+      \strng{authorfullhashraw}{94e79fe87be463037842d65fb60739f8}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{International Journal of Software Engineering and Knowledge Engineering}
+      \field{number}{05}
+      \field{title}{The safety and performance of prominent programming languages}
+      \field{volume}{32}
+      \field{year}{2022}
+      \field{pages}{713\bibrangedash 744}
+      \range{pages}{32}
+    \endentry
+    \entry{Costanzo_Rucci_Naiouf_Giusti_2021}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=c01a7c3de7545cdc3cee41dbf1b4fcd7}{%
+           family={Costanzo},
+           familyi={C\bibinitperiod},
+           given={Manuel},
+           giveni={M\bibinitperiod}}}%
+        {{hash=418f8966c12648e102a707127fd7ba13}{%
+           family={Rucci},
+           familyi={R\bibinitperiod},
+           given={Enzo},
+           giveni={E\bibinitperiod}}}%
+        {{hash=62ffacc99d20a2d493bf6118814bbac6}{%
+           family={Naiouf},
+           familyi={N\bibinitperiod},
+           given={Marcelo},
+           giveni={M\bibinitperiod}}}%
+        {{hash=06a0cd4ebe5450f8caa07ff6b2bd7d0e}{%
+           family={Giusti},
+           familyi={G\bibinitperiod},
+           given={Armando\bibnamedelima De},
+           giveni={A\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {arXiv}%
+      }
+      \strng{namehash}{7d33df26b7071c908c71375c64918d9c}
+      \strng{fullhash}{9f61510527de8502359fd1bfa77d9fd8}
+      \strng{fullhashraw}{9f61510527de8502359fd1bfa77d9fd8}
+      \strng{bibnamehash}{9f61510527de8502359fd1bfa77d9fd8}
+      \strng{authorbibnamehash}{9f61510527de8502359fd1bfa77d9fd8}
+      \strng{authornamehash}{7d33df26b7071c908c71375c64918d9c}
+      \strng{authorfullhash}{9f61510527de8502359fd1bfa77d9fd8}
+      \strng{authorfullhashraw}{9f61510527de8502359fd1bfa77d9fd8}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{month}{10}
+      \field{note}{arXiv:2107.11912 [cs]}
+      \field{number}{arXiv:2107.11912}
+      \field{title}{Performance vs Programming Effort between Rust and C on Multicore Architectures: Case Study in N-Body}
+      \field{year}{2021}
+      \verb{doi}
+      \verb 10.48550/arXiv.2107.11912
+      \endverb
+      \verb{urlraw}
+      \verb http://arxiv.org/abs/2107.11912
+      \endverb
+      \verb{url}
+      \verb http://arxiv.org/abs/2107.11912
+      \endverb
+    \endentry
+    \entry{Lyon_2010}{book}{}{}
+      \name{author}{1}{}{%
+        {{hash=5fecd2561826eb4014ebd779cb15921a}{%
+           family={Lyon},
+           familyi={L\bibinitperiod},
+           given={Gordon},
+           giveni={G\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {eng}%
+      }
+      \list{location}{1}{%
+        {Sunnyvale, CA}%
+      }
+      \list{publisher}{1}{%
+        {Insecure.Com LLC}%
+      }
+      \strng{namehash}{5fecd2561826eb4014ebd779cb15921a}
+      \strng{fullhash}{5fecd2561826eb4014ebd779cb15921a}
+      \strng{fullhashraw}{5fecd2561826eb4014ebd779cb15921a}
+      \strng{bibnamehash}{5fecd2561826eb4014ebd779cb15921a}
+      \strng{authorbibnamehash}{5fecd2561826eb4014ebd779cb15921a}
+      \strng{authornamehash}{5fecd2561826eb4014ebd779cb15921a}
+      \strng{authorfullhash}{5fecd2561826eb4014ebd779cb15921a}
+      \strng{authorfullhashraw}{5fecd2561826eb4014ebd779cb15921a}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{Zero-day release: May 2008}
+      \field{isbn}{978-0-9799587-1-7}
+      \field{title}{Nmap network scanning: official Nmap project guide to network discovery and security scanning}
+      \field{year}{2010}
+    \endentry
+    \entry{IANA_Port_Registry}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=7a11d20162183065066be0792416c70b}{%
+           family={IANA},
+           familyi={I\bibinitperiod}}}%
+      }
+      \strng{namehash}{7a11d20162183065066be0792416c70b}
+      \strng{fullhash}{7a11d20162183065066be0792416c70b}
+      \strng{fullhashraw}{7a11d20162183065066be0792416c70b}
+      \strng{bibnamehash}{7a11d20162183065066be0792416c70b}
+      \strng{authorbibnamehash}{7a11d20162183065066be0792416c70b}
+      \strng{authornamehash}{7a11d20162183065066be0792416c70b}
+      \strng{authorfullhash}{7a11d20162183065066be0792416c70b}
+      \strng{authorfullhashraw}{7a11d20162183065066be0792416c70b}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Service Name and Transport Protocol Port Number Registry}
+      \verb{urlraw}
+      \verb https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml
+      \endverb
+      \verb{url}
+      \verb https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml
+      \endverb
+    \endentry
+    \entry{Wendzel_2021}{book}{}{}
+      \name{author}{1}{}{%
+        {{hash=cd196829720a3b43926b38fa26535d10}{%
+           family={Wendzel},
+           familyi={W\bibinitperiod},
+           given={Steffen},
+           giveni={S\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {ger}%
+      }
+      \list{location}{1}{%
+        {Wiesbaden}%
+      }
+      \list{publisher}{1}{%
+        {Springer Vieweg}%
+      }
+      \strng{namehash}{cd196829720a3b43926b38fa26535d10}
+      \strng{fullhash}{cd196829720a3b43926b38fa26535d10}
+      \strng{fullhashraw}{cd196829720a3b43926b38fa26535d10}
+      \strng{bibnamehash}{cd196829720a3b43926b38fa26535d10}
+      \strng{authorbibnamehash}{cd196829720a3b43926b38fa26535d10}
+      \strng{authornamehash}{cd196829720a3b43926b38fa26535d10}
+      \strng{authorfullhash}{cd196829720a3b43926b38fa26535d10}
+      \strng{authorfullhashraw}{cd196829720a3b43926b38fa26535d10}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{2., aktualisierte und erweiterte Auflage}
+      \field{isbn}{978-3-658-33422-2}
+      \field{series}{Springer eBook Collection}
+      \field{title}{IT-Sicherheit für TCP/IP- und IoT-Netzwerke: Grundlagen, Konzepte, Protokolle, Härtung}
+      \field{year}{2021}
+      \verb{doi}
+      \verb 10.1007/978-3-658-33423-9
+      \endverb
+    \endentry
+    \entry{Postel_1981}{book}{}{}
+      \name{author}{1}{}{%
+        {{hash=22c8db2c59b26571094b7dab5cefad0e}{%
+           family={Postel},
+           familyi={P\bibinitperiod},
+           given={J.},
+           giveni={J\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {RFC Editor}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \strng{namehash}{22c8db2c59b26571094b7dab5cefad0e}
+      \strng{fullhash}{22c8db2c59b26571094b7dab5cefad0e}
+      \strng{fullhashraw}{22c8db2c59b26571094b7dab5cefad0e}
+      \strng{bibnamehash}{22c8db2c59b26571094b7dab5cefad0e}
+      \strng{authorbibnamehash}{22c8db2c59b26571094b7dab5cefad0e}
+      \strng{authornamehash}{22c8db2c59b26571094b7dab5cefad0e}
+      \strng{authorfullhash}{22c8db2c59b26571094b7dab5cefad0e}
+      \strng{authorfullhashraw}{22c8db2c59b26571094b7dab5cefad0e}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{number}{RFC0793}
+      \field{title}{Transmission Control Protocol}
+      \field{year}{1981}
+      \field{pages}{RFC0793}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.17487/rfc0793
+      \endverb
+      \verb{urlraw}
+      \verb https://www.rfc-editor.org/info/rfc0793
+      \endverb
+      \verb{url}
+      \verb https://www.rfc-editor.org/info/rfc0793
+      \endverb
+    \endentry
+    \entry{Eddy_2022}{book}{}{}
+      \name{author}{1}{}{%
+        {{hash=eff1d6e4dc522328e3ceeed671666aad}{%
+           family={Eddy},
+           familyi={E\bibinitperiod},
+           given={Wesley},
+           giveni={W\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {Internet Engineering Task Force}%
+      }
+      \strng{namehash}{eff1d6e4dc522328e3ceeed671666aad}
+      \strng{fullhash}{eff1d6e4dc522328e3ceeed671666aad}
+      \strng{fullhashraw}{eff1d6e4dc522328e3ceeed671666aad}
+      \strng{bibnamehash}{eff1d6e4dc522328e3ceeed671666aad}
+      \strng{authorbibnamehash}{eff1d6e4dc522328e3ceeed671666aad}
+      \strng{authornamehash}{eff1d6e4dc522328e3ceeed671666aad}
+      \strng{authorfullhash}{eff1d6e4dc522328e3ceeed671666aad}
+      \strng{authorfullhashraw}{eff1d6e4dc522328e3ceeed671666aad}
+      \field{extraname}{1}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{month}{8}
+      \field{number}{RFC 9293}
+      \field{title}{Transmission Control Protocol (TCP)}
+      \field{year}{2022}
+      \verb{doi}
+      \verb 10.17487/RFC9293
+      \endverb
+      \verb{urlraw}
+      \verb https://datatracker.ietf.org/doc/rfc9293
+      \endverb
+      \verb{url}
+      \verb https://datatracker.ietf.org/doc/rfc9293
+      \endverb
+    \endentry
+    \entry{Eddy_2007}{book}{}{}
+      \name{author}{1}{}{%
+        {{hash=eff1d6e4dc522328e3ceeed671666aad}{%
+           family={Eddy},
+           familyi={E\bibinitperiod},
+           given={Wesley},
+           giveni={W\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {Internet Engineering Task Force}%
+      }
+      \strng{namehash}{eff1d6e4dc522328e3ceeed671666aad}
+      \strng{fullhash}{eff1d6e4dc522328e3ceeed671666aad}
+      \strng{fullhashraw}{eff1d6e4dc522328e3ceeed671666aad}
+      \strng{bibnamehash}{eff1d6e4dc522328e3ceeed671666aad}
+      \strng{authorbibnamehash}{eff1d6e4dc522328e3ceeed671666aad}
+      \strng{authornamehash}{eff1d6e4dc522328e3ceeed671666aad}
+      \strng{authorfullhash}{eff1d6e4dc522328e3ceeed671666aad}
+      \strng{authorfullhashraw}{eff1d6e4dc522328e3ceeed671666aad}
+      \field{extraname}{2}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{month}{8}
+      \field{number}{RFC 4987}
+      \field{title}{TCP SYN Flooding Attacks and Common Mitigations}
+      \field{type}{Request for Comments}
+      \field{year}{2007}
+      \verb{doi}
+      \verb 10.17487/RFC4987
+      \endverb
+      \verb{urlraw}
+      \verb https://datatracker.ietf.org/doc/rfc4987
+      \endverb
+      \verb{url}
+      \verb https://datatracker.ietf.org/doc/rfc4987
+      \endverb
+    \endentry
+    \entry{Kerrisk_2018}{book}{}{}
+      \name{author}{1}{}{%
+        {{hash=7f32f61adec784489cc0fa2cefa610a3}{%
+           family={Kerrisk},
+           familyi={K\bibinitperiod},
+           given={Michael},
+           giveni={M\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {eng}%
+      }
+      \list{location}{1}{%
+        {San Francisco, CA}%
+      }
+      \list{publisher}{1}{%
+        {No Starch Press}%
+      }
+      \strng{namehash}{7f32f61adec784489cc0fa2cefa610a3}
+      \strng{fullhash}{7f32f61adec784489cc0fa2cefa610a3}
+      \strng{fullhashraw}{7f32f61adec784489cc0fa2cefa610a3}
+      \strng{bibnamehash}{7f32f61adec784489cc0fa2cefa610a3}
+      \strng{authorbibnamehash}{7f32f61adec784489cc0fa2cefa610a3}
+      \strng{authornamehash}{7f32f61adec784489cc0fa2cefa610a3}
+      \strng{authorfullhash}{7f32f61adec784489cc0fa2cefa610a3}
+      \strng{authorfullhashraw}{7f32f61adec784489cc0fa2cefa610a3}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{Ninth printing}
+      \field{isbn}{978-1-59327-220-3}
+      \field{title}{The Linux programming interface: a Linux und UNIX system programming handbook}
+      \field{year}{2018}
+    \endentry
+    \entry{socket2_linux_manpage}{misc}{}{}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{man7.org}
+      \field{note}{Accessed: 2026-01-11}
+      \field{title}{socket(2) - Linux manual page}
+      \verb{urlraw}
+      \verb https://man7.org/linux/man-pages/man2/socket.2.html
+      \endverb
+      \verb{url}
+      \verb https://man7.org/linux/man-pages/man2/socket.2.html
+      \endverb
+    \endentry
+    \entry{raw7_linux_manpage}{misc}{}{}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{man7.org}
+      \field{note}{Accessed: 2026-01-11}
+      \field{title}{raw(7) - Linux manual page}
+      \verb{urlraw}
+      \verb https://man7.org/linux/man-pages/man7/raw.7.html
+      \endverb
+      \verb{url}
+      \verb https://man7.org/linux/man-pages/man7/raw.7.html
+      \endverb
+    \endentry
+    \entry{address_families7_linux_manpage}{misc}{}{}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{man7.org}
+      \field{note}{Accessed: 2026-01-11}
+      \field{title}{address\_families(7) - Linux manual page}
+      \verb{urlraw}
+      \verb https://man7.org/linux/man-pages/man7/address_families.7.html
+      \endverb
+      \verb{url}
+      \verb https://man7.org/linux/man-pages/man7/address_families.7.html
+      \endverb
+    \endentry
+    \entry{260309}{inproceedings}{}{}
+      \name{author}{2}{}{%
+        {{hash=cf154d853500dbdceb40acaedfcc220b}{%
+           family={McCanne},
+           familyi={M\bibinitperiod},
+           given={Steven},
+           giveni={S\bibinitperiod}}}%
+        {{hash=2191d887ae31ebf1ef43a77dc25834c4}{%
+           family={Jacobson},
+           familyi={J\bibinitperiod},
+           given={Van},
+           giveni={V\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {San Diego, CA}%
+      }
+      \list{publisher}{1}{%
+        {USENIX Association}%
+      }
+      \strng{namehash}{b270b6a8cd38a5ed3467f69f7b582cf7}
+      \strng{fullhash}{b270b6a8cd38a5ed3467f69f7b582cf7}
+      \strng{fullhashraw}{b270b6a8cd38a5ed3467f69f7b582cf7}
+      \strng{bibnamehash}{b270b6a8cd38a5ed3467f69f7b582cf7}
+      \strng{authorbibnamehash}{b270b6a8cd38a5ed3467f69f7b582cf7}
+      \strng{authornamehash}{b270b6a8cd38a5ed3467f69f7b582cf7}
+      \strng{authorfullhash}{b270b6a8cd38a5ed3467f69f7b582cf7}
+      \strng{authorfullhashraw}{b270b6a8cd38a5ed3467f69f7b582cf7}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{USENIX Winter 1993 Conference (USENIX Winter 1993 Conference)}
+      \field{month}{1}
+      \field{title}{The {BSD} Packet Filter: A New Architecture for User-level Packet Capture}
+      \field{year}{1993}
+      \verb{urlraw}
+      \verb https://www.usenix.org/conference/usenix-winter-1993-conference/bsd-packet-filter-new-architecture-user-level-packet
+      \endverb
+      \verb{url}
+      \verb https://www.usenix.org/conference/usenix-winter-1993-conference/bsd-packet-filter-new-architecture-user-level-packet
+      \endverb
+    \endentry
+    \entry{Nishanth_Reddy_Pinnapareddy_2025}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=b758a5c0d60b0f54aad22c5324d73fbf}{%
+           family={Pinnapareddy},
+           familyi={P\bibinitperiod},
+           given={Nishanth\bibnamedelima Reddy},
+           giveni={N\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+      }
+      \strng{namehash}{b758a5c0d60b0f54aad22c5324d73fbf}
+      \strng{fullhash}{b758a5c0d60b0f54aad22c5324d73fbf}
+      \strng{fullhashraw}{b758a5c0d60b0f54aad22c5324d73fbf}
+      \strng{bibnamehash}{b758a5c0d60b0f54aad22c5324d73fbf}
+      \strng{authorbibnamehash}{b758a5c0d60b0f54aad22c5324d73fbf}
+      \strng{authornamehash}{b758a5c0d60b0f54aad22c5324d73fbf}
+      \strng{authorfullhash}{b758a5c0d60b0f54aad22c5324d73fbf}
+      \strng{authorfullhashraw}{b758a5c0d60b0f54aad22c5324d73fbf}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{25828185}
+      \field{journaltitle}{International Journal of Science and Research Archive}
+      \field{month}{5}
+      \field{number}{2}
+      \field{title}{eBPF for high-performance networking and security in cloud-native environments}
+      \field{volume}{15}
+      \field{year}{2025}
+      \field{pages}{207\bibrangedash 225}
+      \range{pages}{19}
+      \verb{doi}
+      \verb 10.30574/ijsra.2025.15.2.1264
+      \endverb
+    \endentry
+    \entry{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}{inproceedings}{}{}
+      \name{author}{7}{}{%
+        {{hash=f918b95823cd7dd0c793dde4457a786e}{%
+           family={Høiland-Jørgensen},
+           familyi={H\bibinithyphendelim J\bibinitperiod},
+           given={Toke},
+           giveni={T\bibinitperiod}}}%
+        {{hash=1be07b368033388bf45605b867f0ce29}{%
+           family={Brouer},
+           familyi={B\bibinitperiod},
+           given={Jesper\bibnamedelima Dangaard},
+           giveni={J\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=0ce2d728845862eee5eb0b059a81d9a2}{%
+           family={Borkmann},
+           familyi={B\bibinitperiod},
+           given={Daniel},
+           giveni={D\bibinitperiod}}}%
+        {{hash=729924cda56deb7790cbbc49f8d6464e}{%
+           family={Fastabend},
+           familyi={F\bibinitperiod},
+           given={John},
+           giveni={J\bibinitperiod}}}%
+        {{hash=2011f7f241523157cebd123627ee1a77}{%
+           family={Herbert},
+           familyi={H\bibinitperiod},
+           given={Tom},
+           giveni={T\bibinitperiod}}}%
+        {{hash=68f104384f06cee0552b9dc3cf1dabef}{%
+           family={Ahern},
+           familyi={A\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+        {{hash=32c8c5553ef956ab8a09231d5d2193ba}{%
+           family={Miller},
+           familyi={M\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \list{location}{1}{%
+        {Heraklion Greece}%
+      }
+      \list{publisher}{1}{%
+        {ACM}%
+      }
+      \strng{namehash}{2d2a033826eec97b47942cec5571eec9}
+      \strng{fullhash}{3466b1c6e83f04fe515d82fc73da3305}
+      \strng{fullhashraw}{3466b1c6e83f04fe515d82fc73da3305}
+      \strng{bibnamehash}{2d2a033826eec97b47942cec5571eec9}
+      \strng{authorbibnamehash}{2d2a033826eec97b47942cec5571eec9}
+      \strng{authornamehash}{2d2a033826eec97b47942cec5571eec9}
+      \strng{authorfullhash}{3466b1c6e83f04fe515d82fc73da3305}
+      \strng{authorfullhashraw}{3466b1c6e83f04fe515d82fc73da3305}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 14th International Conference on emerging Networking EXperiments and Technologies}
+      \field{isbn}{978-1-4503-6080-7}
+      \field{month}{12}
+      \field{title}{The eXpress data path: fast programmable packet processing in the operating system kernel}
+      \field{year}{2018}
+      \field{pages}{54\bibrangedash 66}
+      \range{pages}{13}
+      \verb{doi}
+      \verb 10.1145/3281411.3281443
+      \endverb
+      \verb{urlraw}
+      \verb https://dl.acm.org/doi/10.1145/3281411.3281443
+      \endverb
+      \verb{url}
+      \verb https://dl.acm.org/doi/10.1145/3281411.3281443
+      \endverb
+    \endentry
+    \entry{Vieira_Castanho_Pacífico_Santos_Júnior_Vieira_2021}{article}{}{}
+      \name{author}{6}{}{%
+        {{hash=ce4b394f56b70e52d391518770c6035a}{%
+           family={Vieira},
+           familyi={V\bibinitperiod},
+           given={Marcos\bibnamedelimb A.\bibnamedelimi M.},
+           giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=e800f9f14f120367d9a2ec3cafeba4d6}{%
+           family={Castanho},
+           familyi={C\bibinitperiod},
+           given={Matheus\bibnamedelima S.},
+           giveni={M\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=7ab04928fb5340737f717c8a8e9ed5e2}{%
+           family={Pacífico},
+           familyi={P\bibinitperiod},
+           given={Racyus\bibnamedelimb D.\bibnamedelimi G.},
+           giveni={R\bibinitperiod\bibinitdelim D\bibinitperiod\bibinitdelim G\bibinitperiod}}}%
+        {{hash=9bcc59d284cc2e9d61cca4b79db491ac}{%
+           family={Santos},
+           familyi={S\bibinitperiod},
+           given={Elerson\bibnamedelimb R.\bibnamedelimi S.},
+           giveni={E\bibinitperiod\bibinitdelim R\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=12acaee771461661f7614ec9c1da9a32}{%
+           family={Júnior},
+           familyi={J\bibinitperiod},
+           given={Eduardo\bibnamedelimb P.\bibnamedelimi M.\bibnamedelimi Câmara},
+           giveni={E\bibinitperiod\bibinitdelim P\bibinitperiod\bibinitdelim M\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=c659fce1fe8322f86fd484320f77b82d}{%
+           family={Vieira},
+           familyi={V\bibinitperiod},
+           given={Luiz\bibnamedelimb F.\bibnamedelimi M.},
+           giveni={L\bibinitperiod\bibinitdelim F\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \strng{namehash}{2b61493c695f4d495ef5423bfae7be46}
+      \strng{fullhash}{88b5d849b576c990340bd4ca48dd0b38}
+      \strng{fullhashraw}{88b5d849b576c990340bd4ca48dd0b38}
+      \strng{bibnamehash}{88b5d849b576c990340bd4ca48dd0b38}
+      \strng{authorbibnamehash}{88b5d849b576c990340bd4ca48dd0b38}
+      \strng{authornamehash}{2b61493c695f4d495ef5423bfae7be46}
+      \strng{authorfullhash}{88b5d849b576c990340bd4ca48dd0b38}
+      \strng{authorfullhashraw}{88b5d849b576c990340bd4ca48dd0b38}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{0360-0300, 1557-7341}
+      \field{journaltitle}{ACM Computing Surveys}
+      \field{month}{1}
+      \field{number}{1}
+      \field{title}{Fast Packet Processing with eBPF and XDP: Concepts, Code, Challenges, and Applications}
+      \field{volume}{53}
+      \field{year}{2021}
+      \field{pages}{1\bibrangedash 36}
+      \range{pages}{36}
+      \verb{doi}
+      \verb 10.1145/3371038
+      \endverb
+    \endentry
+    \entry{Zhang_Shu_Chen_Xie_2024}{inproceedings}{}{}
+      \name{author}{4}{}{%
+        {{hash=8346be56bc4c4c2248ba62db26a6c36e}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Xiaohang},
+           giveni={X\bibinitperiod}}}%
+        {{hash=4f38cb495d811393ac891ef9c6fd5da5}{%
+           family={Shu},
+           familyi={S\bibinitperiod},
+           given={Xinfeng},
+           giveni={X\bibinitperiod}}}%
+        {{hash=4000d0a1c1f244d0dd439be0e235bfa5}{%
+           family={Chen},
+           familyi={C\bibinitperiod},
+           given={Lijun},
+           giveni={L\bibinitperiod}}}%
+        {{hash=35427070eea3c65b50a92f619b2332bd}{%
+           family={Xie},
+           familyi={X\bibinitperiod},
+           given={Ruilian},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Guangzhou, China}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{25c144112604edd2a5b5c8fd4767eea2}
+      \strng{fullhash}{a89d0ff60350f84b5103cc5ec7f4d93d}
+      \strng{fullhashraw}{a89d0ff60350f84b5103cc5ec7f4d93d}
+      \strng{bibnamehash}{a89d0ff60350f84b5103cc5ec7f4d93d}
+      \strng{authorbibnamehash}{a89d0ff60350f84b5103cc5ec7f4d93d}
+      \strng{authornamehash}{25c144112604edd2a5b5c8fd4767eea2}
+      \strng{authorfullhash}{a89d0ff60350f84b5103cc5ec7f4d93d}
+      \strng{authorfullhashraw}{a89d0ff60350f84b5103cc5ec7f4d93d}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2024 20th International Conference on Natural Computation, Fuzzy Systems and Knowledge Discovery (ICNC-FSKD)}
+      \field{isbn}{979-8-3503-5632-8}
+      \field{title}{High-Performance Network Firewall Based on XDP}
+      \field{year}{2024}
+      \field{pages}{1\bibrangedash 6}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1109/ICNC-FSKD64080.2024.10702282
+      \endverb
+      \verb{urlraw}
+      \verb https://ieeexplore.ieee.org/document/10702282/
+      \endverb
+      \verb{url}
+      \verb https://ieeexplore.ieee.org/document/10702282/
+      \endverb
+    \endentry
+    \entry{Adrian_Durumeric_Singh_Halderman}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=916ddf9a8ba6f52e9a7ad3f20f364500}{%
+           family={Adrian},
+           familyi={A\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+        {{hash=daebddaacc5baf61c90307ca461e704b}{%
+           family={Durumeric},
+           familyi={D\bibinitperiod},
+           given={Zakir},
+           giveni={Z\bibinitperiod}}}%
+        {{hash=66d797958c73938534a91c6442d3ae6b}{%
+           family={Singh},
+           familyi={S\bibinitperiod},
+           given={Gulshan},
+           giveni={G\bibinitperiod}}}%
+        {{hash=6cba604de51e7ad2b27a90bc7f4ce019}{%
+           family={Halderman},
+           familyi={H\bibinitperiod},
+           given={J\bibnamedelima Alex},
+           giveni={J\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \strng{namehash}{aa92a70576575884f2d900bcac2657e7}
+      \strng{fullhash}{09d920ff73151960a4463a18139767fa}
+      \strng{fullhashraw}{09d920ff73151960a4463a18139767fa}
+      \strng{bibnamehash}{09d920ff73151960a4463a18139767fa}
+      \strng{authorbibnamehash}{09d920ff73151960a4463a18139767fa}
+      \strng{authornamehash}{aa92a70576575884f2d900bcac2657e7}
+      \strng{authorfullhash}{09d920ff73151960a4463a18139767fa}
+      \strng{authorfullhashraw}{09d920ff73151960a4463a18139767fa}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Zippier ZMap: Internet-Wide Scanning at 10 Gbps}
+    \endentry
+    \entry{Abu_Bakar_Kijsirikul_2023}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=b0397aa4657bbfe2bb9aede7b18895f7}{%
+           family={Abu\bibnamedelima Bakar},
+           familyi={A\bibinitperiod\bibinitdelim B\bibinitperiod},
+           given={Rana},
+           giveni={R\bibinitperiod}}}%
+        {{hash=e0201244c1a9718ed91d9bb14acc1e83}{%
+           family={Kijsirikul},
+           familyi={K\bibinitperiod},
+           given={Boonserm},
+           giveni={B\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \strng{namehash}{42f05a88b97b6e8aef94d225cd67d1a6}
+      \strng{fullhash}{42f05a88b97b6e8aef94d225cd67d1a6}
+      \strng{fullhashraw}{42f05a88b97b6e8aef94d225cd67d1a6}
+      \strng{bibnamehash}{42f05a88b97b6e8aef94d225cd67d1a6}
+      \strng{authorbibnamehash}{42f05a88b97b6e8aef94d225cd67d1a6}
+      \strng{authornamehash}{42f05a88b97b6e8aef94d225cd67d1a6}
+      \strng{authorfullhash}{42f05a88b97b6e8aef94d225cd67d1a6}
+      \strng{authorfullhashraw}{42f05a88b97b6e8aef94d225cd67d1a6}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{1424-8220}
+      \field{journaltitle}{Sensors}
+      \field{month}{8}
+      \field{number}{17}
+      \field{title}{Enhancing Network Visibility and Security with Advanced Port Scanning Techniques}
+      \field{volume}{23}
+      \field{year}{2023}
+      \field{pages}{7541}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.3390/s23177541
+      \endverb
+    \endentry
+  \enddatalist
+  \missing{Al-Boghdady_Wassif_El-Ramly_Al-Boghdady_Wassif_El-Ramly_2021}
+  \missing{Contiki-syslog}
+  \missing{Hersent:TheInternetOfThings}
+  \missing{Ludewig:SoftwareEngineering}
+  \missing{Ott2012}
+  \missing{RFC6550}
+  \missing{Vermesan:TheInternetOfThings}
+  \missing{dunkels11adhoc}
+  \missing{dunkels11contikimac}
+  \missing{ko11beyond}
+  \missing{tsiftes10rpl}
+  \missing{vasseur10interconnecting}
+  \missing{zigbee-ip}
+\endrefsection
+\endinput
+

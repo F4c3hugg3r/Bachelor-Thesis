@@ -1,0 +1,58 @@
+% !TEX root = ../Thesis.tex
+%%
+%%  Hochschule für Technik und Wirtschaft Berlin --  Abschlussarbeit
+%%
+%% Kapitel 4 - Konzeption und Implementierung
+%%
+%%
+
+\chapter{Methodik und Anforderungsanalyse} \label{Methodik}
+Dieses Kapitel definiert die funktionalen und nicht-funktionalen Anforderungen an den zu entwickelnden Portscanner, 
+beschreibt das gewählte Vorgehensmodell zur Umsetzung in Rust und legt das Untersuchungsdesign für die anschließende Evaluation fest.
+
+\section{Anforderungsanalyse}
+
+\subsection{Funktionale Anforderungen}
+-	Pakete versenden in hoher Geschwindigkeit mind. 5stellige pps
+-	Pakete empfangen in hoher Geschwindigkeit
+-	Stateless
+-	Pakete korrekt bauen und antworten korrekt interpretieren
+-	Mglw. RST senden
+
+\subsection{Nicht-funktionale Anforderungen}
+
+
+\section{Vorgehensmodell der Entwicklung}
+Für die Realisierung wird ein evaluationsgetriebener, prototypischer Ansatz gewählt. Aufgrund der Komplexität asynchroner 
+Netzwerkprogrammierung, sowie der Vielzahl möglicher Technologien, empfiehlt es sich, verschiedene Wege auszuprobieren. Dies
+hilft bei der Schaffung einer realistischen Vergleichsbasis zwischen den verschiedenen Technologien und bietet die Möglichkeit,
+Ausweichlösungen bei Problemen wie z.B. Performance-Engpässe zu finden oder die tatsächliche Notwendigkeit komplexer 
+Technologien zu validieren. Die Entwicklung teilt sich in 2 Hauptphasen:
+
+\begin{enumerate}
+    \item \textbf{Basisimplementierung:} In der Basisimplementierung wird ein vollumfänglicher SYN-Scanner implementiert.
+    Dies soll zum einen als \textit{Proof of Concept}, und zum anderen als erste Vergleichsgrundlage dienen. Für 
+    das Senden, werden bereits die Möglichkeit des Sendens mit AF\_PACKET oder AF\_XDP und jeweils auch in \textit{Batches}\footnote{Gruppen von Paketen}
+    oder Einzelpaketen implementiert. Für das Empfangen wird der \textit{Crate}\footnote{Bezeichnung für Bibliothek im Rust-Ökosystem} \textit{pcap} genutzt,
+    welcher das Empfangen von Paketen abstrahiert, allerdings nicht den Netzwerkstack des Linux-Kernels umgeht. 
+
+    Außerdem wird die für die nötige Struktur um die Komponenten zu vernetzen, sowie die Pakete korrekt zu erstellen
+    und verarbeiten implementiert, sodass das Programm am Ende einen funktionierenden SYN-Scan vollführen kann.
+    Zusätzlich wird auch hier schon auf die möglichst performante Umsetzung der gesamten Struktur, spezifischer
+    Umsetzungen und der Wahl von Crates Wert gelegt. 
+
+    \item \textbf{Optimierung des Empfangspfades durch Nutzung von eBPF:} Basierend auf den Messergebnissen der ersten Phase 
+    wird die Empfangskomponente hier grundsätzlich verändert, um eine hochperformante, sowie effizienten Paketempfang und
+    Paketauswertung zu gewährleisten. Dafür wird ein eBPF in Verbindung mit einem RingBuf zur Protokollierung in Verbindung
+    mit einem XDP Programm statt des pcap-Crates genutzt. maybe TODO "bla bla pcap kann ab gewisser Geschwindigkeit nicht mithalten
+    oder pcap ist zu ineffizient und/oder rst werden immer automatisch gesendet". Außerdem werden weitere, kleinere
+    Performanz-steigernde Maßnahmen addressiert.
+\end{enumerate}
+
+
+\section{Untersuchungsdesign}
+Hier müssen Sie definieren, wie Sie vergleichen.
+-	Definition der Metriken: Warum messen Sie pps? Warum RAM? Wie messen Sie CPU (User vs. System Time)?
+-	Definition der Testumgebung: (Hier nur theoretisch – z.B. "Isolierte Laborumgebung um Netzwerrauschen zu minimieren").
+
+

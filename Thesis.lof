@@ -1,10 +1,9 @@
 \babel@toc {ngerman}{}\relax 
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {2.1}{\ignorespaces Der TCP Three-Way-Handshake. Entscheidend für die Zuordnung ist, dass die \textit {Acknowledgment Number} im zweiten Schritt dem Wert der initialen \textit {Sequence Number} + 1 entspricht ($x+1$).}}{4}{figure.11}%
-\contentsline {figure}{\numberline {2.2}{\ignorespaces Aufbau des TCP-Headers (ohne Nutzdaten). Für SYN-Scans sind insbesondere die \textit {Control Bits} (z.\,B. SYN, RST, ACK) relevant.}}{5}{figure.12}%
-\contentsline {figure}{\numberline {2.3}{\ignorespaces Aufbau eines drahtlosen Sensornetzwerkes}}{9}{figure.23}%
-\contentsline {figure}{\numberline {2.4}{\ignorespaces Die Internet-of-Things Vision \blx@tocontentsinit {0}\cite [Figure 1.2]{Bormann:6LoWPAN}}}{11}{figure.26}%
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Three-Way-Handshake zum Aufbau einer TCP-Verbindung \blx@tocontentsinit {0}\cite {Wendzel_2021}.}}{4}{figure.12}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Aufbau des TCP-Headers nach RFC 9293 \blx@tocontentsinit {0}\cite {Eddy_2022}.}}{5}{figure.13}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Der Empfangspfad durch den Kernel bei der Nutzung von XDP und eBPF. Orientiert an Høiland et al. \blx@tocontentsinit {0}\cite {Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}.}}{9}{figure.23}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

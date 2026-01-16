@@ -12,12 +12,12 @@
 
 Netzwerkscanning macht einen großen Teil des Internet Traffics im IPv4 Adressraumes aus. So ist 98 Prozent des gesamten TCP Verkehrs weltweit auf SYN-Scans zurückzuführen \cite{griffioen2024have}. 
 Bekannte Tools wie Zmap werden stetig weiterentwickelt \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024} und sind seit der Entwicklung von performanten Open-Source Scannern wie Zmap oder Masscan \cite{Durumeric_Wustrow_Halderman}\cite{Graham_2026} dazu fähig,
-den gesamten IPv4 Addressraum in unter einer Stunde zu scannen. Das Scannen von Netzwerken nach offenen Ports ermöglicht es Organisationen Schwachstellen ausfindig zu machen, 
+den gesamten IPv4 Addressraum in weniger als 45min zu scannen. Das Scannen von Netzwerken nach offenen Ports ermöglicht es Organisationen Schwachstellen ausfindig zu machen, 
 bevor Angreifer es tun. Außerdem lassen sich durch das breitflächige Scannen von ausgewählten Addressräumen oder dem gesamten IPv4 Raum Informationen über Trends und Veränderungen 
 dieser ableiten. Cyberangriffe haben Auswirkungen auf den Ruf und die finanzielle Stabilität von Unternehmen \cite{Rudnev_Zolkin_Artemyev_Tychkov_2024}. Die gegenwärtig hohen Angriffszahlen zum Beispiel bei Denial-of-Service Angriffen \cite{Falowo_Okpala_Kojo_Azumah_Li_2023} unterstreichen die Wichtigkeit.
 
-Bisherige hochleistungsscanner wie die soeben genannten, wurden überwiegend in C entwickelt \cite{Durumeric_Wustrow_Halderman}\cite{Graham_2026}\cite{Li_2026}. C ist häufig die Standard Wahl für maschinennahe Anwendungen, da sie zum Einen ein 
-niedriges Level an Abstraktion und zum Anderen hoch performant sein kann [TODO]. Allerdings ist C anfällig für menschengemachte Fehler \cite{Al-Boghdady_Wassif_El-Ramly_Al-Boghdady_Wassif_El-Ramly_2021} wie ..TODO.. [TODO], von welchen
+Bisherige hochleistungsscanner wie die soeben genannten, wurden überwiegend in C entwickelt \cite{Durumeric_Wustrow_Halderman}\cite{Graham_2026}\cite{Li_2026}\cite{Li_Zhang_Guo_Bao_Xu_Hu_Li_2022}. C ist häufig die Standard Wahl für maschinennahe Anwendungen, da sie zum Einen ein 
+niedriges Level an Abstraktion und zum Anderen hoch performant sein kann [TODO]. Allerdings ist C anfällig für menschengemachte Fehler \cite{Al_Boghdady_Wassif_El_Ramly_2021} wie ..TODO.. [TODO], von welchen
 die meisten sicherheitsrelevanten aus der Fraktion der Speicherverwaltung stammen \cite{bugden2022safety}. Andere Sprachen wie Go oder Python lösen einige dieser Probleme durch die Nutzung einer 
 automatischen Speicherverwaltung [TODO]. Diese Sprachen sind allerdings im Vergleich zu Sprachen wie C weniger Performant \cite{bugden2022safety}. 
 
@@ -40,7 +40,16 @@ mit einer repräsentativen Auswahl an bestehenden Scannern verglichen und die Er
 Es ergibt sich folgende Forschungsfrage: Inwieweit kann ein in Rust implementierter asynchroner SYN-Scanner hinsichtlich des Durchsatzes und der Ressourceneffizienz mit etablierten Hochleistungsscannern konkurrieren und durch spracheigene Sicherheitsgarantien eine tragfähige Alternative für den produktiven Einsatz darstellen?
 
 
+\section{Abgrenzung des Themas} \label{Abgrenzung}
+TODO gut begründen (laut Bewertungsmaßstab)
 
+Bei der in dieser Arbeit entwickelten Implementierung handelt es sich um einen horizontalen Scanner \ref{Grundlagen}.
+Anders als beispielsweise beim regulären SYN-Scan des Tools NMap \cite{Lyon_2010}, welcher in der Regel vertikal erfolgt.
+
+Mechanismen zur Erkennungsvermeidung des Scans werden in dieser Implementierung nur rudimentär behandelt, da der Fokus
+klar auf der Performance und Ressourceneffizienz liegt. 
+
+Außerdem beschränkt sich diese Arbeit auf den IPv4 Adressraum, da dies genügt, um der Forschungsfrage nachzugehen.
 
 
 

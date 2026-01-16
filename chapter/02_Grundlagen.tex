@@ -7,7 +7,7 @@
 %%
 
 
-\chapter{Theoretische Grundlagen und Forschungsstand} \label{Grundlagen}
+\chapter{Theoretische Grundlagen} \label{Grundlagen}
 
 In diesem Kapitel werden die nötigen Grundlagen zum Verständnis des Portscanning in Form von SYN-Scans, sowie 
 das nötige Wissen über Netzwerkkommunikation, die genutzten Technologien und Linux-Schnittstellen vermittelt.
@@ -22,19 +22,21 @@ Bei der Kommunikation in TCP/IP \footnote{Eine grundlegende Kenntnis über das T
 Adressierung der spezifischen Anwendungen durch sogenannte Ports bzw. der sogenannten Portnummer bestimmt wird \cite{Lyon_2010} (TODO SEITE?). 
 Die Portnummer ist ein 16-Bit-Wert und kann somit zwischen jeweils einschließlich 0 und 65535 liegen [Computernetzwerke S107]. Einige Portnummern
 sind fest vergeben oder für bestimmte Anwendungen registriert \cite{IANA_Port_Registry}, was es ermöglicht, gezielt nach bestimmten Anwendungen zu scannen.
+Der gesamte Kommunikations-Endpunkt wird Socket genannt. TODO cite [Computernetzwerke S108]. 
 
 \subsection{Ports}
 Ports können in verschiedene Zustände eingeordnet werden. Für diese Arbeit ist nur die Unterscheidung zwischen offen und geschlossen/gefiltert relevant.
 
-Offen: Eine Anwendung lauscht auf dem Port und akzeptiert eingehende valide TCP oder UDP Anfragen \cite{Lyon_2010}.
-Geschlossen / Gefiltert: Der mit dem Port verbundene Service ist zwar ansprechbar, aber akzeptiert keine eingehenden Verbindungen / 
-Es gibt lediglich eine ICMP (Fehler) Antwort oder gar keine, da beispielsweise kein Service für diesen Port
-existiert \cite{Lyon_2010}.
+\begin{itemize} 
+	\itemsep 0pt
+	\item \textbf{Offen:} Eine Anwendung lauscht auf dem Port und akzeptiert eingehende valide 
+	TCP oder UDP Anfragen \cite{Lyon_2010}.
+	\item \textbf{Geschlossen / Gefiltert:} Der mit dem Port verbundene Service ist zwar ansprechbar, aber akzeptiert keine eingehenden Verbindungen / 
+	Es gibt lediglich eine ICMP (Fehler) Antwort oder gar keine, da beispielsweise kein Service für diesen Port
+	existiert \cite{Lyon_2010}.
+\end{itemize}
 
-Ein IP-Port Paar z.B. 192.178.0.42:8080 wird Socket bzw. Socket Paar genannt. 
 
-mglw. Irrelevant: Ein Verbindung zweier Rechner über einen spezifischen Dienst ist durch die beiden
-Socket Paare eindeutig identifizierbar [Computernetzwerke S108]. 
 
 \subsection{Transmission Control Protocol (TCP)}
 Das Transmission Control Protocol operiert in der Transportschicht des TCP/IP Modells und ist eines der meistgenutzten
@@ -43,30 +45,76 @@ Datenübertragung zwischen den Prozessen der Hosts. Die ursprüngliche Spezifika
 welches durch RFC 9293 \cite{Eddy_2022} konsolidiert wurde. Für die Entwicklung eines SYN-Portscanners sind insbesondere
 der Aufbau des TCP-Headers und der Mechanismus des Verbindungsaufbaues entscheidend. 
 
-
-Da das TCP Protokoll Daten 
-als Datenstrom (Stream) statt einzeln (Message) versendet, wird vorher eine Verbindung in einem sogenannten 
-\textit{Three-Way-Handshake} aufgebaut \cite{Wendzel_2021} S71/72. Bei diesem werden TCP Pakete mit jeweils unterschiedlichen
-Werten in den \textit{Control Bits (Flags)} des TCP-Headers nach folgendem Muster ausgetauscht:
-
 \begin{figure}[htbp]
-	\centering
-	\begin{tikzpicture}[font=\small]
-		\node[align=center] (c) at (0,0) {Client\\(Scanner)};
-		\node[align=center] (s) at (9,0) {Server\\(Target)};
+    \centering
+    \begin{tikzpicture}[
+        >=latex, 
+        font=\small,
+        node distance=1cm,
+        every node/.style={align=center}
+    ]
 
-		\draw (c.south) ++(0,-0.2) -- ++(0,-4.2);
-		\draw (s.south) ++(0,-0.2) -- ++(0,-4.2);
+        % --- Koordinaten-Definition ---
+        % X-Positionen der Linien
+        \def\clientx{0}
+        \def\serverx{8}
+        
+        % Y-Positionen der Ereignisse
+        \def\yStart{0}
+        \def\yListen{-0.5}
+        \def\yConnect{-2}
+        \def\ySynSend{-2.5}
+        \def\ySynRecv{-3.5}
+        \def\ySynAckSend{-4.5}
+        \def\ySynAckRecv{-5.5}
+        \def\yAckSend{-6.5}
+        \def\yAckRecv{-7.5}
+        \def\yEnd{-8.5}
 
-		\draw[->] (0,-1.0) -- node[above] {SYN, $\mathit{seq}=x$} node[below, font=\footnotesize, text=gray] {Verbindungsanfrage} (9,-1.0);
-		\draw[->] (9,-2.0) -- node[above] {SYN/ACK, $\mathit{seq}=y,\; \mathit{ack}=x+1$} node[below, font=\footnotesize, text=gray] {Bestätigung \& Gegenanfrage} (0,-2.0);
-		\draw[->] (0,-3.0) -- node[above] {ACK, $\mathit{seq}=x+1,\; \mathit{ack}=y+1$} node[below, font=\footnotesize, text=gray] {Verbindung steht} (9,-3.0);
+        % --- Vertikale Linien (Timelines) ---
+        \draw[thick] (\clientx, \yStart) -- (\clientx, \yEnd);
+        \draw[thick] (\serverx, \yStart) -- (\serverx, \yEnd);
 
-		\draw[rounded corners, fill=green!10, draw=green!40!black] (0,-3.65) rectangle (9,-4.15);
-		\node[align=center, font=\footnotesize] at (4.5,-3.9) {ESTABLISHED\\Socket-Verbindung etabliert};
-	\end{tikzpicture}
-	\caption{Der TCP Three-Way-Handshake. Entscheidend für die Zuordnung ist, dass die \textit{Acknowledgment Number} im zweiten Schritt dem Wert der initialen \textit{Sequence Number} + 1 entspricht ($x+1$).}
-	\label{fig:handshake_detail}
+        % --- Header ---
+        \node[font=\bfseries] at (\clientx, 0.5) {Client};
+        \node[font=\bfseries] at (\serverx, 0.5) {Server};
+
+        % --- SERVER SEITE (Rechts) ---
+        % LISTEN Zustand
+        \node[anchor=west] at (\serverx+0.2, \yListen) {<LAUSCHEN>};
+
+        % SYN_RECV Zustand
+        \node[anchor=west] at (\serverx+0.2, \ySynAckSend) {<SYN\_EMPFANGEN>};
+        
+        % ESTABLISHED Zustand
+        \node[anchor=west] at (\serverx+0.2, \yAckRecv) {<VERBUNDEN>};
+
+
+        % --- CLIENT SEITE (Links) ---
+        % SYN_SENT Zustand
+        \node[anchor=east] at (\clientx-0.2, \ySynSend) {<SYN\_GESENDET>};
+
+        % ESTABLISHED Zustand
+        \node[anchor=east] at (\clientx-0.2, \yAckSend) {<VERBUNDEN>};
+
+
+        % --- NACHRICHTEN (Pfeile) ---
+        
+        % 1. SYN M
+        \draw[->, thick] (\clientx, \ySynSend) -- (\serverx, \ySynRecv) 
+            node[midway, above, sloped] {SYN $M$};
+
+        % 2. SYN N, ACK M+1
+        \draw[->, thick] (\serverx, \ySynAckSend) -- (\clientx, \ySynAckRecv) 
+            node[midway, above, sloped] {SYN $N$, ACK $M+1$};
+
+        % 3. ACK N+1
+        \draw[->, thick] (\clientx, \yAckSend) -- (\serverx, \yAckRecv) 
+            node[midway, above, sloped] {ACK $N+1$};
+
+    \end{tikzpicture}
+    \caption{Three-Way-Handshake zum Aufbau einer TCP-Verbindung \cite{Wendzel_2021}.}
+    \label{fig:tcp_handshake}
 \end{figure}
 
 Da das TCP Protokoll Daten als Datenstrom (Stream) statt einzeln (Message) versendet, 
@@ -75,39 +123,53 @@ Bei diesem werden TCP Pakete mit jeweils unterschiedlichen Werten in den \textit
 des TCP-Headers nach folgendem Muster ausgetauscht:
 
 \begin{figure}[htbp]
-	\centering
-	\begin{tikzpicture}[x=0.23cm, y=0.85cm, every node/.style={font=\scriptsize, align=center}]
-		% Bit indices
-		\node[anchor=south] at (0,6.15) {0};
-		\node[anchor=south] at (16,6.15) {16};
-		\node[anchor=south] at (32,6.15) {31};
-		\node[anchor=south] at (15,6.15) {15};
+    \centering
+    % Skalierung vergrößert (x für Breite, y für Höhe der Zeilen)
+    \begin{tikzpicture}[x=0.45cm, y=1.1cm, every node/.style={font=\scriptsize, align=center}]
+        % Bit indices - 10 entfernt
+        \node[anchor=south] at (0,6.15) {0};
+        \node[anchor=south] at (16,6.15) {16};
+        \node[anchor=south] at (32,6.15) {31};
 
-		% Row 1
-		\draw (0,6) rectangle (16,5) node[midway] {Source Port};
-		\draw (16,6) rectangle (32,5) node[midway] {Destination Port};
+        % Row 1: Source / Destination Port
+        \draw (0,6) rectangle (16,5) node[midway] {Source Port};
+        \draw (16,6) rectangle (32,5) node[midway] {Destination Port};
 
-		% Row 2
-		\draw (0,5) rectangle (32,4) node[midway] {Sequence Number};
+        % Row 2: Sequence Number
+        \draw (0,5) rectangle (32,4) node[midway] {Sequence Number};
 
-		% Row 3
-		\draw (0,4) rectangle (32,3) node[midway] {Acknowledgment Number};
+        % Row 3: Acknowledgment Number
+        \draw (0,4) rectangle (32,3) node[midway] {Acknowledgment Number};
 
-		% Row 4
-		\draw (0,3) rectangle (4,2) node[midway] {Data\\Offset};
-		\draw (4,3) rectangle (7,2) node[midway] {Res.};
-		\draw (7,3) rectangle (16,2) node[midway] {Control Bits\\(Flags)};
-		\draw (16,3) rectangle (32,2) node[midway] {Window Size};
+        % Row 4: Offset, Reserved, Flags, Window
+        % Data Offset (4 Bits: 0-3)
+        \draw (0,3) rectangle (4,2) node[midway] {Data\\Offset};
+        
+        % Reserved (4 Bits: 4-7) - "Rsrvd" wie in Vorlage
+        \draw (4,3) rectangle (8,2) node[midway] {Reserved};
 
-		% Row 5
-		\draw (0,2) rectangle (16,1) node[midway] {Checksum};
-		\draw (16,2) rectangle (32,1) node[midway] {Urgent Pointer};
+        % Flags (8 Bits: 8-15) - Einzelne Kästchen mit tiny Schrift gestapelt
+        \draw (8,3) rectangle (9,2) node[midway, font=\tiny, inner sep=0pt] {C\\W\\R};
+        \draw (9,3) rectangle (10,2) node[midway, font=\tiny, inner sep=0pt] {E\\C\\E};
+        \draw (10,3) rectangle (11,2) node[midway, font=\tiny, inner sep=0pt] {U\\R\\G};
+        \draw (11,3) rectangle (12,2) node[midway, font=\tiny, inner sep=0pt] {A\\C\\K};
+        \draw (12,3) rectangle (13,2) node[midway, font=\tiny, inner sep=0pt] {P\\S\\H};
+        \draw (13,3) rectangle (14,2) node[midway, font=\tiny, inner sep=0pt] {R\\S\\T};
+        \draw (14,3) rectangle (15,2) node[midway, font=\tiny, inner sep=0pt] {S\\Y\\N};
+        \draw (15,3) rectangle (16,2) node[midway, font=\tiny, inner sep=0pt] {F\\I\\N};
 
-		% Row 6
-		\draw (0,1) rectangle (32,0) node[midway] {Options / Padding};
-	\end{tikzpicture}
-	\caption{Aufbau des TCP-Headers (ohne Nutzdaten). Für SYN-Scans sind insbesondere die \textit{Control Bits} (z.\,B. SYN, RST, ACK) relevant.}
-	\label{fig:tcp_header}
+        % Window (16 Bits: 16-31)
+        \draw (16,3) rectangle (32,2) node[midway] {Window};
+
+        % Row 5: Checksum, Urgent Pointer
+        \draw (0,2) rectangle (16,1) node[midway] {Checksum};
+        \draw (16,2) rectangle (32,1) node[midway] {Urgent Pointer};
+
+        % Row 6: Options / Padding
+        \draw (0,1) rectangle (32,0) node[midway] {Options / Padding};
+    \end{tikzpicture}
+    \caption{Aufbau des TCP-Headers nach RFC 9293 \cite{Eddy_2022}.}
+    \label{fig:tcp_header}
 \end{figure}
 
 
@@ -118,11 +180,14 @@ zieht anhand der Antworten, oder auch ausbleibenden Antworten, Rückschlüsse au
 von offenen Ports bzw. aktiven Diensten, was als erster Schritt für weiterführende Sicherheitsanalysen oder aber auch Angriffe dienen kann. [TODO NIST S4-3] 
 
 Beim Scannen von Ports können grundsätzlich zwei strategische Ausrichtungen unterschieden werden:
-- Vertikales Scannen: Hierbei wird ein einzelner Ziel-Host (TODO Host erklären) auf eine Vielzahl von Ports (oft alle 65535) gescannt, um ein möglichst
+\begin{itemize} 
+	\itemsep 0pt
+	\item \textbf{Vertikales Scannen:} Hierbei wird ein einzelner Ziel-Host (TODO Host erklären) auf eine Vielzahl von Ports (oft alle 65535) gescannt, um ein möglichst
 vollständiges Profil möglicher Schwachstellen des Zielsystemes zu erlangen und somit eher für das Penetrationtesting geeignet ist.
-- Horizontales Scannen: Ein sehr großer Addressbereich, beispielsweise das komplette IPv4-Internet wird gescannt. Dafür ist die Anzahl
+\item \textbf{Horizontales Scannen:} Ein sehr großer Addressbereich, beispielsweise das komplette IPv4-Internet wird gescannt. Dafür ist die Anzahl
 der zu scannenden Ports sehr klein oder auf einen einzigen beschränkt. Dies bietet die Möglichkeit wertvolle Daten über Trends oder
 die Verbreitung von Schwachstellen zu untersuchen \cite{Durumeric_Wustrow_Halderman}.
+\end{itemize} 
 
 \subsection{SYN-Scanning}
 Für einen \textit{half-open} SYN-Scan wie er in dieser Arbeit behandelt wird, sind lediglich die ersten beiden Schritte des Verbindungsablaufes
@@ -130,9 +195,8 @@ relevant. Es wird davon gebraucht gemacht, dass bereits und ausschließlich eine
 was den weiteren Verbindungsaufbau irrelevant macht \cite{Lyon_2010}. Um den Scan zu verschleiern und den Verbindungsversuch trotz dessen sauber
 abzuschießen, kann anschließend noch ein Paket, bei welchem die RST Flag der Control Bits gesetzt ist gesendet werden \cite{Lyon_2010}.
 
-Um antwortende Hosts effizient zu identifizieren, wird das Prinzip des SYN-Cookies adaptiert, welches ursprünglich als 
-Abwehrmechanismus gegen Denial-of-Service-Angriffe spezifiziert wurde \cite[S. 8]{Eddy_2007}. Dieses Verfahren bietet den Vorteil, 
-dass der Scanner keinen Zustand für die versendeten Pakete im Arbeitsspeicher halten muss. Stattdessen werden verbindungsspezifische 
+Um antwortende Hosts effizient zu identifizieren, wird das Prinzip des SYN-Cookies adaptiert \cite{Durumeric_Wustrow_Halderman}, welches ursprünglich als 
+Abwehrmechanismus gegen Denial-of-Service-Angriffe spezifiziert wurde \cite[S. 8]{Eddy_2007}. Dafür werden verbindungsspezifische 
 Informationen unter Verwendung eines Hash-Algorithmus (z. B. keyed SipHash) kodiert 
 und als \textit{Sequence Number} in den TCP-Header des ausgehenden SYN-Pakets eingetragen.
 Antwortet ein Ziel-Host mit einem SYN-ACK-Paket, so enthält dessen Acknowledgment Number gemäß TCP-Spezifikation den inkrementierten 
@@ -140,10 +204,14 @@ Wert der ursprünglichen \textit{Sequence Number}. Die Validierung lässt sich a
 
 \begin{verbatim}is_valid = hash(value_0, value_1, ..., secret) == answer.ack_num - 1\end{verbatim}
 
+Da die Validierung einer Antwort somit rein mathematisch erfolgt und keine Speicherung in - oder Zugriff auf eine lokale Zustandstabelle benötigt, 
+wird eine sowohl zeitliche als auch logische Entkopplung von Sende- und Empfangsprozessen erwirkt, was wiederum eine asynchrone 
+Architektur ermöglicht. 
+
 Entscheidend für den Scanner sind also folgende Header Felder: 
 
 \begin{table}[htbp]
-\caption{TCP Header Felder}
+\caption{Relevante TCP Header Felder}
 \resizebox{\textwidth}{!}{
 \begin{tabular}{|c|c|}\hline
 \textbf{Header Feld} & \textbf{Beschreibung} \\ \hline
@@ -163,7 +231,8 @@ geeignet und zum anderen hohe Sende- und Empfangsraten zulassen, während mögli
 Rechenressourcen verbraucht werden. 
 
 \subsection{Linux}
-Linux ist ein Open-Source Betriebssystem-Kernel, welcher aufgrund neuartiger Subsysteme (wie eBPF [später] und XDP [später]), eine 
+Linux ist ein Open-Source Betriebssystem-Kernel, welcher aufgrund neuartiger Subsysteme (wie beispielsweise eBPF (siehe \ref{Grundlagen.eBPF}) oder
+ XDP (siehe \ref{Grundlagen.XDP})), eine 
 programmierbare Paketverarbeitung nahe an der Hardware ermöglicht \cite{Kerrisk_2018}. Dies ist für die Entwicklung eines Hochleistungs-Scanners
 von großem Vorteil.
 
@@ -172,9 +241,10 @@ zwischen \textit{User Space} und \textit{Kernel Space} \cite{Kerrisk_2018} S23:
 
 \begin{itemize} 
 	\itemsep 0pt
-	\item \textbf{Kernel Space:} Hier läuft der Kern des Betriebssystems (Ring 0) mit vollem Zugriff 
+	\item \textbf{Kernel Space:} Hier läuft der Kern des Betriebssystems mit vollem Zugriff 
 	auf die Hardware und den Speicher. Treiber und der Netzwerk-Stack operieren auf dieser Ebene. 
-	\item \textbf{User Space:} Hier laufen reguläre Anwendungen (Ring 3) in isolierten Speicherbereichen. 
+	\item \textbf{User Space:} Hier laufen reguläre Anwendungen in isolierten Speicherbereichen. 
+	Diese haben keinen direkten Zugriff auf den Kernel Space. 
 \end{itemize} 
 Die Kommunikation zwischen diesen Ebenen erfolgt über \textit{System Calls}. Jeder Wechsel (\textit{Context Switch}) 
 zwischen User und Kernel Space, sowie das Kopieren von Daten zwischen diesen 
@@ -189,7 +259,7 @@ dabei vollständig den \textit{Three-Way-Handshake} und das Zustandsverwaltung [
 Für einen SYN-Scanner ist dies ungeeignet, da der Scanner lediglich das initiale SYN-Paket senden und die Antwort 
 registrieren will, ohne eine vollwertige Verbindung aufzubauen, welche Ressourcen im Kernel binden würde.
 
-RAW Sockets erlauben der Anwendung, Netzwerkpakete unter Umgehung bestimmter Layer des Kernel-Stacks zu senden 
+RAW-Sockets erlauben der Anwendung, Netzwerkpakete unter Umgehung bestimmter Layer des Kernel-Stacks zu senden 
 und zu empfangen \cite{raw7_linux_manpage}. Der Entwickler muss die Protokoll-Header selbst konstruieren. 
 Dies ist für half-open Port-Scanner essenziell, um individuelle Pakete zu generieren, ohne dass der Kernel 
 automatisch in den Verbindungsaufbau eingreift. 
@@ -202,14 +272,12 @@ Hier ein paar Beispiele: TODO Besser formulieren
 	Auch das Routing wird (TODO vollständig?) durch den Kernel vorgenommen. 
  	\item \textbf{AF\_PACKET (Performant):} Diese Familie ermöglicht direkten Zugriff auf Layer 2 (Ethernet-Ebene). 
 	Anwendungen können rohe Ethernet-Frames lesen und schreiben. Dies bietet die vollständige Kontrolle
-	über die Paketerstellung. TODO wie weit durch Kernel geschickt? 
+	über die Paketerstellung. TODO wie weit durch Kernel geschickt? Was ist mit V1/V2/V3?
 	\item \textbf{AF\_XDP (Sehr Performant):} Hierbei handelt es sich um eine für Hochleistungspaketverarbeitung optimierte Address-Familie. 
 	Sie ermöglicht das Senden und Empfangen von Paketen unter fast vollständiger Umgehung des Kernel-Stacks. 
 \end{itemize}
 
-(TOOD -> Abbildung Netzwerkstack bzw Paketverlauf)
-
-\subsection{Erweiterte Berkley Packet Filter (eBPF)}
+\subsection{Erweiterte Berkley Packet Filter (eBPF)} \label{Grundlagen.eBPF}
 Ursprünglich als \textit{Berkeley Packet Filter} (BPF) für Werkzeuge wie tcpdump entwickelt, um Pakete effizient zu filtern \cite{260309}, 
 wurde die Technologie zum erweitert, sodass grundlegend neue Möglichkeiten erschlossen wurden. 
 
@@ -220,14 +288,16 @@ durch einen JIT-Compiler (Just-In-Time) in native Maschinensprache übersetzt. E
 vor der Ausführung sicher, dass der Code sicher ist TODO cite. 
 So werden Fehler wie beispielsweise Endlosschleifen oder falsche Speicherzugriffe vermieden.
 
+TODO bpf Maps und RingBuf erklären!!!
+
 Für einen SYN-Scanner ist eBPF nützlich, da es ermöglicht, eingehende Antwortpakete (SYN-ACK) extrem früh 
 zu filtern und an den User Space weiterzuleiten, bevor teure Speicherstrukturen des Kernels angelegt werden. 
 So werden nur relevante Daten an den User Space weitergereicht. 
 
-\subsection{eXpress Data Path (XDP)} 
+\subsection{eXpress Data Path (XDP)} \label{Grundlagen.XDP}
 XDP definiert eine limitierte Ausführungsumgebung für eBPF-Programme, die direkt im Kontext des 
 Netzwerktreibers ausgeführt werden.
-Dies ermöglicht eine programmierbare Hochleistungspaketverarbeitung direkt im Betriebssystemkern. 
+Dies ermöglicht eine programmierbare und hochperformante Paketverarbeitung direkt im Betriebssystemkern. 
 Im Gegensatz zu früheren Ansätzen, die den Kernel vollständig umgehen (z.B. DPDK), 
 integriert sich XDP kooperativ in den bestehenden Stack \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}. 
 
@@ -236,15 +306,19 @@ Ein XDP-Programm kann Pakete verwerfen (XDP\_DROP), an den regulären Netzwerkst
 umleiten (XDP\_REDIRECT) \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}\cite{Vieira_Castanho_Pacífico_Santos_Júnior_Vieira_2021}.
 
 Die Effizienz von XDP resultiert aus der Positionierung im Datenpfad. In herkömmlichen 
-Linux-Netzwerkarchitekturen durchläuft ein Paket nach dem Empfang durch die Netzwerkkarte (NIC) den 
+Linux-Netzwerkarchitekturen durchläuft ein Paket nach dem Empfang durch die Netzwerkkarte den 
 gesamten Netzwerk-Stack. Erst danach erreichen die Daten den User Space. Dies erfordert CPU und Speicher-
 aufwendige Kontextwechsel (Context Switches) zwischen Kernel- und User-Mode, sowie die Allokation 
-komplexer Metadatenstrukturen (sk\_buff) (TODO siehe Abbildung vorher) \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}\cite{Zhang_Shu_Chen_Xie_2024}.
-
-XDP greift vor dieser Allokation ein (TODO siehe Abbildung). Tests zeigen, dass XDP auf einem einzelnen CPU-Kern bis zu 
+komplexer Metadatenstrukturen (sk\_buff) \footnote{Socket Buffer} \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}\cite{Zhang_Shu_Chen_Xie_2024}.
+XDP greift vor dieser Allokation ein (siehe Abbildung \ref{fig:rx_xdp}). Tests zeigen, dass XDP auf einem einzelnen CPU-Kern bis zu 
 fünfmal mehr Pakete pro Sekunde verarbeiten kann als der Standard Linux-Stack \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}.
 
--> Abbbildung XDP einfügen
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{pictures/RX_Kernel_hell_3.drawio.png}
+	\caption{Der Empfangspfad durch den Kernel bei der Nutzung von XDP und eBPF. Orientiert an Høiland et al. \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}.}
+	\label{fig:rx_xdp}
+\end{figure}
 
 Die Performance und Verfügbarkeit von XDP hängen vom verwendeten Betriebsmodus ab. 
 Nach Zhang et al. \cite{Zhang_Shu_Chen_Xie_2024} und Vieira et al. \cite{Vieira_Castanho_Pacífico_Santos_Júnior_Vieira_2021} 
@@ -266,100 +340,92 @@ lassen sich drei Modi unterscheiden:
 	Trotzdem profitiert es von effizienteren, sperrfreien Ring-Buffer-Strukturen (<- TODO bessere Argumente)
 \end{itemize}
 
+\section{Rust}
+Rust ist eine multiparadigmatische Systemprogrammiersprache, die ursprünglich von Mozilla Research entwickelt wurde.
+Der Hauptfokus der Sprache ist die Sicherheit. Doch auch Performance und Nebenläufigkeit sind immer weiter in 
+den Fokus gerückt \cite{Bugden_Alahmar_2022}. Dabei schafft es Rust als erste Sprache
+Speichersicherheits-Konzepte von Sprachen hoher Abstraktionsebene mit der Entscheidungsfreiheit 
+über die Ressourcenverwaltung von Sprachen niedriger 
+Abstraktionsebene zu vereinen \cite{Jung_Jourdan_Krebbers_Dreyer_2021}.
 
-\section{Abgrenzung des Themas} \label{Abgrenzung}
+\subsection{Konzepte und Besonderheiten}
+Sprachen hoher Abstraktionsebene bedienen sich häufig einer automatisierten Speicherverwaltung mithilfe eines 
+\textit{Garbage Collectors}, um Speicherfehler, welche das Sicherheitsniveau einer Sprache maßgeblich 
+bestimmen \cite{bugden2022safety}, zu vermeiden. Rust hingegen nutzt ein einzigartiges Modell, welches 
+durch drei zentrale Konzepte bestimmt wird:
 
-. Außerdem ist es das Ziel, horizontal (TODO siehe nächstes Kapitel) zu scannen. Anders als 
-beispielsweise der reguläre SYN-Scan des Tools NMap \cite{Lyon_2010}, welcher in der Regel vertikal erfolgt.
-
-Mechanismen zur Erkennungsvermeidung des Scans werden in dieser Implementierung nur rudimentär behandelt, da der Fokus
-klar auf der Performance und Ressourceneffizienz der Anwendung liegt. 
-Außerdem beschränkt sich diese Arbeit auf den IPv4 Addressraum, da dies genügt, um der Forschungsfrage nachzugehen.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-%%
-%% Alt
-%%
-
-\begin{table}[htbp]
-\caption{OSI-7-Schichtenmodell}
-\resizebox{\textwidth}{!}{
-\begin{tabular}{|c|c|c|c|c|}\hline
-  \multicolumn{3}{|c|}{\textbf{Schicht}} & \textbf{Beispielprotokoll} & \textbf{TCP/IP-Modell} \\ \hline
-  7 & Anwendungsschicht & Application Layer & \multirow{3}{*}{HTTP, FTP, SNMP} & \multirow{3}{*}{Application Layer} \\ \cline{1-3}
-  6 & Darstellungsschicht & Presentation Layer & & \\ \cline{1-3}
-  5 & Sitzungsschicht & Session Layer & & \\ \hline
-  4 & Transportschicht & Transport Layer & TCP, UDP & Transport Layer \\ \hline
-  3 & Vermittlungsschicht & Networking Layer & IPv4, IPv6, ICMP & Internet Layer \\ \hline
-  2 & Sicherungsschicht & Data Link Layer & \multirow{2}{*}{Ethernet, WLAN, ISDN} & \multirow{2}{*}{Link Layer} \\ \cline{1-3}
-  1 & Physikalische Schicht & Physical Layer & & \\ \hline
-\end{tabular}
-}
-\label{tab:OSI-7-Schichtenmodell}
-\end{table}
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=12cm]{wireless_sensor_network}
-	\caption{Aufbau eines drahtlosen Sensornetzwerkes}
-	\label{fig:wsn}
-\end{figure}
-
-Bei drahtlosen Sensornetzen, international auch Wireless Sensor Networks (WSN) genannt, handelt es sich um Netzwerke aus kleinen Sensoren, die ihre Messergebnisse zu einer zentralen Station senden. Die Sensoren helfen dabei einander, die Informationen weiterzureichen (siehe Abbildung \ref{fig:wsn}). So ein drahtloses Sensornetz kann zum Beispiel in einem Gebäude Temperatur- und Luftfeuchtigkeitswerte an eine zentrale Station liefern, die dann die Klimaanlage entsprechend ansteuert. Eine komplette Verkabelung jedes einzelnen Sensors kann dabei je nach Anzahl sehr aufwendig und kostspielig sein. Wenn die Sensoren dazu noch mobil sein sollen, empfiehlt sich eine drahtlose Kommunikation.
-
-Ein Sensor in einem drahtlosen Sensornetz ist ausgestattet mit einer Kommunikationseinheit, die sich selbstständig innerhalb des Netzes konfiguriert und darüber die eingelesenen Messgrößen zu einer zentralen Stelle transportiert.
-
-%%Ein Sensor ist dabei ein typisches Smart Object. Es 
-%% Das Steuergerät soll dabei möglichst klein sein, damit es in einem Steckdosengehäuse Platz finden kann. 
-%% Der Fernzugriff soll mithilfe des Protokolls IPv6 erfolgen, um zukunftssicher auf die Infrastruktur des Internet verwenden zu können. 
-
-\subsection{Smart Objects}\label{Smart Objects}
-
-Diese Definition von Smart Objects \index{Smart Object} beruht auf \textcite{vasseur10interconnecting}. Dabei handelt es sich um kleine Objekte, die mit folgenden Einheiten ausgestattet sind:
-
-\begin{itemize}
-	\itemsep 0pt
-	\item eine Form von Sensor und/oder Aktor
-	\item ein kleiner Mikrocontroller
-	\item eine Kommunikationseinheit
-	\item eine Energieversorgung
+\begin{itemize} \label{rust.concepts}
+	\item \textbf{Ownership:} Jede Variable hat einen \textit{Owner} (Besitzer). Wird der Besitzer gelöscht,
+	wird auch die Variable gelöscht. Die Variable kann nur einen Besitzer haben \cite{RustBelt}. Das bewirkt,
+	dass der Programmierer sich nicht um das Freigeben des Speichers kümmern muss.
+	\item \textbf{Borrowing:} Um eine Variable als Referenz in mehreren Kontexten nutzen zu können, 
+	ohne dessen Owner zu wechseln, gibt es das \textit{Borrowing} Konzept, mit folgenden Regeln:
+	es kann entweder eine veränderbare oder mehrere unveränderbare Referenzen einer Variable 
+	geben \cite{Bugden_Alahmar_2022}. 
+	\item \textbf{Lifetimes:} Jede Referenz in Rust besitzt eine Lebensdauer (\textit{Lifetime}), 
+    welche den Gültigkeitsbereich definiert, in dem die Referenz valide ist. Meist implizit vom Compiler abgeleitet, 
+    verhindern Lifetimes falsche Zugriffe, indem sie sicherstellen, dass die referenzierten 
+    Daten mindestens so lange existieren wie die Referenz selbst \cite{Bugden_Alahmar_2022}.
 \end{itemize}
 
-Ein Sensor und/oder Aktor wird benötigt, um mit der Umwelt interagieren zu können. Ein Sensor kann bestimmte Messgrößen erfassen, die dann verarbeitet werden können. Ein Aktor ist das Gegenstück zu einem Sensor. Über ihn kann aktiv die Umwelt beeinflusst werden. Die Kommunikationseinheit befähigt das Smart Object über ein Netzwerk kommunizieren zu können. Es ist dabei möglich mit anderen Smart Objects zu kommunizieren als auch mit weit entfernten Geräten, im Falle des Internets weltweit. Ein kleiner Mikrocontroller übernimmt die Informationsverarbeitung. Dieser nimmt Daten von Sensoren entgegen bzw. steuert den Aktor. Die Kommunikation wird ebenso von ihm geregelt, von einem Sensor gemessene Werte können über das Netzwerk weitergegeben werden. Der Mikrocontroller kann als Kern des Smart Object angesehen werden. Die Energieversorgung ist notwendig, um alle Einheiten ausreichend mit elektrischer Energie zu versorgen.
+Die Einhaltung dieser Regeln wird zur Kompilierzeit vom \textit{Borrow-Checker} verifiziert. 
+Außerdem hat Rust noch weitere Konzepte zur Steigerung der Sicherheit, 
+Budgen et al. \cite{Bugden_Alahmar_2022} führen weitere Konzepte wie das
+\textit{Bounds Checking}, welches auf ungültige Indexzugriffe prüft oder 
+die Nutzung von \textit{Options}, welche Zugriffe auf nicht initialisierte Werte vermeiden, indem
+sie eine Struktur welche entweder den gewünschten Wert x als Some(x) oder None enthält zurückgeben auf. TODO formatieren
+Außerdem müssen \textit{Pointer-Arithmetik} in sogenannte \textit{unsafe}-Blöcke ausgelagert werden.
+Diese dienen als einer Art Umgehungsmöglichkeit der anderen Konzepte und lösen
+einen Programm-beendenden \textit{panic} aus, welcher verhindert, dass das Programm
+in einem undefinierten Zustand weiter läuft.
 
-Alle diese technischen Eigenschaften machen ein Objekt aber noch nicht zu einem Smart Object. Erst die Anwendung und sein Verhalten machen aus einem Objekt mit den obigen Eigenschaften ein Smart Object. Allerdings ist es sehr schwierig, dieses Verhalten zu definieren. Die Anwendungen sind sehr unterschiedlich und es ist völlig unbekannt, wie Smart Objects in der Zukunft eingesetzt werden. Gemeinsam ist allen Anwendungen allerdings, dass Smart Objects mit der physikalischen Umwelt interagieren und über ein Netzwerk kommunizieren. Dieses Verhalten und die obigen technischen Eigenschaften machen ein Smart Object aus.
+Trotz der Möglichkeit und Notwendigkeit, unsafe-Blöcke zu nutzen (beispielsweise für hardwarenahe 
+Operationen oder der Arbeit mit C Bibliotheken), was dem Sicherheitskonzept der Sprache
+widerspricht, sind laut Jung et al. "zahlreiche wichtige Rust Bibliotheken" \cite{RustBelt}
+sicher, da die unsafe-Blöcke korrekt gekapselt sind.
 
-Von der Kommunikationstechnologie her ähnelt ein Smart Object einem Sensor in einem Sensornetz. Allerdings ist im Gegensatz zu einem Sensornetz ein Netz aus Smart Objects nicht allein auf die Datenübermittlung fokussiert. Bei einem Sensornetz ist der Datenfluss immer vom Sensor ins Netzwerk, wohingegen der Datenfluss bei einem Smart Object bidirektional ist. Der Fokus liegt dabei auf eine Vielzahl von Funktionen insbesondere der Steuerung und Überwachung \citep[Seite 12]{vasseur10interconnecting}. Es ist also die Anwendung, die ein Gerät zu einem Smart Object macht. Aber Entwicklungen, hauptsächlich in der Energieversorgung und Kommunikationstechnik, kommen beiden Forschungsgebieten zugute.
+Durch das Zusammenspiel dieser Konzepte können Speicherfehler verschiedenster Art 
+bereits zur Kompilierzeit vermieden werden, was Rust zur sichersten unter den derzeit
+gängigen Sprachen macht \cite{bugden2022safety}. Allerdings müssen deshalb auch einige
+Regeln bei der Programmierung beachtet und eingehalten werden, weshalb der Sprache eine 
+steile Lernkurve zugeschrieben wird \cite{Cui_Xu_2025}.
 
+\subsection{Performance und asynchrone Programmierung}
+Die im letzten Abschnitt genannten Konzepte schließen auch \textit{data races}, 
+welche beim Zugriff mehrerer \textit{Threads} \footnote{Untergeordnete Arbeitseinheiten eines Prozesses} auf 
+den gleichen Speicher entstehen können und eine häufige Fehlerquelle in der asynchronen 
+Programmierung darstellt \cite{Bugden_Alahmar_2022}, bereits zur Kompilierzeit aus \cite{Costanzo_Rucci_Naiouf_Giusti_2021}. 
+Dies macht Rust zu einer guten Wahl für sowohl nebenläufige als auch parallele Programmierung. 
 
-\subsection{Internet-of-Things}
+Die nebenläufige Programmierung, welche in Rust durch das 
+\textit{async/await}-Modell umgesetzt wird, befasst sich mit der logischen Strukturierung von Software 
+in unabhängige Kontrollflüsse. Diese agieren zeitlich verschränkt, wobei der primäre Zweck nicht 
+die gleichzeitige Ausführung, sondern die Entkopplung von Aufgaben ist. So werden Ressourcen effektiv genutzt,
+indem sie während möglicher Wartezeiten z.B. bei I/O-Operationen\footnote{Input-/Output-Operationen}, für andere
+Prozesse freigegeben werden. Dadurch kann die Effizienz und die Responsivität des Systems erhöht werden \cite{Silberschatz_Galvin_Gagne_2018, Arpaci-Dusseau_Arpaci-Dusseau_2018}.
 
-\begin{figure}[htbp]
-	\centering
-	\includegraphics{internet_of_things}
-	\caption{Die Internet-of-Things Vision \cite[Figure 1.2]{Bormann:6LoWPAN}}
-	\label{fig:internet_of_things}
-\end{figure}
+Die Parallelität hingegen, bezieht sich auf die tatsächliche physikalische Ausführung mehrerer 
+Aufgaben zum gleichen Zeitpunkt \cite{Silberschatz_Galvin_Gagne_2018}, was eine entsprechende \textit{Multi-Core}-Hardware voraussetzt \cite{Concurrency_is_not_parallelism_-_The_Go_Programming_Language}. 
+Der Vorteil der Parallelität liegt in der Leistungssteigerung und der Maximierung des 
+Datendurchsatzes bei rechenintensiven Problemen \cite{Silberschatz_Galvin_Gagne_2018, Arpaci-Dusseau_Arpaci-Dusseau_2018}.
 
-Das Internet-of-Things, auch Internet der Dinge genannt, ist eine Vision, wie sich das Internet in Zukunft entwickeln kann. Es soll aus der Vernetzung vieler Kleinstgeräte -- auch oder vielleicht hauptsächlich Smart Objects -- bestehen. \textcite{Bormann:6LoWPAN} betrachten das Internet-of-Things als eine weitere Schale des Internets (Abbildung \ref{fig:internet_of_things}), die gerade anfängt sich heraus zu bilden. Der Kern des Internets (Core Internet) besteht heute aus vielen Routern und Servern, die zusammen Millionen von Teilnehmern ausmachen. Um diesen Kern herum liegt das sogenannte Fringe Internet, was beispielsweise aus privaten Rechnern oder Laptops besteht, aber auch aus lokalen Netzwerken, die zum Internet verbunden werden. Die Teilnehmer des Fringe Internet gehen in die Milliarden. Um dieses Fringe Internet herum beginnt sich eine weitere Schale zu bilden, das sogenannte Internet-of-Things. Auf lange Sicht kann hier mit Billionen von Teilnehmern gerechnet werden. Hauptsächlich bestehen diese Teilnehmer aus IP-fähigen eingebetteten Systemen (embedded systems). Eine so große Zahl an Teilnehmern kann nur mithilfe des Internet Protokolls der Version 6 ans Internet angeschlossen werden, da das bisherige Internet Protokoll der Version 4 keine freien Adressräume mehr zur Verfügung hat.
+Neben den möglichen Performance-Vorteilen durch die nebenläufige Programmierung, welche
+aber letztendlich dem Programmierer überlassen ist, bietet die Sprache ihre 
+größten internen Performance-Vorteile durch die \textit{Zero-Cost Abstraction}. 
+Das Konzept der Zero-Cost Abstraction \cite{Cui_Xu_2025}, welches auch in der Sprache C++ Anwendung
+findet, kann nach Bjarne Stroustrup wie folgt beschrieben werden: "Was man nicht 
+nutzt, dafür bezahlt man nicht. Was man nutzt, könnte man selbst nicht 
+besser per Hand codieren" \cite{Stroustrup_1994}.
 
-\section{Theoretische Grundlagen}
-\ldots
+Die Prüfung der zuvor vorgestellten \ref{rust.concepts}, und weiteren Konzepte zur 
+Kompilierzeit, führt dazu, dass Rust in Benchmarks gängige Sprachen wie Java, Python,
+oder Go übertrifft und sogar mit der Geschwindigkeit von C konkurriert \cite{Costanzo_Rucci_Naiouf_Giusti_2021}
+\cite{Bugden_Alahmar_2022} \cite{Cui_Xu_2025}.
+
+Dazugehörige Konzepte sind beispielsweise die Eliminierung von Laufzeit-Overhead durch 
+die Vermeidung eines zur Laufzeit arbeitenden \textit{Garbage Collectors} \cite{bugden2022safety} \cite{Cui_Xu_2025}, 
+die \textit{Monomorphisierung} um die Typen oder Größen generischer Strukturen wie z.B.
+Vec \footnote{Vektor, ähnlich einer Liste} oder Option nicht mehr während der Laufzeit 
+bestimmen zu müssen \cite{Cui_Xu_2025}, oder die Bereitstellung eigener Iteratoren, welche 
+die Leistung manuell geschriebener Schleifen oft übertrifft \cite{Cui_Xu_2025}.
+
