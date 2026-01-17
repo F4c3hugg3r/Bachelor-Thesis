@@ -215,16 +215,14 @@ Entscheidend für den Scanner sind also folgende Header Felder:
 
 \begin{table}[htbp]
 \caption{Relevante TCP Header Felder}
-\resizebox{\textwidth}{!}{
-\begin{tabular}{|c|c|}\hline
+\begin{tabularx}{\textwidth}{|c|X|}\hline 
 \textbf{Header Feld} & \textbf{Beschreibung} \\ \hline
 \textit{Source Port} & Beschreibt den genutzten Port des Ausgangsdienstes. \\ \hline
 \textit{Destination Port} &  Beschreibt den zu scannenden Port des Zielsystems. \\ \hline
 \textit{Sequence Number} & Wird zur Speicherung des \texttt{SYN}-Cookies genutzt. \\ \hline
 \textit{Acknowledgement Number} & Wird zum Abrufen des \texttt{SYN}-Cookies genutzt. \\ \hline
 \textit{Control Bits (Flags)} & Wird für die verschiedenen Phasen des Verbindungsaufbaues angepasst oder ausgelesen.  \\ \hline
-\end{tabular}
-}
+\end{tabularx}
 \label{tab:TCP-header-fields}
 \end{table}
 

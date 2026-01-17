@@ -24,37 +24,41 @@
 \contentsline {subsection}{\numberline {3.1.3}Alternative Implementierungsansätze}{14}{subsection.34}%
 \contentsline {subsection}{\numberline {3.1.4}Problematik bisheriger Ansätze}{15}{subsection.36}%
 \contentsline {section}{\numberline {3.2}Vergleichsbasis}{16}{section.37}%
-\contentsline {chapter}{\numberline {4}Methodik und Anforderungsanalyse}{17}{chapter.38}%
+\contentsline {chapter}{\numberline {4}Anforderungsanalyse und Methodik}{17}{chapter.38}%
 \contentsline {section}{\numberline {4.1}Anforderungsanalyse}{17}{section.39}%
 \contentsline {subsection}{\numberline {4.1.1}Funktionale Anforderungen}{17}{subsection.40}%
 \contentsline {subsection}{\numberline {4.1.2}Nicht-funktionale Anforderungen}{18}{subsection.42}%
 \contentsline {section}{\numberline {4.2}Vorgehensmodell der Entwicklung}{19}{section.43}%
 \contentsline {section}{\numberline {4.3}Untersuchungsdesign}{19}{section.48}%
-\contentsline {chapter}{\numberline {5}Konzeption und Implementierung}{21}{chapter.49}%
-\contentsline {section}{\numberline {5.1}Aufbau der Implementierung}{21}{section.50}%
-\contentsline {section}{\numberline {5.2}Contiki-Verzeichnisstruktur}{21}{section.51}%
-\contentsline {subsection}{\numberline {5.2.1}Übersetzung eines Contiki-Programms}{22}{subsection.80}%
-\contentsline {subsection}{\numberline {5.2.2}Programmieren eines Mikrocontrollers}{23}{subsection.99}%
-\contentsline {chapter}{\numberline {6}Tests und Evaluation}{25}{chapter.124}%
-\contentsline {section}{\numberline {6.1}Herleitung von Test-Cases}{25}{section.125}%
-\contentsline {subsection}{\numberline {6.1.1}Funktionale Tests}{25}{subsection.126}%
-\contentsline {subsection}{\numberline {6.1.2}Leistungstests/Performancetests}{25}{subsection.127}%
-\contentsline {section}{\numberline {6.2}Bewertung der Ergebnisse}{25}{section.128}%
-\contentsline {chapter}{\numberline {7}Fazit und Ausblick}{27}{chapter.129}%
-\contentsline {section}{\numberline {7.1}Analyse der Implementierung}{27}{section.130}%
-\contentsline {subsection}{\numberline {7.1.1}Kostenbetrachtung}{27}{subsection.131}%
-\contentsline {subsubsection}{\nonumberline Materialkosten}{27}{subsubsection*.132}%
-\contentsline {subsubsection}{\nonumberline Entwicklungskosten iec104}{28}{subsubsection*.134}%
-\contentsline {section}{\numberline {7.2}Anwendungsmöglichkeiten}{30}{section.135}%
-\contentsline {subsection}{\numberline {7.2.1}Anwendungsbereiche von Smart Objects}{30}{subsection.136}%
-\contentsline {subsection}{\numberline {7.2.2}Anwendungsmöglichkeiten für die Implementierung}{31}{subsection.137}%
-\contentsline {subsection}{\numberline {7.2.3}Erweiterungsvorschläge für die Implementierung}{31}{subsection.138}%
-\contentsline {section}{\numberline {7.3}Zusammenfassung}{32}{section.139}%
+\contentsline {subsection}{\numberline {4.3.1}Performanz}{20}{subsection.49}%
+\contentsline {subsection}{\numberline {4.3.2}Metriken}{20}{subsection.50}%
+\contentsline {subsection}{\numberline {4.3.3}Testumgebung}{20}{subsection.52}%
+\contentsline {subsection}{\numberline {4.3.4}Testablauf}{21}{subsection.55}%
+\contentsline {chapter}{\numberline {5}Konzeption und Implementierung}{23}{chapter.56}%
+\contentsline {section}{\numberline {5.1}Aufbau der Implementierung}{23}{section.57}%
+\contentsline {section}{\numberline {5.2}Contiki-Verzeichnisstruktur}{23}{section.58}%
+\contentsline {subsection}{\numberline {5.2.1}Übersetzung eines Contiki-Programms}{24}{subsection.87}%
+\contentsline {subsection}{\numberline {5.2.2}Programmieren eines Mikrocontrollers}{25}{subsection.106}%
+\contentsline {chapter}{\numberline {6}Tests und Evaluation}{27}{chapter.131}%
+\contentsline {section}{\numberline {6.1}Herleitung von Test-Cases}{27}{section.132}%
+\contentsline {subsection}{\numberline {6.1.1}Funktionale Tests}{27}{subsection.133}%
+\contentsline {subsection}{\numberline {6.1.2}Leistungstests/Performancetests}{27}{subsection.134}%
+\contentsline {section}{\numberline {6.2}Bewertung der Ergebnisse}{27}{section.135}%
+\contentsline {chapter}{\numberline {7}Fazit und Ausblick}{29}{chapter.136}%
+\contentsline {section}{\numberline {7.1}Analyse der Implementierung}{29}{section.137}%
+\contentsline {subsection}{\numberline {7.1.1}Kostenbetrachtung}{29}{subsection.138}%
+\contentsline {subsubsection}{\nonumberline Materialkosten}{29}{subsubsection*.139}%
+\contentsline {subsubsection}{\nonumberline Entwicklungskosten iec104}{30}{subsubsection*.141}%
+\contentsline {section}{\numberline {7.2}Anwendungsmöglichkeiten}{32}{section.142}%
+\contentsline {subsection}{\numberline {7.2.1}Anwendungsbereiche von Smart Objects}{32}{subsection.143}%
+\contentsline {subsection}{\numberline {7.2.2}Anwendungsmöglichkeiten für die Implementierung}{33}{subsection.144}%
+\contentsline {subsection}{\numberline {7.2.3}Erweiterungsvorschläge für die Implementierung}{33}{subsection.145}%
+\contentsline {section}{\numberline {7.3}Zusammenfassung}{34}{section.146}%
 \def \@chapapp {\appendixname }
-\contentsline {chapter}{\numberline {A}Der Blindtext}{35}{appendix.140}%
-\contentsline {chapter}{\nonumberline Abbildungsverzeichnis}{37}{chapter*.141}%
-\contentsline {chapter}{\nonumberline Tabellenverzeichnis}{39}{chapter*.142}%
-\contentsline {chapter}{\nonumberline {Quelltextverzeichnis}}{41}{chapter*.143}%
-\contentsline {chapter}{\nonumberline {Literaturverzeichnis}}{43}{chapter*.144}%
-\contentsline {chapter}{\nonumberline Eigenständigkeitserklärung}{47}{chapter*.145}%
+\contentsline {chapter}{\numberline {A}Der Blindtext}{37}{appendix.147}%
+\contentsline {chapter}{\nonumberline Abbildungsverzeichnis}{39}{chapter*.148}%
+\contentsline {chapter}{\nonumberline Tabellenverzeichnis}{41}{chapter*.149}%
+\contentsline {chapter}{\nonumberline {Quelltextverzeichnis}}{43}{chapter*.150}%
+\contentsline {chapter}{\nonumberline {Literaturverzeichnis}}{45}{chapter*.151}%
+\contentsline {chapter}{\nonumberline Eigenständigkeitserklärung}{49}{chapter*.152}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

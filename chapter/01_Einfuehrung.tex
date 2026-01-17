@@ -43,17 +43,24 @@ mit einer repräsentativen Auswahl an bestehenden Scannern verglichen und die Er
 
 Es ergibt sich folgende Forschungsfrage: Inwieweit kann ein in Rust implementierter asynchroner \texttt{SYN}-Scanner hinsichtlich des Durchsatzes und der Ressourceneffizienz mit etablierten Hochleistungsscannern konkurrieren und durch spracheigene Sicherheitsgarantien eine tragfähige Alternative für den produktiven Einsatz darstellen?
 
-
 \section{Abgrenzung des Themas} \label{Abgrenzung}
-%TODO gut begründen (laut Bewertungsmaßstab)
+%The best port scanning technique is TCP SYN scan as it has the lowest response time and thus the least impact on the target host.
+%TCP SYN scan is also well-known as the stealthiest port scanning technique. cite A Comparative Performance of Port Scanning Techniques
+% -> Es geht nur um SYN Scan weil ...
 
 Bei der in dieser Arbeit entwickelten Implementierung handelt es sich um einen horizontalen Scanner \ref{Grundlagen}.
 Anders als beispielsweise beim regulären \texttt{SYN}-Scan des Tools \textit{Nmap} \cite{Lyon_2010}, welcher in der Regel vertikal erfolgt.
+% Begründen (gibt explizit Punkte)
 
-Mechanismen zur Erkennungsvermeidung des Scans werden in dieser Implementierung nur rudimentär behandelt, da der Fokus
-klar auf der Performance und Ressourceneffizienz liegt. 
+Zusätzliche Mechanismen zur Verschleierung des Scans oder weiterführende Maßnahmen zur Treffererhöhung
+werden in dieser Implementierung rudimentär oder gar nicht behandelt, da der Fokus
+auf der Nutzung von Rust, sowie der Entwicklung eines Performanz-orientieren Netzwerkscanners liegt. 
+Da der normale Ablauf des SYN-Scans bereits grundlegende Mechanismen in den Bereichen mitbringt \cite{Universiti_Tun_Hussein_Onn_Malaysia_Roslan_2023}, 
+sind diese Gebiete für die Beantwortung der Forschungsfrage nicht notwendig. Die weiterführende 
+Untersuchung der Ergebnisse bildet einen eigenen Forschungszweig und ist somit auch ausgeschlossen.
 
 Außerdem beschränkt sich diese Arbeit auf den IPv4 Adressraum, da dies genügt, um der Forschungsfrage nachzugehen.
+% oder maybe da es eine prototypische Implementierung ist oder so idk
 
 
 
