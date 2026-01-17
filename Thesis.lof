@@ -1,9 +1,9 @@
 \babel@toc {ngerman}{}\relax 
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {2.1}{\ignorespaces Three-Way-Handshake zum Aufbau einer TCP-Verbindung \blx@tocontentsinit {0}\cite {Wendzel_2021}.}}{4}{figure.12}%
+\contentsline {figure}{\numberline {2.1}{\ignorespaces \textit {Three-Way-Handshake} zum Aufbau einer TCP-Verbindung \blx@tocontentsinit {0}\cite {Wendzel_2021}.}}{4}{figure.12}%
 \contentsline {figure}{\numberline {2.2}{\ignorespaces Aufbau des TCP-Headers nach RFC 9293 \blx@tocontentsinit {0}\cite {Eddy_2022}.}}{5}{figure.13}%
-\contentsline {figure}{\numberline {2.3}{\ignorespaces Der Empfangspfad durch den Kernel bei der Nutzung von XDP und eBPF. Orientiert an Høiland et al. \blx@tocontentsinit {0}\cite {Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}.}}{9}{figure.23}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Der Empfangspfad durch den Kernel bei der Nutzung von \texttt {XDP} und \texttt {eBPF} (vereinfacht). Orientiert an Høiland et al. \blx@tocontentsinit {0}\cite {Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}.}}{9}{figure.23}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

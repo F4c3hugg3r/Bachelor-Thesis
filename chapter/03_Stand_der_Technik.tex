@@ -11,51 +11,51 @@ In diesem Kapitel werden im ersten Schritt sich in der Forschung etablierte Scan
 vorgestellt und diskutiert. Anschließend werden ausgewählte Scanner, welche später als
 Vergleichsobjekte dienen ebenfalls eingeordnet und dessen Relevanz erklärt.
 
-TODO related works Teil in welchem einfach aufgezählt wird, welche Arbeiten es bereits zu 
-dem Thema gibt, welche Methodik und welche Erkenntnisse
-
 \section{Etablierter Stand der Forschung}
 Dieser Abschnitt beleuchtet die historische Entwicklung, die dominierenden
 Implementierungen, deren Limitationen sowie technologische Alternativen.
 
-\subsection{Historische Entwicklung und Paradigmenwechsel}
-Traditionelle Netzwerkscanner wie Nmap \cite{Lyon_2010} wurden primär für die vertikale Analyse einzelner Hosts oder 
+% TODO related works Teil in welchem einfach aufgezählt wird, welche Arbeiten es bereits zu 
+% dem Thema gibt, welche Methodik und welche Erkenntnisse
+
+\subsection{Historische Entwicklung}
+Traditionelle Netzwerkscanner wie \textit{Nmap} \cite{Lyon_2010} wurden primär für die vertikale Analyse einzelner Hosts oder 
 kleiner Netzwerke konzipiert. Sie arbeiten teils Zustands-behaftet, was bedeutet, dass für jede 
 ausgesendete Anfrage ein eigener Eintrag im Arbeitsspeicher verwaltet wird, um den Verbindungsstatus abzubilden. 
 Bei Internet-weiten Scans führt dieser Ansatz jedoch schnell zur Erschöpfung der Systemressourcen und limitiert die 
 Scan-Geschwindigkeit drastisch. Ein vollständiger Scan des Internets benötigte mit diesen Methoden 
 oft Wochen oder Monate \cite{Durumeric_Wustrow_Halderman}.
 
-Der entscheidende Durchbruch gelang 2013 mit der Veröffentlichung von ZMap durch Durumeric et al. 
-Mithilfe eines radikalen Architekturwechsels hin zum zustandslosen (stateless) Scanning 
+Der entscheidende Durchbruch gelang 2013 mit der Veröffentlichung von \textit{ZMap} durch Durumeric et al. 
+Mithilfe eines radikalen Architekturwechsels hin zum zustandslosen Scanning 
 konnte die Geschwindigkeit so weit gesteigert werden, dass 97 \% der theoretischen Geschwindigkeit 
 vom Gigabit-Ethernet erreicht wurden. Dies ermöglichte erstmals Scans des gesamten IPv4-Adressraums 
 in unter 45 Minuten von einem einzelnen Rechner aus \cite{Durumeric_Wustrow_Halderman}. Spätere Arbeiten, wie 
 \textit{Zippier ZMap}, optimierten diesen Ansatz weiter, um auch bis zu 10-Gbps Leitungen auszulasten \cite{Adrian_Durumeric_Singh_Halderman}
-und somit die anhaltende Relevanz des ZMap-Projektes zu unterstreichen.
+und somit die anhaltende Relevanz des \textit{ZMap}-Projektes zu unterstreichen.
 
 \subsection{ZMap}
-In der wissenschaftlichen Literatur gilt ZMap \cite{Durumeric_Wustrow_Halderman} als der De-facto-Standard und als das primäre Vergleichsobjekt für 
-internetweite Scans. In einer Retrospektive aus dem Jahr 2024 stellen Durumeric et al. fest, dass ZMap die Art und Weise, wie Internetmessungen 
+In der wissenschaftlichen Literatur gilt \textit{ZMap} \cite{Durumeric_Wustrow_Halderman} als der De-facto-Standard und als das primäre Vergleichsobjekt für 
+internetweite Scans. In einer Retrospektive aus dem Jahr 2024 stellen Durumeric et al. fest, dass \textit{ZMap} die Art und Weise, wie Internetmessungen 
 durchgeführt werden, fundamental verändert hat. Mit über 1.200 wissenschaftlichen Zitationen und der Nutzung als 
-Basis für kommerzielle Sicherheitsanalysen (z. B. Censys) ist es das am weitesten verbreitete Werkzeug seiner Art \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024}.
+Basis für kommerzielle Sicherheitsanalysen (z. B. \textit{Censys}) ist es das am weitesten verbreitete Werkzeug seiner Art \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024}.
 
-Der Kern der Leistungsfähigkeit von ZMap lässt sich auf drei wesentliche Implementierungsentscheidungen zurückführen:
+Der Kern der Leistungsfähigkeit von \textit{ZMap} lässt sich auf drei wesentliche Implementierungsentscheidungen zurückführen:
 
 \begin{itemize} 
 	\itemsep 0pt
-	\item Effiziente I/O-Schnittstellen: ZMap nutzt standardmäßig AF\_PACKET in Kombination mit Memory Mapping (mmap), 
-    um den Overhead des Kopierens zwischen Kernel und User-Space zu reduzieren. Zwar zeigten Erweiterungen wie 
-    \textit{Zippier ZMap} \cite{Adrian_Durumeric_Singh_Halderman}, dass durch spezialisierte Treiber wie PF\_RING ZC (Zero Copy) 
+	\item Effiziente I/O-Schnittstellen: \textit{ZMap} nutzt standardmäßig \texttt{AF\_PACKET} in Kombination mit \textit{Memory Mapping} (\texttt{mmap}), 
+    um den \textit{Overhead} des Kopierens zwischen \textit{Kernel} und \textit{User-Space} zu reduzieren. Zwar zeigten Erweiterungen wie 
+    \textit{Zippier ZMap} \cite{Adrian_Durumeric_Singh_Halderman}, dass durch spezialisierte Treiber wie \texttt{PF\_RING ZC} (\textit{Zero Copy}) 
     noch höhere Geschwindigkeiten möglich sind, jedoch weisen die Autoren darauf 
     hin, dass solche externen Treiber oft Wartungsprobleme und Inkompatibilitäten mit sich bringen. 
-    Daher setzt die aktuelle Version von ZMap primär auf universell verfügbare Linux-Schnittstellen, 
+    Daher setzt die aktuelle Version von \textit{ZMap} primär auf universell verfügbare Linux-Schnittstellen, 
     auch wenn diese performancetechnisch limitiert sind \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024}.
 
-\item \textbf{Zustandslose Architektur:} ZMap nutzt das Prinzip der SYN-Cookies \ref{Grundlagen}, um keinen Zustand 
+\item \textbf{Zustandslose Architektur:} \textit{ZMap} nutzt das Prinzip der \texttt{SYN}-Cookies \ref{Grundlagen}, um keinen Zustand 
 für ausgehende Verbindungen im Arbeitsspeicher halten zu müssen. 
 
-\item \textbf{Adressgenerierung mittels zyklischer Gruppen:} ZMap nutzt zyklische multiplikative Gruppen 
+\item \textbf{Adressgenerierung mittels zyklischer Gruppen:} \textit{ZMap} nutzt zyklische multiplikative Gruppen 
 modulo $p$ (wobei $p$ eine Primzahl $> 2^{32}$ ist). Dies ermöglicht eine pseudozufällige Permutation des gesamten 
 IPv4-Adressraums, was nötig ist, um Zielnetzwerke nicht zu überlasten. \cite{Durumeric_Wustrow_Halderman}.
 \end{itemize}
@@ -66,47 +66,55 @@ Technologien und Scanner-Architekturen aufgetan. Beispielsweise:
 
 \begin{itemize} 
 	\itemsep 0pt
-\item \textbf{Kernel-Bypass mit DPDK:} Das Data Plane Development Kit (DPDK) erlaubt es Anwendungen, die Netzwerkkarte 
-direkt aus dem User-Space anzusprechen und den Kernel komplett zu umgehen. Abu Bakar und Kijsirikul zeigen, dass 
-DPDK-basierte Scanner extrem hohe Raten erzielen können \cite{Abu_Bakar_Kijsirikul_2023}. Der Nachteil ist jedoch 
+\item \textbf{\textit{Kernel-Bypass} mit \texttt{DPDK}:} Das \textit{Data Plane Development Kit} (\texttt{DPDK}) erlaubt es Anwendungen, die Netzwerkkarte 
+direkt aus dem \textit{User-Space} anzusprechen und den Kernel komplett zu umgehen. Abu Bakar und Kijsirikul zeigen, dass 
+\texttt{DPDK}-basierte Scanner extrem hohe Raten erzielen können \cite{Abu_Bakar_Kijsirikul_2023}. Der Nachteil ist jedoch 
 die hohe Komplexität, die exklusive Belegung von CPU-Kernen und die schwierige Integration in bestehende Systemumgebungen.
 
-\item \textbf{Eigener TCP-Stack im User-Space (Masscan):} Der Scanner \textit{Masscan} \cite{Graham_2026} umgeht den Flaschenhals des Betriebssystems 
-mithilfe eines eigenem, TCP-Stack im User-Space. Dies erlaubt es dem Scanner, die Statusverwaltung und das Timing von Paketen 
-komplett unabhängig vom Kernel-Scheduler \footnote{TODO} zu steuern. Dadurch kann Masscan deutliche Performancegewinne gegenüber
-Zmap erreichen \cite{Pittman_2023}.
+\item \textbf{Eigener TCP-Stack im \textit{User-Space} (\textit{Masscan}):} Der Scanner \textit{Masscan} \cite{Graham_2026} umgeht den Flaschenhals des Betriebssystems 
+mithilfe eines eigenem, TCP-Stack im \textit{User-Space}. Dies erlaubt es dem Scanner, die Statusverwaltung und das Timing von Paketen 
+komplett unabhängig vom \textit{Kernel-Scheduler} \footnote{TODO} zu steuern. Dadurch kann \textit{Masscan} deutliche Performancegewinne gegenüber
+\textit{ZMap} erreichen \cite{Pittman_2023}.
 
-\item \textbf{Hardware-Offloading und SmartNICs:} Um die CPU des Host-Systems zu entlasten, lagern neuere Ansätze wie \textit{IMap} 
-die Scan-Logik direkt auf die Netzwerkhardware aus. Durch den Einsatz von programmierbaren Switches oder SmartNICs können Pakete 
+\item \textbf{Hardware-Offloading und \textit{SmartNICs}:} Um die CPU des Host-Systems zu entlasten, lagern neuere Ansätze wie \textit{IMap} 
+die Scan-Logik direkt auf die Netzwerkhardware aus. Durch den Einsatz von programmierbaren Switches oder \textit{SmartNICs} können Pakete 
 bereits auf der Netzwerkkarte generiert und Antworten gefiltert werden, bevor sie überhaupt die CPU erreichen. \cite{Li_Zhang_Guo_Bao_Xu_Hu_Li_2022}
-Dies ermöglicht theoretisch Line-Rate-Scanning auch bei 100 Gbps, erfordert jedoch spezialisierte Hardware.
+Dies ermöglicht theoretisch \textit{Line-Rate-Scanning} auch bei 100 Gbps, erfordert jedoch spezialisierte Hardware.
 \end{itemize}
 
 \subsection{Problematik bisheriger Ansätze}
-Limitationen und die Problematik von C
-Obwohl ZMap und ähnliche Hochleistungsscanner (wie Masscan oder DPDK-Scanner) extrem effizient sind, basieren sie fast ausschließlich auf der Programmiersprache C. Dies bringt signifikante Nachteile mit sich:
+Obwohl \textit{ZMap} und ähnliche Hochleistungsscanner (wie \textit{Masscan} oder \texttt{DPDK}-Scanner) extrem effizient sind, 
+basieren sie fast ausschließlich auf der Programmiersprache C. Diese technologische Monokultur bringt jedoch signifikante Nachteile mit sich.
 
-Speichersicherheit: C bietet keine intrinsische Speichersicherheit. Fehler in der Speicherverwaltung können zu Abstürzen oder Sicherheitslücken führen. Dies ist besonders kritisch bei der Verarbeitung von untrusted Input aus dem offenen Internet.
+Ein zentrales Problem ist die fehlende intrinsische Speichersicherheit von C [TODO]. Da die Sprache dem Entwickler die volle 
+Verantwortung für die Speicherverwaltung überträgt, führen menschliche Fehler häufig zu schwerwiegenden Sicherheitslücken. 
+Schwachstellen wie \textit{Buffer Overflows} in C/C++-basierten Systemen zählen nach wie 
+vor zu den häufigsten Ursachen für Sicherheitslücken \cite{Al_Boghdady_Wassif_El_Ramly_2021}. 
+% TODO recherchieren
+Besonders im Kontext von 
+Internet-Scannern, die massenhaft \textit{untrusted Input} aus potenziell maliziösen Quellen des offenen Internets verarbeiten, 
+stellt die Verwendung einer nicht speichersicheren Sprache ein erhebliches Risiko dar.
+%
+Darüber hinaus geht die Leistungsfähigkeit von C oft zu Lasten der Wartbarkeit und Entwicklungseffizienz \cite{Costanzo_Rucci_Naiouf_Giusti_2021}. 
+Um maximale Durchsatzraten zu erzielen, sind in C häufig komplexe, manuelle Optimierungen notwendig. Costanzo et al. heben
+hervor, dass die Entwicklung von korrektem und effizientem C-Code im Vergleich zu Rust-Code
+einen signifikant höheren Programmieraufwand erfordert, insbesondere wenn komplexe Nebenläufigkeit 
+umgesetzt werden soll \cite{Costanzo_Rucci_Naiouf_Giusti_2021}.
 
-Komplexität: Um hohe Performance zu erreichen, müssen in C oft komplexe, manuelle Optimierungen vorgenommen werden, die den Code schwer wartbar machen.
+Die Programmiersprache Rust (siehe \ref{rust}) stellt eine vielversprechende Alternative dar, 
+da sie Speichersicherheit bereits zur Kompilierzeit garantiert und in der Lage ist, eine mit C vergleichbare Effizienz zu erreichen, 
+während es gleichzeitig durch sein striktes Typ- und Besitzmodell ganze Klassen von Fehlern (wie \textit{Data Races}) eliminiert, 
+die in C-basierten Scannern latent vorhanden sind. Selbst die Autoren von 
+\textit{ZMap} sagen in ihrer Retrospektive explizit, dass sie für eine heutige Implementierung ihres Scanners Rust 
+wählen würden, um die Wartbarkeit und Sicherheit der Codebasis langfristig zu gewährleisten \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024}.
 
-TODO folgendes nur als Motivation statt technische Grundlagen formulieren
-Hier bietet die Programmiersprache Rust eine vielversprechende Alternative. Rust garantiert Speichersicherheit 
-durch ein striktes Ownership- und Borrowing-Modell bereits zur Kompilierzeit, ohne dabei auf einen Garbage 
-Collector angewiesen zu sein \cite{bugden2022safety}. 
-Dies eliminiert ganze Klassen von Fehlern (wie Buffer Overflows oder Data Races), 
-die in C-basierten Scannern latent vorhanden sind, bei vergleichbarer Performance.
-Auch Durumeric et al. würden aus heutiger Sicht explizit Rust für solch ein Projekt wählen \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024}.
+Ein weiteres wesentliches Problem bisheriger Hochleistungsansätze (wie \texttt{DPDK} oder \texttt{PF\_RING}) ist ihre fehlende Integration 
+in den \textit{Linux-Mainline-Kernel}. Sie erfordern oft proprietäre Treiber oder Kernel-Module, die das Sicherheitssystem des Kernels 
+umgehen und bei Updates zu Inkompatibilitäten führen können [TODO]. Durumeric et al. merken an, dass die Wartung solcher 
+spezialisierten Treiber für \textit{ZMap} über die Jahre eine erhebliche Hürde darstellte \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024}. \texttt{XDP} 
+füllt diese Lücke, indem es High-Performance-Paketverarbeitung direkt im Kernel ermöglicht, ohne dessen Sicherheit und Kompatibilität zu kompromittieren.
 
-Ein weiteres wesentliches Problem bisheriger Hochleistungsansätze (wie DPDK oder PF\_RING) ist außerdem ihre fehlende 
-Integration in den Linux-Mainline-Kernel. Sie erfordern oft proprietäre Treiber oder Kernel-Module, 
-die das Sicherheitssystem des Kernels umgehen und bei Updates zu Inkompatibilitäten führen können. 
-Auch die Entwickler von ZMap merken an, dass die Wartung solcher spezialisierten Treiber über die Jahre eine erhebliche 
-Hürde darstellte \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024}. AF\_XDP bietet hier den entscheidenden Vorteil: Es ermöglicht 
-High-Performance-Paketverarbeitung (TODO maybe VErgleich aus XDP Paper mit DPDK Schnelligkeit einfügen) unter Beibehaltung der
-Sicherheit und Kompatibilität des Standard-Linux-Kernels, da es eine native Schnittstelle ist.
-
-Die Kombination aus moderner Linux-Technologie (eBPF/XDP) und einer speichersicheren Systemsparache (Rust) stellt 
-in diesem Kontext eine Forschungslücke dar, die in dieser Arbeit untersucht wird.
+Die Kombination aus moderner Linux-Technologie (\texttt{eBPF/XDP}) und der speichersicheren Systemsprache (Rust) stellt in diesem Kontext
+eine Forschungslücke dar, die in dieser Arbeit untersucht wird.
 
 \section{Vergleichsbasis}
