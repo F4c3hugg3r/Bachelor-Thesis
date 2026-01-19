@@ -107,23 +107,15 @@ Es wird im Folgenden erklärt, wie Performanz im Kontext eines SYN-Scanners zu d
 Anschließend werden die in dieser Arbeit zur Evaluation genutzten Metriken erklärt und 
 daraufhin die Testumgebung konzeptionell vorgestellt und erläutert.  
 
-\subsection{Performanz}
+\subsection{Metriken}
 Der Begriff "Performanz-Effizienz" wird
 gemäß der Norm \textbf{ISO/IEC 25010} als die Fähigkeit eines Produkts, seine Funktionen innerhalb festgelegter 
 Zeit- und Durchsatz-Parameter zu erfüllen und dabei die Ressourcen unter den gegebenen Bedingungen 
 effizient zu nutzen, verstanden \cite{ISO/IEC_25010:2023}. 
 
-Für die Evaluation eines SYN-Scanners lässt sich diese Definition in zwei wesentliche Teilaspekte untergliedern:
-\begin{itemize}
-    \item \textbf{Zeitverhalten und Durchsatz:} Dies beschreibt die Fähigkeit in einem festen zeitlichen
-    Rahmen einen vorgeschriebenen Durchsatz zu erreichen, was für einen SYN-Scanner die Anzahl der gesendeten
-    Pakete darstellt.
-    \item \textbf{Ressourcennutzung:} Dies beschreibt den Verbrauch von 
-    Systemressourcen (z.B. CPU-Zyklen oder Arbeitsspeicher) während der Ausführung. 
-\end{itemize}
-
-\subsection{Metriken}
-Basierend auf der oben genannten Definition werden folgende Metriken zur Quantifizierung herangezogen:
+Basierend auf der Definition werden folgende Metriken zur Quantifizierung herangezogen, wobei
+die Paketrate den Durchsatzparameter und die CPU Auslastung, sowie RAM Verbrauch die Ressourcennutzung 
+darstellen:
 
 \begin{table}[htbp]
 \caption{Metriken zur Performanz-orientierten Evaluation der SYN-Scanner}
@@ -141,8 +133,7 @@ des Arbeitsspeichers, der physisch durch den Prozess belegt wird. \\ \hline
 
 \subsection{Testumgebung}
 Um die Performanz des Scanners isoliert von externen Störfaktoren zu evaluieren, wird ein dedizierter 
-Laboraufbau gewählt. Dieser folgt dem Prinzip einer \textit{Back-to-Back}-Topologie [TODO RFC 2544], bei der zwei 
-Systeme über eine direkte Ethernet-Verbindung miteinander kommunizieren.
+Laboraufbau gewählt. Dafür werden zwei Geräte per Ethernet-Kabel direkt miteinander verbunden.
 
 Der Aufbau besteht aus zwei physischen Knoten:
 \begin{enumerate}
@@ -165,7 +156,8 @@ die maximalen Leistungsgrenzen des Scanners zu evaluieren. Für beide Szenarien 
 Ressourcen-Metriken (CPU, RAM) sowie die Paketraten aufgezeichnet.
 
 \begin{itemize}
-    \item \textbf{Szenario A: Anforderungsvalidierung} Im ersten Szenario wird der Scanner mit einer festen, limitierten Senderate von 100.000 Paketen pro Sekunde (pps) 
+    \item \textbf{Szenario A: Anforderungsvalidierung} Im ersten Szenario wird der Scanner mit einer festen, limitierten Senderate 
+    von 100.000 Paketen pro Sekunde (pps) 
 betrieben. Dieser Test dient als Referenzmessung (\textit{Baseline}), um die Erfüllung der funktionalen 
 Anforderungen zu verifizieren. Bei 100.000 pps handelt es sich um eine signifikante Last, die jedoch weit unterhalb 
 der theoretischen Sättigungsgrenze einer Gigabit-Leitung liegt. Ziel ist der Nachweis, dass der Scanner bei dieser 

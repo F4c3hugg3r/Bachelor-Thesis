@@ -291,6 +291,7 @@ vor der Ausführung sicher, dass der Code sicher ist TODO cite.
 So werden Fehler wie beispielsweise Endlosschleifen oder falsche Speicherzugriffe vermieden.
 
 % TODO \texttt{bpf} Maps und \texttt{RingBuf} erklären!!!
+% \cite{Zhang_Shu_Chen_Xie_2024}
 
 Für einen \texttt{SYN}-Scanner ist \texttt{eBPF} nützlich, da es ermöglicht, eingehende Antwortpakete (\texttt{SYN-ACK}) extrem früh 
 zu filtern und an den \textit{User Space} weiterzuleiten, bevor teure Speicherstrukturen des Kernels angelegt werden. 
@@ -343,7 +344,7 @@ lassen sich drei Modi unterscheiden:
 	Trotzdem profitiert es von effizienteren, sperrfreien \textit{Ring-Buffer}-Strukturen (<- TODO bessere Argumente)
 \end{itemize}
 
-\section{Rust} \label{rust}
+\section{Die Programmiersprache: Rust} \label{rust}
 Rust ist eine multiparadigmatische Systemprogrammiersprache, die ursprünglich von Mozilla Research entwickelt wurde.
 Der Hauptfokus der Sprache ist die Sicherheit. Doch auch Performance und Nebenläufigkeit sind immer weiter in 
 den Fokus gerückt \cite{Bugden_Alahmar_2022}. Dabei schafft es Rust als erste Sprache
@@ -393,13 +394,14 @@ gängigen Sprachen macht \cite{bugden2022safety}. Allerdings müssen deshalb auc
 Regeln bei der Programmierung beachtet und eingehalten werden, weshalb der Sprache eine 
 steile Lernkurve zugeschrieben wird \cite{Cui_Xu_2025}.
 
-\subsection{Performance und asynchrone Programmierung}
+\subsection{Asynchrone Programmierung und Performance von Rust}
 Die im letzten Abschnitt genannten Konzepte schließen auch \textit{data races}, 
 welche beim Zugriff mehrerer \textit{Threads} \footnote{Untergeordnete Arbeitseinheiten eines Prozesses} auf 
 den gleichen Speicher entstehen können und eine häufige Fehlerquelle in der asynchronen 
 Programmierung darstellen \cite{Bugden_Alahmar_2022} bereits zur Kompilierzeit aus \cite{Costanzo_Rucci_Naiouf_Giusti_2021}. 
 Dies macht Rust zu einer guten Wahl für sowohl nebenläufige als auch parallele Programmierung. 
 
+\subsubsection{Nebenläufige und Parallele Programmierung}
 Die nebenläufige Programmierung, welche in Rust durch das 
 \texttt{async/await}-Modell umgesetzt wird, befasst sich mit der logischen Strukturierung von Software 
 in unabhängige Kontrollflüsse. Diese agieren zeitlich verschränkt, wobei der primäre Zweck nicht 
@@ -412,6 +414,7 @@ Aufgaben zum gleichen Zeitpunkt \cite{Silberschatz_Galvin_Gagne_2018}, was eine 
 Der Vorteil der Parallelität liegt in der Leistungssteigerung und der Maximierung des 
 Datendurchsatzes bei rechenintensiven Problemen \cite{Silberschatz_Galvin_Gagne_2018, Arpaci-Dusseau_Arpaci-Dusseau_2018}.
 
+\subsubsection{Rusts Konzepte zur Performancesteigerung}
 Neben den möglichen Performance-Vorteilen durch die nebenläufige Programmierung, welche
 aber letztendlich dem Programmierer überlassen ist, bietet die Sprache ihre 
 größten internen Performance-Vorteile durch die \textit{Zero-Cost Abstraction}. 
@@ -420,11 +423,6 @@ findet, kann nach Bjarne Stroustrup wie folgt beschrieben werden: "Was man nicht
 nutzt, dafür bezahlt man nicht. Was man nutzt, könnte man selbst nicht 
 besser per Hand codieren" \cite{Stroustrup_1994}.
 
-Die Prüfung der zuvor vorgestellten \ref{rust.concepts}, und weiteren Konzepte zur 
-Kompilierzeit, führt dazu, dass Rust in Benchmarks gängige Sprachen wie Java, Python,
-oder Go übertrifft und sogar mit der Geschwindigkeit von C konkurriert \cite{Costanzo_Rucci_Naiouf_Giusti_2021}
-\cite{Bugden_Alahmar_2022} \cite{Cui_Xu_2025}.
-
 Dazugehörige Konzepte sind beispielsweise die Eliminierung von Laufzeit-Overhead durch 
 die Vermeidung eines zur Laufzeit arbeitenden \textit{Garbage Collectors} \cite{bugden2022safety} \cite{Cui_Xu_2025}, 
 die \textit{Monomorphisierung} um die Typen oder Größen generischer Strukturen wie z.B.
@@ -432,3 +430,7 @@ die \textit{Monomorphisierung} um die Typen oder Größen generischer Strukturen
 bestimmen zu müssen \cite{Cui_Xu_2025}, oder die Bereitstellung eigener Iteratoren, welche 
 die Leistung manuell geschriebener Schleifen oft übertrifft \cite{Cui_Xu_2025}.
 
+Diese Konzepte und vor allem die Prüfung der in \ref{rust.concepts} vorgestellten Konzepte zur 
+Kompilierzeit, führt dazu, dass Rust in Benchmarks gängige Sprachen wie Java, Python,
+oder Go übertrifft und sogar mit der Geschwindigkeit von C konkurriert \cite{Costanzo_Rucci_Naiouf_Giusti_2021}
+\cite{Bugden_Alahmar_2022} \cite{Cui_Xu_2025}.

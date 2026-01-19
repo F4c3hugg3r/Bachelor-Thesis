@@ -14,51 +14,55 @@
 \contentsline {subsection}{\numberline {2.3.2}Raw-Sockets und Address Families}{7}{subsection.19}%
 \contentsline {subsection}{\numberline {2.3.3}Erweiterte Berkley Packet Filter (\texttt {eBPF})}{7}{subsection.20}%
 \contentsline {subsection}{\numberline {2.3.4}eXpress Data Path (\texttt {XDP})}{8}{subsection.21}%
-\contentsline {section}{\numberline {2.4}Rust}{10}{section.24}%
+\contentsline {section}{\numberline {2.4}Die Programmiersprache: Rust}{10}{section.24}%
 \contentsline {subsection}{\numberline {2.4.1}Konzepte und Besonderheiten}{10}{subsection.25}%
-\contentsline {subsection}{\numberline {2.4.2}Performance und asynchrone Programmierung}{11}{subsection.26}%
-\contentsline {chapter}{\numberline {3}Stand der Technik}{13}{chapter.30}%
-\contentsline {section}{\numberline {3.1}Etablierter Stand der Forschung}{13}{section.31}%
-\contentsline {subsection}{\numberline {3.1.1}Historische Entwicklung}{13}{subsection.32}%
-\contentsline {subsection}{\numberline {3.1.2}ZMap}{13}{subsection.33}%
-\contentsline {subsection}{\numberline {3.1.3}Alternative Implementierungsansätze}{14}{subsection.34}%
-\contentsline {subsection}{\numberline {3.1.4}Problematik bisheriger Ansätze}{15}{subsection.36}%
-\contentsline {section}{\numberline {3.2}Vergleichsbasis}{16}{section.37}%
-\contentsline {chapter}{\numberline {4}Anforderungsanalyse und Methodik}{17}{chapter.38}%
-\contentsline {section}{\numberline {4.1}Anforderungsanalyse}{17}{section.39}%
-\contentsline {subsection}{\numberline {4.1.1}Funktionale Anforderungen}{17}{subsection.40}%
-\contentsline {subsection}{\numberline {4.1.2}Nicht-funktionale Anforderungen}{18}{subsection.42}%
-\contentsline {section}{\numberline {4.2}Vorgehensmodell der Entwicklung}{19}{section.43}%
-\contentsline {section}{\numberline {4.3}Untersuchungsdesign}{19}{section.48}%
-\contentsline {subsection}{\numberline {4.3.1}Performanz}{20}{subsection.49}%
-\contentsline {subsection}{\numberline {4.3.2}Metriken}{20}{subsection.50}%
-\contentsline {subsection}{\numberline {4.3.3}Testumgebung}{20}{subsection.52}%
-\contentsline {subsection}{\numberline {4.3.4}Testablauf}{21}{subsection.55}%
-\contentsline {chapter}{\numberline {5}Konzeption und Implementierung}{23}{chapter.56}%
-\contentsline {section}{\numberline {5.1}Aufbau der Implementierung}{23}{section.57}%
-\contentsline {section}{\numberline {5.2}Contiki-Verzeichnisstruktur}{23}{section.58}%
-\contentsline {subsection}{\numberline {5.2.1}Übersetzung eines Contiki-Programms}{24}{subsection.87}%
-\contentsline {subsection}{\numberline {5.2.2}Programmieren eines Mikrocontrollers}{25}{subsection.106}%
-\contentsline {chapter}{\numberline {6}Tests und Evaluation}{27}{chapter.131}%
-\contentsline {section}{\numberline {6.1}Herleitung von Test-Cases}{27}{section.132}%
-\contentsline {subsection}{\numberline {6.1.1}Funktionale Tests}{27}{subsection.133}%
-\contentsline {subsection}{\numberline {6.1.2}Leistungstests/Performancetests}{27}{subsection.134}%
-\contentsline {section}{\numberline {6.2}Bewertung der Ergebnisse}{27}{section.135}%
-\contentsline {chapter}{\numberline {7}Fazit und Ausblick}{29}{chapter.136}%
-\contentsline {section}{\numberline {7.1}Analyse der Implementierung}{29}{section.137}%
-\contentsline {subsection}{\numberline {7.1.1}Kostenbetrachtung}{29}{subsection.138}%
-\contentsline {subsubsection}{\nonumberline Materialkosten}{29}{subsubsection*.139}%
-\contentsline {subsubsection}{\nonumberline Entwicklungskosten iec104}{30}{subsubsection*.141}%
-\contentsline {section}{\numberline {7.2}Anwendungsmöglichkeiten}{32}{section.142}%
-\contentsline {subsection}{\numberline {7.2.1}Anwendungsbereiche von Smart Objects}{32}{subsection.143}%
-\contentsline {subsection}{\numberline {7.2.2}Anwendungsmöglichkeiten für die Implementierung}{33}{subsection.144}%
-\contentsline {subsection}{\numberline {7.2.3}Erweiterungsvorschläge für die Implementierung}{33}{subsection.145}%
-\contentsline {section}{\numberline {7.3}Zusammenfassung}{34}{section.146}%
+\contentsline {subsection}{\numberline {2.4.2}Asynchrone Programmierung und Performance von Rust}{11}{subsection.26}%
+\contentsline {subsubsection}{\nonumberline Nebenläufige und Parallele Programmierung}{11}{subsubsection*.28}%
+\contentsline {subsubsection}{\nonumberline Rusts Konzepte zur Performancesteigerung}{12}{subsubsection*.30}%
+\contentsline {chapter}{\numberline {3}Stand der Technik}{13}{chapter.32}%
+\contentsline {section}{\numberline {3.1}Historische Entwicklung des horizontalen Netzwerk-Scannings}{13}{section.33}%
+\contentsline {subsection}{\numberline {3.1.1}Der Standard Scanner: ZMap}{13}{subsection.34}%
+\contentsline {section}{\numberline {3.2}Alternative Implementierungsansätze}{14}{section.35}%
+\contentsline {section}{\numberline {3.3}Weitere relevante wissenschaftliche Arbeiten}{15}{section.37}%
+\contentsline {section}{\numberline {3.4}Vergleichsobjekte für die Evaluation}{16}{section.39}%
+\contentsline {section}{\numberline {3.5}Problematik bisheriger Ansätze}{16}{section.40}%
+\contentsline {subsection}{\numberline {3.5.1}Problematik C-basierter Ansätze}{16}{subsection.41}%
+\contentsline {subsection}{\numberline {3.5.2}Problematik alternativer Ansätze}{17}{subsection.42}%
+\contentsline {subsection}{\numberline {3.5.3}Lösungsansatz}{17}{subsection.43}%
+\contentsline {chapter}{\numberline {4}Anforderungsanalyse und Methodik}{19}{chapter.44}%
+\contentsline {section}{\numberline {4.1}Anforderungsanalyse}{19}{section.45}%
+\contentsline {subsection}{\numberline {4.1.1}Funktionale Anforderungen}{19}{subsection.46}%
+\contentsline {subsection}{\numberline {4.1.2}Nicht-funktionale Anforderungen}{20}{subsection.48}%
+\contentsline {section}{\numberline {4.2}Vorgehensmodell der Entwicklung}{21}{section.49}%
+\contentsline {section}{\numberline {4.3}Untersuchungsdesign}{21}{section.54}%
+\contentsline {subsection}{\numberline {4.3.1}Metriken}{22}{subsection.55}%
+\contentsline {subsection}{\numberline {4.3.2}Testumgebung}{22}{subsection.57}%
+\contentsline {subsection}{\numberline {4.3.3}Testablauf}{23}{subsection.60}%
+\contentsline {chapter}{\numberline {5}Konzeption und Implementierung}{25}{chapter.61}%
+\contentsline {section}{\numberline {5.1}Aufbau der Implementierung}{25}{section.62}%
+\contentsline {section}{\numberline {5.2}Contiki-Verzeichnisstruktur}{25}{section.63}%
+\contentsline {subsection}{\numberline {5.2.1}Übersetzung eines Contiki-Programms}{26}{subsection.92}%
+\contentsline {subsection}{\numberline {5.2.2}Programmieren eines Mikrocontrollers}{27}{subsection.111}%
+\contentsline {chapter}{\numberline {6}Tests und Evaluation}{29}{chapter.136}%
+\contentsline {section}{\numberline {6.1}Herleitung von Test-Cases}{29}{section.137}%
+\contentsline {subsection}{\numberline {6.1.1}Funktionale Tests}{29}{subsection.138}%
+\contentsline {subsection}{\numberline {6.1.2}Leistungstests/Performancetests}{29}{subsection.139}%
+\contentsline {section}{\numberline {6.2}Bewertung der Ergebnisse}{29}{section.140}%
+\contentsline {chapter}{\numberline {7}Fazit und Ausblick}{31}{chapter.141}%
+\contentsline {section}{\numberline {7.1}Analyse der Implementierung}{31}{section.142}%
+\contentsline {subsection}{\numberline {7.1.1}Kostenbetrachtung}{31}{subsection.143}%
+\contentsline {subsubsection}{\nonumberline Materialkosten}{31}{subsubsection*.144}%
+\contentsline {subsubsection}{\nonumberline Entwicklungskosten iec104}{32}{subsubsection*.146}%
+\contentsline {section}{\numberline {7.2}Anwendungsmöglichkeiten}{34}{section.147}%
+\contentsline {subsection}{\numberline {7.2.1}Anwendungsbereiche von Smart Objects}{34}{subsection.148}%
+\contentsline {subsection}{\numberline {7.2.2}Anwendungsmöglichkeiten für die Implementierung}{35}{subsection.149}%
+\contentsline {subsection}{\numberline {7.2.3}Erweiterungsvorschläge für die Implementierung}{35}{subsection.150}%
+\contentsline {section}{\numberline {7.3}Zusammenfassung}{36}{section.151}%
 \def \@chapapp {\appendixname }
-\contentsline {chapter}{\numberline {A}Der Blindtext}{37}{appendix.147}%
-\contentsline {chapter}{\nonumberline Abbildungsverzeichnis}{39}{chapter*.148}%
-\contentsline {chapter}{\nonumberline Tabellenverzeichnis}{41}{chapter*.149}%
-\contentsline {chapter}{\nonumberline {Quelltextverzeichnis}}{43}{chapter*.150}%
-\contentsline {chapter}{\nonumberline {Literaturverzeichnis}}{45}{chapter*.151}%
-\contentsline {chapter}{\nonumberline Eigenständigkeitserklärung}{49}{chapter*.152}%
+\contentsline {chapter}{\numberline {A}Der Blindtext}{39}{appendix.152}%
+\contentsline {chapter}{\nonumberline Abbildungsverzeichnis}{41}{chapter*.153}%
+\contentsline {chapter}{\nonumberline Tabellenverzeichnis}{43}{chapter*.154}%
+\contentsline {chapter}{\nonumberline {Quelltextverzeichnis}}{45}{chapter*.155}%
+\contentsline {chapter}{\nonumberline {Literaturverzeichnis}}{47}{chapter*.156}%
+\contentsline {chapter}{\nonumberline Eigenständigkeitserklärung}{51}{chapter*.157}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 
