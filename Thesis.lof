@@ -7,6 +7,10 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Diagramm logischer Komponenten des \texttt {scanner} Verzeichnisses (vereinfacht)}}{25}{figure.112}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Weg der Pakete durch den Linux Kernel (vereinfacht)}}{27}{figure.113}%
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Ablaufes und Funktionsweise der \texttt {emitting\_packets}-Komponente (vereinfacht)}}{28}{figure.116}%
+\contentsline {figure}{\numberline {5.4}{\ignorespaces Exemplarisches Diagramm zur Funktionsweise der \texttt {capturing\_packets}-Komponente (vereinfacht)}}{31}{figure.122}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \def \@chapapp {\appendixname }

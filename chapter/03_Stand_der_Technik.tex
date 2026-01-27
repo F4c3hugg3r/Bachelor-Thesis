@@ -38,8 +38,7 @@ Basis für kommerzielle Sicherheitsanalysen (z. B. \textit{Censys}) ist es das a
 Der Kern der Leistungsfähigkeit von \textit{ZMap} lässt sich auf drei wesentliche Implementierungsentscheidungen zurückführen:
 
 \begin{itemize} 
-	\itemsep 0pt
-	\item Effiziente I/O-Schnittstellen: \textit{ZMap} nutzt standardmäßig \texttt{AF\_PACKET} in Kombination mit \textit{Memory Mapping} (\texttt{mmap}), 
+	\item \textbf{Effiziente I/O-Schnittstellen:} \textit{ZMap} nutzt standardmäßig \texttt{AF\_PACKET} in Kombination mit \textit{Memory Mapping} (\texttt{mmap}), 
     um den \textit{Overhead} des Kopierens zwischen \textit{Kernel} und \textit{User-Space} zu reduzieren. Zwar zeigten Erweiterungen wie 
     \textit{Zippier ZMap} \cite{Adrian_Durumeric_Singh_Halderman}, dass durch spezialisierte Treiber wie \texttt{PF\_RING ZC} (\textit{Zero Copy}) 
     noch höhere Geschwindigkeiten möglich sind, jedoch weisen die Autoren darauf 
@@ -61,7 +60,6 @@ Technologien und Scanner-Architekturen aufgetan. Beispielsweise mithilfe von:
 
 % TODO hier teilweise Quellen ergänzen
 \begin{itemize} 
-	\itemsep 0pt
 \item \textbf{\textit{Kernel-Bypass} mit \texttt{DPDK}:} Das \textit{Data Plane Development Kit} (\texttt{DPDK}) erlaubt es Anwendungen, die Netzwerkkarte 
 direkt aus dem \textit{User-Space} anzusprechen und den Kernel komplett zu umgehen. Abu Bakar und Kijsirikul zeigen, dass 
 \texttt{DPDK}-basierte Scanner extrem hohe Raten erzielen können \cite{Abu_Bakar_Kijsirikul_2023}. Der Nachteil ist jedoch 
@@ -109,9 +107,9 @@ erhält \cite{Bugden_Alahmar_2022,bugden2022safety,Balasubramanian2017System}.
 
 \section{Vergleichsobjekte für die Evaluation}
 Um die Eignung der Implementierung in seiner Funktion als Performanz-orientierter SYN-Scanner aussagekräftig evaluieren zu können,
-wird er im Evaluationsteil der Arbeit mit Scannern aus folgenden Bereichen verglichen:
+wird er im Evaluationsteil der Arbeit mit folgenden Scannern verglichen
 
-% TODO für Rust und Go Alternative noch darauf eingehen, welche Technologien sie nutzen 
+% TODO ändern zu ZMap und Masscan
 \begin{itemize}
     \item  \textbf{Vergleichsobjekt aus der Forschung:} Als Vergleichsobjekt aus der Forschung dient ZMap. Wie bereits in \ref{Ch3_S1_ZMap}
     gezeigt, repräsentiert er das Standard-Vergleichsobjekt aus der Forschung und ist gleichzeitig einer der zahlreichen Varianten, 

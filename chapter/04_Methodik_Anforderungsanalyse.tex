@@ -10,40 +10,40 @@
 Dieses Kapitel definiert die funktionalen und nicht-funktionalen Anforderungen an den zu entwickelnden Portscanner, 
 beschreibt das gewählte Vorgehensmodell zur Umsetzung in Rust und legt das Untersuchungsdesign für die anschließende Evaluation fest.
 
-\section{Anforderungsanalyse}
+\section{Anforderungsanalyse} \label{Anforderungen}
 
-\subsection{Funktionale Anforderungen}
+\subsection{Funktionale Anforderungen} \label{Anforderungen.fa}
 Die funktionalen Anforderungen definieren das Verhalten des Systems und die logischen Operationen, die der Scanner ausführen muss, 
 um einen korrekten \texttt{SYN}-Scan durchzuführen.
 
 \begin{itemize} 
-    \item \textbf{/F-01/ Konstruktion valider \texttt{TCP-SYN}-Pakete:} Das System muss in der Lage sein, rohe TCP-Pakete zu konstruieren. 
-    Dabei müssen \texttt{IP}-Header und \texttt{TCP}-Header manuell gesetzt und korrekte Prüfsummen berechnet werden, 
-    um vom Zielsystem als legitime Verbindungsanfragen akzeptiert zu werden.
+    \item \textbf{/F-01/ \phantomsection\label{req:F-01} Konstruktion valider \texttt{TCP-SYN}-Pakete:} Das System muss in der Lage sein, rohe TCP-Pakete so zu konstruieren, 
+    dass \texttt{IP}-Header und \texttt{TCP}-Header (inklusive \texttt{SYN}-Cookie) korrekt manuell gesetzt und die Prüfsummen korrekt berechnet werden,
+    um vom Zielsystem als legitime Verbindungsanfragen akzeptiert zu werden. 
 
-    \item \textbf{/F-02/ Senden von Paketen:} Das System muss in der Lage sein, TCP Pakete an andere Zielsysteme zu senden.
-    Es sollten auch bei sehr hohem Durchsatz weniger als 10\% \textit{Packet-loss}\footnote{Verlorene Pakete}
-    auftreten. Dies ist eine eher liberale Grenze und orientiert sich an den Verlustraten renommierter 
-    hochleistungs-Scanner wie \textit{ZMap} (.TODO..\%) oder \textit{Masscan} (.TODO.. \%) inklusive eines kleinen Puffers aufgrund des begrenzten Umfanges einer
-    Bachelorarbeit.
+    \item \textbf{/F-02/ \phantomsection\label{req:F-02} Senden von Paketen:} Das System muss in der Lage sein, TCP Pakete an andere Zielsysteme zu senden. 
     
-    \item \textbf{/F-03/ Empfang von Paketen:} Das System muss in der Lage sein, eingehende Netzwerkpakete
-    abzufangen und zu untersuchen. Es sollten auch bei sehr hohem Durchsatz weniger als 5\% \textit{Packet-loss}
-    auftreten. Dies ist eine eher liberale Grenze und orientiert sich an den Verlustraten renommierter 
-    hochleistungs-Scanner wie \textit{ZMap} (.TODO..\%) oder \textit{Masscan} (.TODO.. \%) plus eines kleinen Puffers aufgrund des begrenzten Umfanges einer
-    Bachelorarbeit.
+    \item \textbf{/F-03/ \phantomsection\label{req:F-03} Empfang von Paketen:} Das System muss in der Lage sein, eingehende Netzwerkpakete
+    abzufangen und zu untersuchen.
 
-    \item \textbf{/F-04/ \textit{Stateless-Scanning} (\texttt{SYN}-Cookie):} Um die Speicherung ausgehender Verbindungen zu eliminieren, muss der Scanner 
-    verbindungsspezifische Informationen kryptografisch so in die \textit{Sequence Number} des ausgehenden Pakets kodieren, dass
-    dieser zur Validierung für eingehende Pakete genutzt werden kann.
+    \item \textbf{/F-04/ \phantomsection\label{req:F-04} Zustandsloses Scanning:} Zwischen den Sende- und Empfangskomponenten darf keine Kommunikation über die Zielsysteme
+    bestehen, sodass kein Zustand über bereits kontaktierte Zielsysteme gespeichert wird.
 
-    \item \textbf{/F-05/ Validierung eingehender Antworten:} Die Empfangskomponente muss eingehende \texttt{SYN-ACK}-Pakete abfangen und validieren. 
+    \item \textbf{/F-05/ \phantomsection\label{req:F-05} Validierung eingehender Antworten:} Die Empfangskomponente muss eingehende \texttt{SYN-ACK}-Pakete validieren. 
     Dafür muss der Hash-Werte des \texttt{SYN}-Cookies korrekt erstellt und mit dem aus der \textit{Acknowledgement Number} extrahierten Wert verglichen werden.
 
-    \item \textbf{/F-06/ Schließen der Verbindung auf Zielsystem:} Nach der Identifikation eines offenen Ports, sollte der Scanner 
+    \item \textbf{/F-06/ \phantomsection\label{req:F-06} Schließen der Verbindung auf Zielsystem:} Nach der Identifikation eines offenen Ports, sollte der Scanner 
     ein \texttt{RST}-Paket senden, um die halb-offene Verbindung auf dem Zielsystem sauber zu schließen und Ressourcenfreigabe zu ermöglichen.
 
-    \item \textbf{/F-07/ Vermeidung von Duplikaten:} Die Endausgabe des Scan-Ergebnisses muss von Duplikaten bereinigt sein.
+    \item \textbf{/F-07/ \phantomsection\label{req:F-07} Endausgabe und Vermeidung von Duplikaten:} Die Endausgabe muss die ausgewerteten Scanergebnisse inklusive IP-Adresse und Ziel-Port
+    der offenen Zielsysteme enthalten und muss von Duplikaten bereinigt sein.
+
+    \item \textbf{/F-08/ \phantomsection\label{req:F-08} Durchsatzlimitierung (\textit{Rate Limiting}):} Das Programm muss in der Lage sein, eine angegebene Durchsatzrate (in Byte pro Sekunde)
+    nicht zu überschreiten, sodass eine konsistente Performanz-Messung möglich ist.
+
+    \item \textbf{/F-9/ \phantomsection\label{req:F-09} Anpassung an bestehende Infrastruktur:} Das Programm muss die zu scannenden Ziel-IP-Adressen aus dem \textit{Standard Input}
+    des Programmes entnehmen, um in die Infrastruktur des Unternehmens, welches diese Arbeit begleitet, zu passen.
+    
 \end{itemize}
 
 \subsection{Nicht-funktionale Anforderungen}
@@ -51,27 +51,28 @@ Die nicht-funktionalen Anforderungen stellen Qualitätsanforderungen dar und lei
 der Performance-Maximierung und der Verwendung von Rust ab. 
 
 \begin{itemize} 
-\item \textbf{/NF-01/ Maximierung des Durchsatzes:} Das System soll in der Lage sein, die verfügbare Bandbreite einer 
+\item \textbf{/NF-01/ \phantomsection\label{req:NF-01} Maximierung des Durchsatzes:} Das System soll in der Lage sein, die verfügbare Bandbreite einer 
 Standard-Gigabit-Schnittstelle bestmöglich auszunutzen. Zielgröße ist ein Sende-Durchsatz im mindestens fünfstelligen Paket-pro-Sekunde-Bereich, 
 um mit etablierten Tools vergleichbar zu sein.
 
-\item \textbf{/NF-02/ Asynchrone Architektur:} Die Anwendung muss Gebrauch von Lastverteilenden Maßnahmen in Form
+\item \textbf{/NF-02/ \phantomsection\label{req:NF-02} Asynchrone Architektur:} Die Anwendung muss Gebrauch von Lastverteilenden Maßnahmen in Form
 von nebenläufiger Programmierung machen, um die Auslastung zu verteilen und Performance somit zu steigern.
 
-\item \textbf{/NF-03/ Nutzung moderner Kernel-Mechanismen:} 
+\item \textbf{/NF-03/ \phantomsection\label{req:NF-03} Nutzung moderner Kernel-Mechanismen:} 
     Zur Steigerung der Performance und Forschungsrelevanz sollen fortschrittliche Linux-Mechanismen zur Paketverarbeitung, 
     spezifisch \texttt{AF\_XDP} oder \texttt{eBPF}, evaluiert und implementiert werden.
 
-\item \textbf{/NF-04/ Speichersicherheit:} 
+\item \textbf{/NF-04/ \phantomsection\label{req:NF-04} Speichersicherheit:} 
 Die Gesamtarchitektur soll die Sicherheitsgarantien von Rust wahren. \texttt{unsafe}-Blöcke können, falls nötig, genutzt werden 
 (z.B. für systemnahe Netzwerkoperationen) sollten aber möglichst vermieden oder durch die Nutzung von externen Bibliotheken  
 ersetzt werden, da diese intern \texttt{unsafe}-Blöcke häufig sicher kapseln \cite{RustBelt}.
 
-\item \textbf{/NF-05/ Minimale Ressourcennutzung:} Die Architektur und gewählten Technologien sollten die Ressourcennutzung
-(CPU-Zeit, RAM Verbrauch) neben der Durchsatzgeschwindigkeit nach /NF-01/ priorisieren und somit minimieren.
+\item \textbf{/NF-05/ \phantomsection\label{req:NF-05} Minimale Ressourcennutzung:} Die Architektur und gewählten Technologien sollten die Ressourcennutzung
+(CPU-Zeit, RAM Verbrauch) neben der Durchsatzgeschwindigkeit nach \hyperref[req:NF-01]{/NF-01/} priorisieren und somit minimieren.
 Keine der beiden Anforderungen darf aufgrund der anderen stark vernachlässigt werden. 
 \end{itemize}
 
+% TODO das ändern! Keine zwei Stufen mehr sondern ein Architektonisches Projekt
 \section{Vorgehensmodell der Entwicklung}
 Für die Realisierung wird ein evaluationsgetriebener, prototypischer Ansatz gewählt. Aufgrund der Komplexität asynchroner 
 Netzwerkprogrammierung, sowie der Vielzahl möglicher Technologien, empfiehlt es sich, verschiedene Wege auszuprobieren. Dies
@@ -155,8 +156,8 @@ Der experimentelle Ablauf gliedert sich in zwei definierte Szenarien, um sowohl 
 die maximalen Leistungsgrenzen des Scanners zu evaluieren. Für beide Szenarien werden die zuvor definierten 
 Ressourcen-Metriken (CPU, RAM) sowie die Paketraten aufgezeichnet.
 
-\begin{itemize}
-    \item \textbf{Szenario A: Anforderungsvalidierung} Im ersten Szenario wird der Scanner mit einer festen, limitierten Senderate 
+\begin{enumerate}
+    \item \textbf{Anforderungsvalidierung} Im ersten Szenario wird der Scanner mit einer festen, limitierten Senderate 
     von 100.000 Paketen pro Sekunde (pps) 
 betrieben. Dieser Test dient als Referenzmessung (\textit{Baseline}), um die Erfüllung der funktionalen 
 Anforderungen zu verifizieren. Bei 100.000 pps handelt es sich um eine signifikante Last, die jedoch weit unterhalb 
@@ -164,8 +165,14 @@ der theoretischen Sättigungsgrenze einer Gigabit-Leitung liegt. Ziel ist der Na
 definierten Last über einen längeren Zeitraum stabil arbeitet und ein deterministisches Ressourcenverhalten zeigt. 
 Dies stellt sicher, dass gemessene Ineffizienzen im zweiten Szenario 
 tatsächlich auf die Hardware- oder Software-Limitierung und nicht auf Implementierungsfehler zurückzuführen sind.
-    \item \textbf{Szenario B: Ermittlung der Performanzgrenze} Im zweiten Szenario wird die künstliche Drosselung des Scanners aufgehoben. Der Scanner versucht, Pakete so schnell 
+Um die Erfüllung der funktionalen Anforderungen zu prüfen, wird der Ziel-Knoten außerdem auf eine gewisse Anzahl an
+Paketen mit validen \texttt{SYN/ACK} Paketen Antworten.
+    \item \textbf{Ermittlung der Performanzgrenze} Im zweiten Szenario wird die künstliche Drosselung des Scanners aufgehoben. Der Scanner versucht, Pakete so schnell 
 zu generieren und zu versenden, wie es die CPU oder das Netzwerkinterface zulassen. Dieses Szenario dient der Ermittlung des maximalen Durchsatzes. 
 Durch den Vergleich der CPU-Auslastung bei maximaler Last lässt sich feststellen, ob die Limitierung durch die Rechenleistung der Adressgenerierung
 oder durch den Overhead der Paketübertragung entsteht und wie viele Ressourcen dabei genutzt werden.
-\end{itemize}
+    \item \textbf{Test mit realen Eingabeparametern} Im dritten Test werden Parameter gewählt, die in einem realen Szenario von Vorteil wären.
+Dabei soll eine feste Senderate gewählt werden, um die Vergleichbarkeit zu erhöhen. Um die Antwortrate in einem realen Szenario zu erhöhen, 
+indem der Scan schlechter von dem normalen Netzwerkrauschen zu unterscheiden ist, werden in der Regel mehrere verschiedene \textit{Source}-IP-Adressen zum Senden gewählt.
+Auch das Scannen mehrerer statt eines einzelnen \textit{Destination}-Ports hilft dabei \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024}.
+\end{enumerate}

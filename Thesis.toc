@@ -29,40 +29,61 @@
 \contentsline {subsection}{\numberline {3.5.1}Problematik C-basierter Ansätze}{16}{subsection.41}%
 \contentsline {subsection}{\numberline {3.5.2}Problematik alternativer Ansätze}{17}{subsection.42}%
 \contentsline {subsection}{\numberline {3.5.3}Lösungsansatz}{17}{subsection.43}%
-\contentsline {chapter}{\numberline {4}Anforderungsanalyse und Methodik}{19}{chapter.44}%
-\contentsline {section}{\numberline {4.1}Anforderungsanalyse}{19}{section.45}%
-\contentsline {subsection}{\numberline {4.1.1}Funktionale Anforderungen}{19}{subsection.46}%
-\contentsline {subsection}{\numberline {4.1.2}Nicht-funktionale Anforderungen}{20}{subsection.48}%
-\contentsline {section}{\numberline {4.2}Vorgehensmodell der Entwicklung}{21}{section.49}%
-\contentsline {section}{\numberline {4.3}Untersuchungsdesign}{21}{section.54}%
-\contentsline {subsection}{\numberline {4.3.1}Metriken}{22}{subsection.55}%
-\contentsline {subsection}{\numberline {4.3.2}Testumgebung}{22}{subsection.57}%
-\contentsline {subsection}{\numberline {4.3.3}Testablauf}{23}{subsection.60}%
-\contentsline {chapter}{\numberline {5}Konzeption und Implementierung}{25}{chapter.61}%
-\contentsline {section}{\numberline {5.1}Aufbau der Implementierung}{25}{section.62}%
-\contentsline {section}{\numberline {5.2}Contiki-Verzeichnisstruktur}{25}{section.63}%
-\contentsline {subsection}{\numberline {5.2.1}Übersetzung eines Contiki-Programms}{26}{subsection.92}%
-\contentsline {subsection}{\numberline {5.2.2}Programmieren eines Mikrocontrollers}{27}{subsection.111}%
-\contentsline {chapter}{\numberline {6}Tests und Evaluation}{29}{chapter.136}%
-\contentsline {section}{\numberline {6.1}Herleitung von Test-Cases}{29}{section.137}%
-\contentsline {subsection}{\numberline {6.1.1}Funktionale Tests}{29}{subsection.138}%
-\contentsline {subsection}{\numberline {6.1.2}Leistungstests/Performancetests}{29}{subsection.139}%
-\contentsline {section}{\numberline {6.2}Bewertung der Ergebnisse}{29}{section.140}%
-\contentsline {chapter}{\numberline {7}Fazit und Ausblick}{31}{chapter.141}%
-\contentsline {section}{\numberline {7.1}Analyse der Implementierung}{31}{section.142}%
-\contentsline {subsection}{\numberline {7.1.1}Kostenbetrachtung}{31}{subsection.143}%
-\contentsline {subsubsection}{\nonumberline Materialkosten}{31}{subsubsection*.144}%
-\contentsline {subsubsection}{\nonumberline Entwicklungskosten iec104}{32}{subsubsection*.146}%
-\contentsline {section}{\numberline {7.2}Anwendungsmöglichkeiten}{34}{section.147}%
-\contentsline {subsection}{\numberline {7.2.1}Anwendungsbereiche von Smart Objects}{34}{subsection.148}%
-\contentsline {subsection}{\numberline {7.2.2}Anwendungsmöglichkeiten für die Implementierung}{35}{subsection.149}%
-\contentsline {subsection}{\numberline {7.2.3}Erweiterungsvorschläge für die Implementierung}{35}{subsection.150}%
-\contentsline {section}{\numberline {7.3}Zusammenfassung}{36}{section.151}%
+\contentsline {chapter}{\numberline {4}Anforderungsanalyse und Methodik}{18}{chapter.44}%
+\contentsline {section}{\numberline {4.1}Anforderungsanalyse}{18}{section.45}%
+\contentsline {subsection}{\numberline {4.1.1}Funktionale Anforderungen}{18}{subsection.46}%
+\contentsline {subsection}{\numberline {4.1.2}Nicht-funktionale Anforderungen}{19}{subsection.56}%
+\contentsline {section}{\numberline {4.2}Vorgehensmodell der Entwicklung}{20}{section.62}%
+\contentsline {section}{\numberline {4.3}Untersuchungsdesign}{20}{section.67}%
+\contentsline {subsection}{\numberline {4.3.1}Metriken}{21}{subsection.68}%
+\contentsline {subsection}{\numberline {4.3.2}Testumgebung}{21}{subsection.70}%
+\contentsline {subsection}{\numberline {4.3.3}Testablauf}{22}{subsection.73}%
+\contentsline {chapter}{\numberline {5}Konzeption und Implementierung}{23}{chapter.77}%
+\contentsline {section}{\numberline {5.1}Übersicht genutzter Crates}{23}{section.78}%
+\contentsline {section}{\numberline {5.2}Projektstruktur Basisimplementierung}{23}{section.80}%
+\contentsline {subsection}{\numberline {5.2.1}Logische Komponenten des Scanners (\texttt {scanner})}{25}{subsection.111}%
+\contentsline {section}{\numberline {5.3}Implementierung und Funktionsweise der Komponenten}{29}{section.114}%
+\contentsline {subsection}{\numberline {5.3.1}Paketemissionierung (emitting\_packets)}{29}{subsection.115}%
+\contentsline {subsubsection}{\nonumberline Rate Limiter (\texttt {rate\_limiter.rs})}{29}{subsubsection*.117}%
+\contentsline {subsubsection}{\nonumberline Assembler (\texttt {assembler.rs})}{29}{subsubsection*.118}%
+\contentsline {subsubsection}{\nonumberline Sender (\texttt {sender.rs})}{30}{subsubsection*.120}%
+\contentsline {section}{\numberline {5.4}Ergebnisverarbeitung (capturing\_packets)}{30}{section.121}%
+\contentsline {subsubsection}{\nonumberline Receiver (\texttt {receiver.rs})}{30}{subsubsection*.123}%
+\contentsline {subsubsection}{\nonumberline Bucket (\texttt {bucket.rs})}{32}{subsubsection*.124}%
+\contentsline {section}{\numberline {5.5}Programmstart (\texttt {main.rs}, \texttt {bin/mock.program}) und Jobverwaltung (job\_controlling)}{33}{section.125}%
+\contentsline {subsection}{\numberline {5.5.1}Funktionsweise}{33}{subsection.126}%
+\contentsline {subsubsection}{\nonumberline Startprogramm (\texttt {mock\_program.rs})}{33}{subsubsection*.127}%
+\contentsline {subsubsection}{\nonumberline Einstiegspunkt (\texttt {main.rs})}{33}{subsubsection*.128}%
+\contentsline {subsubsection}{\nonumberline Finish-Broadcaster (\texttt {finish\_broadcaster})}{34}{subsubsection*.129}%
+\contentsline {subsubsection}{\nonumberline Standard-Input Parser (\texttt {parser\_std\_in})}{34}{subsubsection*.130}%
+\contentsline {subsubsection}{\nonumberline Scanjob (\texttt {scanjob.rs})}{34}{subsubsection*.131}%
+\contentsline {section}{\numberline {5.6}eBPF}{34}{section.132}%
+\contentsline {subsection}{\numberline {5.6.1}Funktionsweise}{34}{subsection.133}%
+\contentsline {section}{\numberline {5.7}Qualitätssicherung}{34}{section.134}%
+\contentsline {section}{\numberline {5.8}Testumgebung}{34}{section.135}%
+\contentsline {section}{\numberline {5.9}Contiki-Verzeichnisstruktur}{34}{section.136}%
+\contentsline {subsection}{\numberline {5.9.1}Übersetzung eines Contiki-Programms}{35}{subsection.165}%
+\contentsline {subsection}{\numberline {5.9.2}Programmieren eines Mikrocontrollers}{36}{subsection.184}%
+\contentsline {chapter}{\numberline {6}Tests und Evaluation}{38}{chapter.209}%
+\contentsline {section}{\numberline {6.1}Herleitung von Test-Cases}{38}{section.210}%
+\contentsline {subsection}{\numberline {6.1.1}Funktionale Tests}{38}{subsection.211}%
+\contentsline {subsection}{\numberline {6.1.2}Leistungstests/Performancetests}{38}{subsection.212}%
+\contentsline {section}{\numberline {6.2}Bewertung der Ergebnisse}{38}{section.213}%
+\contentsline {chapter}{\numberline {7}Fazit und Ausblick}{39}{chapter.214}%
+\contentsline {section}{\numberline {7.1}Analyse der Implementierung}{39}{section.215}%
+\contentsline {subsection}{\numberline {7.1.1}Kostenbetrachtung}{39}{subsection.216}%
+\contentsline {subsubsection}{\nonumberline Materialkosten}{39}{subsubsection*.217}%
+\contentsline {subsubsection}{\nonumberline Entwicklungskosten iec104}{40}{subsubsection*.219}%
+\contentsline {section}{\numberline {7.2}Anwendungsmöglichkeiten}{42}{section.220}%
+\contentsline {subsection}{\numberline {7.2.1}Anwendungsbereiche von Smart Objects}{42}{subsection.221}%
+\contentsline {subsection}{\numberline {7.2.2}Anwendungsmöglichkeiten für die Implementierung}{43}{subsection.222}%
+\contentsline {subsection}{\numberline {7.2.3}Erweiterungsvorschläge für die Implementierung}{43}{subsection.223}%
+\contentsline {section}{\numberline {7.3}Zusammenfassung}{44}{section.224}%
 \def \@chapapp {\appendixname }
-\contentsline {chapter}{\numberline {A}Der Blindtext}{39}{appendix.152}%
-\contentsline {chapter}{\nonumberline Abbildungsverzeichnis}{41}{chapter*.153}%
-\contentsline {chapter}{\nonumberline Tabellenverzeichnis}{43}{chapter*.154}%
-\contentsline {chapter}{\nonumberline {Quelltextverzeichnis}}{45}{chapter*.155}%
-\contentsline {chapter}{\nonumberline {Literaturverzeichnis}}{47}{chapter*.156}%
-\contentsline {chapter}{\nonumberline Eigenständigkeitserklärung}{51}{chapter*.157}%
+\contentsline {chapter}{\numberline {A}Der Blindtext}{47}{appendix.225}%
+\contentsline {chapter}{\nonumberline Abbildungsverzeichnis}{49}{chapter*.226}%
+\contentsline {chapter}{\nonumberline Tabellenverzeichnis}{50}{chapter*.227}%
+\contentsline {chapter}{\nonumberline {Quelltextverzeichnis}}{51}{chapter*.228}%
+\contentsline {chapter}{\nonumberline {Literaturverzeichnis}}{52}{chapter*.229}%
+\contentsline {chapter}{\nonumberline Eigenständigkeitserklärung}{56}{chapter*.230}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

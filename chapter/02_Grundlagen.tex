@@ -29,7 +29,6 @@ Der gesamte Kommunikations-Endpunkt wird \textit{Socket} genannt. TODO cite [Com
 Ports können in verschiedene Zustände eingeordnet werden. Für diese Arbeit ist nur die Unterscheidung zwischen offen und geschlossen/gefiltert relevant.
 
 \begin{itemize} 
-	\itemsep 0pt
 	\item \textbf{Offen:} Eine Anwendung lauscht auf dem Port und akzeptiert eingehende valide 
 	TCP oder UDP Anfragen \cite{Lyon_2010}.
 	\item \textbf{Geschlossen / Gefiltert:} Der mit dem Port verbundene Service ist zwar ansprechbar, aber akzeptiert keine eingehenden Verbindungen / 
@@ -182,7 +181,6 @@ von offenen Ports bzw. aktiven Diensten, was als erster Schritt für weiterführ
 
 Beim Scannen von Ports können grundsätzlich zwei strategische Ausrichtungen unterschieden werden:
 \begin{itemize} 
-	\itemsep 0pt
 	\item \textbf{Vertikales Scannen:} Hierbei wird ein einzelner Ziel-Host (TODO Host erklären) auf eine Vielzahl von Ports (oft alle 65535) gescannt, um ein möglichst
 vollständiges Profil möglicher Schwachstellen des Zielsystems zu erlangen und somit eher für das Penetrationtesting geeignet ist.
 \item \textbf{Horizontales Scannen:} Ein sehr großer Adressbereich, beispielsweise das komplette IPv4-Internet wird gescannt. Dafür ist die Anzahl
@@ -241,7 +239,6 @@ Ein zentrales Konzept zum Verständnis der Performance-Grenzen ist die Untersche
 zwischen \textit{User Space} und \textit{Kernel Space} \cite{Kerrisk_2018} S23: 
 
 \begin{itemize} 
-	\itemsep 0pt
 	\item \textbf{Kernel Space:} Hier läuft der Kern des Betriebssystems mit vollem Zugriff 
 	auf die Hardware und den Speicher. Treiber und der Netzwerk-Stack operieren auf dieser Ebene. 
 	\item \textbf{User Space:} Hier laufen reguläre Anwendungen in isolierten Speicherbereichen. 
@@ -316,7 +313,7 @@ komplexer Metadatenstrukturen (\texttt{sk\_buff}) \footnote{\textit{Socket Buffe
 \texttt{XDP} greift vor dieser Allokation ein (siehe Abbildung \ref{fig:rx_xdp}). Tests zeigen, dass \texttt{XDP} auf einem einzelnen CPU-Kern bis zu 
 fünfmal mehr Pakete pro Sekunde verarbeiten kann als der Standard Linux-Stack \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}.
 
-% TODO Pfeil vom ebpf Programm muss orange sein, Queuing und forwarding so stehen lassen?
+% TODO Pfeil vom ebpf Programm muss orange sein
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\textwidth]{pictures/RX_Kernel_hell_3.drawio.png}
