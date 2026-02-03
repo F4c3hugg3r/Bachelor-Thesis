@@ -1,19 +1,21 @@
 \babel@toc {ngerman}{}\relax 
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {2.1}{\ignorespaces \textit {Three-Way-Handshake} zum Aufbau einer TCP-Verbindung \blx@tocontentsinit {0}\cite {Wendzel_2021}.}}{4}{figure.12}%
-\contentsline {figure}{\numberline {2.2}{\ignorespaces Aufbau des TCP-Headers nach RFC 9293 \blx@tocontentsinit {0}\cite {Eddy_2022}.}}{5}{figure.13}%
-\contentsline {figure}{\numberline {2.3}{\ignorespaces Der Empfangspfad durch den Kernel bei der Nutzung von \texttt {XDP} und \texttt {eBPF} (vereinfacht). Orientiert an Høiland et al. \blx@tocontentsinit {0}\cite {Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}.}}{9}{figure.23}%
+\contentsline {figure}{\numberline {2.1}{\ignorespaces \textit {Three-Way-Handshake} zum Aufbau einer TCP-Verbindung \blx@tocontentsinit {0}\cite {Wendzel_2021}.}}{4}{figure.14}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Aufbau des TCP-Headers nach RFC 9293 \blx@tocontentsinit {0}\cite {Eddy_2022}.}}{5}{figure.15}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Der Empfangspfad durch den Kernel bei der Nutzung von \texttt {XDP} und \texttt {eBPF} (vereinfacht). Orientiert an Høiland et al. \blx@tocontentsinit {0}\cite {Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}.}}{9}{figure.25}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {5.1}{\ignorespaces Diagramm logischer Komponenten des \texttt {scanner} Verzeichnisses (vereinfacht)}}{25}{figure.112}%
-\contentsline {figure}{\numberline {5.2}{\ignorespaces Weg der Pakete durch den Linux Kernel (vereinfacht)}}{27}{figure.113}%
-\contentsline {figure}{\numberline {5.3}{\ignorespaces Ablaufes und Funktionsweise der \texttt {emitting\_packets}-Komponente (vereinfacht)}}{28}{figure.116}%
-\contentsline {figure}{\numberline {5.4}{\ignorespaces Exemplarisches Diagramm zur Funktionsweise der \texttt {capturing\_packets}-Komponente (vereinfacht)}}{31}{figure.122}%
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Diagramm logischer Komponenten des \texttt {scanner} Verzeichnisses (vereinfacht)}}{25}{figure.116}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Weg der Pakete durch den Linux Kernel (vereinfacht)}}{27}{figure.117}%
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Ablaufes und Funktionsweise der \texttt {emitting\_packets}-Komponente (vereinfacht)}}{29}{figure.122}%
+\contentsline {figure}{\numberline {5.4}{\ignorespaces Exemplarisches Diagramm zur Funktionsweise der \texttt {capturing\_packets}-Komponente (vereinfacht)}}{31}{figure.129}%
+\contentsline {figure}{\numberline {5.5}{\ignorespaces Funktionsweise der \texttt {scan\_job.rs} Datei (vereinfacht)}}{36}{figure.183}%
+\contentsline {figure}{\numberline {5.6}{\ignorespaces Funktionsweise des eBPF Programmes (vereinfacht)}}{38}{figure.188}%
+\contentsline {figure}{\numberline {5.7}{\ignorespaces In-Memory Modifikation des SYN ACK Paketes zum RST Paket}}{41}{figure.208}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\def \@chapapp {\appendixname }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

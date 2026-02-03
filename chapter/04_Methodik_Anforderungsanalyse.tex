@@ -43,6 +43,10 @@ um einen korrekten \texttt{SYN}-Scan durchzuführen.
 
     \item \textbf{/F-9/ \phantomsection\label{req:F-09} Anpassung an bestehende Infrastruktur:} Das Programm muss die zu scannenden Ziel-IP-Adressen aus dem \textit{Standard Input}
     des Programmes entnehmen, um in die Infrastruktur des Unternehmens, welches diese Arbeit begleitet, zu passen.
+
+    % TODO besser formulieren
+    \item \textbf{/F-10/ \phantomsection\label{req:F-10} Linux native Technologien:} Das Programm soll keine Technologien nutzen, die nicht aus dem Ökosystem des Linux Kernels selbst
+    stammen, um die Zukunftssicherheit und Unterstützung der genutzten Technologie zu untermauern.
     
 \end{itemize}
 
@@ -126,7 +130,7 @@ darstellen:
 Netzwerkadapter übergebenen Pakete pro Sekunde. \\ \hline
 \textit{CPU Auslastung} & Prozent (\%) & Die prozentuale Auslastung der CPU-Kerne, aufgeteilt 
 in \textit{User-Space} und \textit{Kernel-Space}. \\ \hline
-\textit{RAM Verbrauch} & Megabyte (MB) & Der \textit{Resident Set Size} (RSS), also der Anteil 
+\textit{RAM Verbrauch} & Megabyte (MB) & Der Anteil 
 des Arbeitsspeichers, der physisch durch den Prozess belegt wird. \\ \hline
 \end{tabularx}
 \label{tab:evaluations-Metriken}

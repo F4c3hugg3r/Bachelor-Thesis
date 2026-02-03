@@ -1,89 +1,85 @@
 \babel@toc {ngerman}{}\relax 
-\contentsline {chapter}{\numberline {1}Einleitung}{1}{chapter.2}%
-\contentsline {section}{\numberline {1.1}Motivation und Einführung in das Themengebiet}{1}{section.3}%
-\contentsline {section}{\numberline {1.2}Zielsetzung und Forschungsfrage}{2}{section.5}%
-\contentsline {section}{\numberline {1.3}Abgrenzung des Themas}{2}{section.6}%
-\contentsline {chapter}{\numberline {2}Theoretische Grundlagen}{3}{chapter.7}%
-\contentsline {section}{\numberline {2.1}Grundlagen der Netzwerkkommunikation}{3}{section.8}%
-\contentsline {subsection}{\numberline {2.1.1}Ports}{3}{subsection.10}%
-\contentsline {subsection}{\numberline {2.1.2}Transmission Control Protocol (TCP)}{4}{subsection.11}%
-\contentsline {section}{\numberline {2.2}Portscanning}{4}{section.14}%
-\contentsline {subsection}{\numberline {2.2.1}SYN-Scanning}{5}{subsection.15}%
-\contentsline {section}{\numberline {2.3}Schnittstellen zur Paketverarbeitung unter Linux}{6}{section.17}%
-\contentsline {subsection}{\numberline {2.3.1}Linux}{6}{subsection.18}%
-\contentsline {subsection}{\numberline {2.3.2}Raw-Sockets und Address Families}{7}{subsection.19}%
-\contentsline {subsection}{\numberline {2.3.3}Erweiterte Berkley Packet Filter (\texttt {eBPF})}{7}{subsection.20}%
-\contentsline {subsection}{\numberline {2.3.4}eXpress Data Path (\texttt {XDP})}{8}{subsection.21}%
-\contentsline {section}{\numberline {2.4}Die Programmiersprache: Rust}{10}{section.24}%
-\contentsline {subsection}{\numberline {2.4.1}Konzepte und Besonderheiten}{10}{subsection.25}%
-\contentsline {subsection}{\numberline {2.4.2}Asynchrone Programmierung und Performance von Rust}{11}{subsection.26}%
-\contentsline {subsubsection}{\nonumberline Nebenläufige und Parallele Programmierung}{11}{subsubsection*.28}%
-\contentsline {subsubsection}{\nonumberline Rusts Konzepte zur Performancesteigerung}{12}{subsubsection*.30}%
-\contentsline {chapter}{\numberline {3}Stand der Technik}{13}{chapter.32}%
-\contentsline {section}{\numberline {3.1}Historische Entwicklung des horizontalen Netzwerk-Scannings}{13}{section.33}%
-\contentsline {subsection}{\numberline {3.1.1}Der Standard Scanner: ZMap}{13}{subsection.34}%
-\contentsline {section}{\numberline {3.2}Alternative Implementierungsansätze}{14}{section.35}%
-\contentsline {section}{\numberline {3.3}Weitere relevante wissenschaftliche Arbeiten}{15}{section.37}%
-\contentsline {section}{\numberline {3.4}Vergleichsobjekte für die Evaluation}{16}{section.39}%
-\contentsline {section}{\numberline {3.5}Problematik bisheriger Ansätze}{16}{section.40}%
-\contentsline {subsection}{\numberline {3.5.1}Problematik C-basierter Ansätze}{16}{subsection.41}%
-\contentsline {subsection}{\numberline {3.5.2}Problematik alternativer Ansätze}{17}{subsection.42}%
-\contentsline {subsection}{\numberline {3.5.3}Lösungsansatz}{17}{subsection.43}%
-\contentsline {chapter}{\numberline {4}Anforderungsanalyse und Methodik}{18}{chapter.44}%
-\contentsline {section}{\numberline {4.1}Anforderungsanalyse}{18}{section.45}%
-\contentsline {subsection}{\numberline {4.1.1}Funktionale Anforderungen}{18}{subsection.46}%
-\contentsline {subsection}{\numberline {4.1.2}Nicht-funktionale Anforderungen}{19}{subsection.56}%
-\contentsline {section}{\numberline {4.2}Vorgehensmodell der Entwicklung}{20}{section.62}%
-\contentsline {section}{\numberline {4.3}Untersuchungsdesign}{20}{section.67}%
-\contentsline {subsection}{\numberline {4.3.1}Metriken}{21}{subsection.68}%
-\contentsline {subsection}{\numberline {4.3.2}Testumgebung}{21}{subsection.70}%
-\contentsline {subsection}{\numberline {4.3.3}Testablauf}{22}{subsection.73}%
-\contentsline {chapter}{\numberline {5}Konzeption und Implementierung}{23}{chapter.77}%
-\contentsline {section}{\numberline {5.1}Übersicht genutzter Crates}{23}{section.78}%
-\contentsline {section}{\numberline {5.2}Projektstruktur Basisimplementierung}{23}{section.80}%
-\contentsline {subsection}{\numberline {5.2.1}Logische Komponenten des Scanners (\texttt {scanner})}{25}{subsection.111}%
-\contentsline {section}{\numberline {5.3}Implementierung und Funktionsweise der Komponenten}{29}{section.114}%
-\contentsline {subsection}{\numberline {5.3.1}Paketemissionierung (emitting\_packets)}{29}{subsection.115}%
-\contentsline {subsubsection}{\nonumberline Rate Limiter (\texttt {rate\_limiter.rs})}{29}{subsubsection*.117}%
-\contentsline {subsubsection}{\nonumberline Assembler (\texttt {assembler.rs})}{29}{subsubsection*.118}%
-\contentsline {subsubsection}{\nonumberline Sender (\texttt {sender.rs})}{30}{subsubsection*.120}%
-\contentsline {section}{\numberline {5.4}Ergebnisverarbeitung (capturing\_packets)}{30}{section.121}%
-\contentsline {subsubsection}{\nonumberline Receiver (\texttt {receiver.rs})}{30}{subsubsection*.123}%
-\contentsline {subsubsection}{\nonumberline Bucket (\texttt {bucket.rs})}{32}{subsubsection*.124}%
-\contentsline {section}{\numberline {5.5}Programmstart (\texttt {main.rs}, \texttt {bin/mock.program}) und Jobverwaltung (job\_controlling)}{33}{section.125}%
-\contentsline {subsection}{\numberline {5.5.1}Funktionsweise}{33}{subsection.126}%
-\contentsline {subsubsection}{\nonumberline Startprogramm (\texttt {mock\_program.rs})}{33}{subsubsection*.127}%
-\contentsline {subsubsection}{\nonumberline Einstiegspunkt (\texttt {main.rs})}{33}{subsubsection*.128}%
-\contentsline {subsubsection}{\nonumberline Finish-Broadcaster (\texttt {finish\_broadcaster})}{34}{subsubsection*.129}%
-\contentsline {subsubsection}{\nonumberline Standard-Input Parser (\texttt {parser\_std\_in})}{34}{subsubsection*.130}%
-\contentsline {subsubsection}{\nonumberline Scanjob (\texttt {scanjob.rs})}{34}{subsubsection*.131}%
-\contentsline {section}{\numberline {5.6}eBPF}{34}{section.132}%
-\contentsline {subsection}{\numberline {5.6.1}Funktionsweise}{34}{subsection.133}%
-\contentsline {section}{\numberline {5.7}Qualitätssicherung}{34}{section.134}%
-\contentsline {section}{\numberline {5.8}Testumgebung}{34}{section.135}%
-\contentsline {section}{\numberline {5.9}Contiki-Verzeichnisstruktur}{34}{section.136}%
-\contentsline {subsection}{\numberline {5.9.1}Übersetzung eines Contiki-Programms}{35}{subsection.165}%
-\contentsline {subsection}{\numberline {5.9.2}Programmieren eines Mikrocontrollers}{36}{subsection.184}%
-\contentsline {chapter}{\numberline {6}Tests und Evaluation}{38}{chapter.209}%
-\contentsline {section}{\numberline {6.1}Herleitung von Test-Cases}{38}{section.210}%
-\contentsline {subsection}{\numberline {6.1.1}Funktionale Tests}{38}{subsection.211}%
-\contentsline {subsection}{\numberline {6.1.2}Leistungstests/Performancetests}{38}{subsection.212}%
-\contentsline {section}{\numberline {6.2}Bewertung der Ergebnisse}{38}{section.213}%
-\contentsline {chapter}{\numberline {7}Fazit und Ausblick}{39}{chapter.214}%
-\contentsline {section}{\numberline {7.1}Analyse der Implementierung}{39}{section.215}%
-\contentsline {subsection}{\numberline {7.1.1}Kostenbetrachtung}{39}{subsection.216}%
-\contentsline {subsubsection}{\nonumberline Materialkosten}{39}{subsubsection*.217}%
-\contentsline {subsubsection}{\nonumberline Entwicklungskosten iec104}{40}{subsubsection*.219}%
-\contentsline {section}{\numberline {7.2}Anwendungsmöglichkeiten}{42}{section.220}%
-\contentsline {subsection}{\numberline {7.2.1}Anwendungsbereiche von Smart Objects}{42}{subsection.221}%
-\contentsline {subsection}{\numberline {7.2.2}Anwendungsmöglichkeiten für die Implementierung}{43}{subsection.222}%
-\contentsline {subsection}{\numberline {7.2.3}Erweiterungsvorschläge für die Implementierung}{43}{subsection.223}%
-\contentsline {section}{\numberline {7.3}Zusammenfassung}{44}{section.224}%
-\def \@chapapp {\appendixname }
-\contentsline {chapter}{\numberline {A}Der Blindtext}{47}{appendix.225}%
-\contentsline {chapter}{\nonumberline Abbildungsverzeichnis}{49}{chapter*.226}%
-\contentsline {chapter}{\nonumberline Tabellenverzeichnis}{50}{chapter*.227}%
-\contentsline {chapter}{\nonumberline {Quelltextverzeichnis}}{51}{chapter*.228}%
-\contentsline {chapter}{\nonumberline {Literaturverzeichnis}}{52}{chapter*.229}%
-\contentsline {chapter}{\nonumberline Eigenständigkeitserklärung}{56}{chapter*.230}%
+\contentsline {chapter}{\numberline {1}Einleitung}{1}{chapter.4}%
+\contentsline {section}{\numberline {1.1}Motivation und Einführung in das Themengebiet}{1}{section.5}%
+\contentsline {section}{\numberline {1.2}Zielsetzung und Forschungsfrage}{2}{section.7}%
+\contentsline {section}{\numberline {1.3}Abgrenzung des Themas}{2}{section.8}%
+\contentsline {chapter}{\numberline {2}Theoretische Grundlagen}{3}{chapter.9}%
+\contentsline {section}{\numberline {2.1}Grundlagen der Netzwerkkommunikation}{3}{section.10}%
+\contentsline {subsection}{\numberline {2.1.1}Ports}{3}{subsection.12}%
+\contentsline {subsection}{\numberline {2.1.2}Transmission Control Protocol (TCP)}{4}{subsection.13}%
+\contentsline {section}{\numberline {2.2}Portscanning}{4}{section.16}%
+\contentsline {subsection}{\numberline {2.2.1}SYN-Scanning}{5}{subsection.17}%
+\contentsline {section}{\numberline {2.3}Schnittstellen zur Paketverarbeitung unter Linux}{6}{section.19}%
+\contentsline {subsection}{\numberline {2.3.1}Linux}{6}{subsection.20}%
+\contentsline {subsection}{\numberline {2.3.2}Raw-Sockets und Address Families}{7}{subsection.21}%
+\contentsline {subsection}{\numberline {2.3.3}Erweiterte Berkley Packet Filter (\texttt {eBPF})}{7}{subsection.22}%
+\contentsline {subsection}{\numberline {2.3.4}eXpress Data Path (\texttt {XDP})}{8}{subsection.23}%
+\contentsline {section}{\numberline {2.4}Die Programmiersprache: Rust}{10}{section.26}%
+\contentsline {subsection}{\numberline {2.4.1}Konzepte und Besonderheiten}{10}{subsection.27}%
+\contentsline {subsection}{\numberline {2.4.2}Asynchrone Programmierung und Performance von Rust}{11}{subsection.28}%
+\contentsline {subsubsection}{\nonumberline Nebenläufige und Parallele Programmierung}{11}{subsubsection*.31}%
+\contentsline {subsubsection}{\nonumberline Rusts Konzepte zur Performancesteigerung}{12}{subsubsection*.34}%
+\contentsline {chapter}{\numberline {3}Stand der Technik}{13}{chapter.36}%
+\contentsline {section}{\numberline {3.1}Historische Entwicklung des horizontalen Netzwerk-Scannings}{13}{section.37}%
+\contentsline {subsection}{\numberline {3.1.1}Der Standard Scanner: ZMap}{13}{subsection.38}%
+\contentsline {section}{\numberline {3.2}Alternative Implementierungsansätze}{14}{section.39}%
+\contentsline {section}{\numberline {3.3}Weitere relevante wissenschaftliche Arbeiten}{15}{section.41}%
+\contentsline {section}{\numberline {3.4}Vergleichsobjekte für die Evaluation}{16}{section.43}%
+\contentsline {section}{\numberline {3.5}Problematik bisheriger Ansätze}{16}{section.44}%
+\contentsline {subsection}{\numberline {3.5.1}Problematik C-basierter Ansätze}{16}{subsection.45}%
+\contentsline {subsection}{\numberline {3.5.2}Problematik alternativer Ansätze}{17}{subsection.46}%
+\contentsline {subsection}{\numberline {3.5.3}Lösungsansatz}{17}{subsection.47}%
+\contentsline {chapter}{\numberline {4}Anforderungsanalyse und Methodik}{18}{chapter.48}%
+\contentsline {section}{\numberline {4.1}Anforderungsanalyse}{18}{section.49}%
+\contentsline {subsection}{\numberline {4.1.1}Funktionale Anforderungen}{18}{subsection.50}%
+\contentsline {subsection}{\numberline {4.1.2}Nicht-funktionale Anforderungen}{19}{subsection.61}%
+\contentsline {section}{\numberline {4.2}Vorgehensmodell der Entwicklung}{20}{section.67}%
+\contentsline {section}{\numberline {4.3}Untersuchungsdesign}{21}{section.72}%
+\contentsline {subsection}{\numberline {4.3.1}Metriken}{21}{subsection.73}%
+\contentsline {subsection}{\numberline {4.3.2}Testumgebung}{21}{subsection.75}%
+\contentsline {subsection}{\numberline {4.3.3}Testablauf}{22}{subsection.78}%
+\contentsline {chapter}{\numberline {5}Konzeption und Implementierung}{23}{chapter.82}%
+\contentsline {section}{\numberline {5.1}Übersicht genutzter Crates}{23}{section.83}%
+\contentsline {section}{\numberline {5.2}Projektstruktur Basisimplementierung}{24}{section.85}%
+\contentsline {subsection}{\numberline {5.2.1}Logische Komponenten des Scanners}{25}{subsection.115}%
+\contentsline {section}{\numberline {5.3}Implementierung und Funktionsweise der Komponenten}{26}{section.118}%
+\contentsline {subsection}{\numberline {5.3.1}Paketemissionierung (emitting\_packets)}{28}{subsection.119}%
+\contentsline {subsubsection}{\nonumberline Rate Limiter (\texttt {rate\_limiter.rs})}{28}{subsubsection*.121}%
+\contentsline {subsubsection}{\nonumberline Assembler (\texttt {assembler.rs})}{28}{subsubsection*.124}%
+\contentsline {subsubsection}{\nonumberline Sender (\texttt {sender.rs})}{30}{subsubsection*.127}%
+\contentsline {section}{\numberline {5.4}Ergebnisverarbeitung (capturing\_packets)}{30}{section.128}%
+\contentsline {subsubsection}{\nonumberline Receiver (\texttt {receiver.rs})}{32}{subsubsection*.131}%
+\contentsline {subsubsection}{\nonumberline Bucket (\texttt {bucket.rs})}{32}{subsubsection*.133}%
+\contentsline {section}{\numberline {5.5}Programmstart und Jobverwaltung (job\_controlling)}{33}{section.134}%
+\contentsline {subsubsection}{\nonumberline Startprogramm (\texttt {mock\_program.rs})}{33}{subsubsection*.136}%
+\contentsline {subsubsection}{\nonumberline Einstiegspunkt (\texttt {main.rs})}{34}{subsubsection*.139}%
+\contentsline {subsubsection}{\nonumberline Standard-Input Parser (\texttt {parser\_std\_in})}{34}{subsubsection*.142}%
+\contentsline {subsubsection}{\nonumberline Scanjob (\texttt {scanjob.rs})}{36}{subsubsection*.182}%
+\contentsline {section}{\numberline {5.6}eBPF}{37}{section.184}%
+\contentsline {subsection}{\numberline {5.6.1}XDP Programm}{37}{subsection.185}%
+\contentsline {subsection}{\numberline {5.6.2}Funktionsweise}{37}{subsection.187}%
+\contentsline {section}{\numberline {5.7}Qualitätssicherung}{41}{section.209}%
+\contentsline {section}{\numberline {5.8}Testumgebung}{41}{section.210}%
+\contentsline {subsection}{\numberline {5.8.1}Hardware-Spezifikation}{41}{subsection.211}%
+\contentsline {subsection}{\numberline {5.8.2}Inkompatibilitäten und Einschränkungen}{42}{subsection.213}%
+\contentsline {subsubsection}{\nonumberline zero-copy Modus}{42}{subsubsection*.215}%
+\contentsline {subsubsection}{\nonumberline Paketrate}{43}{subsubsection*.220}%
+\contentsline {subsection}{\numberline {5.8.3}Aufbau des Zielknotens}{43}{subsection.221}%
+\contentsline {subsection}{\numberline {5.8.4}Messdatenerfassung}{44}{subsection.225}%
+\contentsline {section}{\numberline {5.9}Contiki-Verzeichnisstruktur}{44}{section.226}%
+\contentsline {subsection}{\numberline {5.9.1}Übersetzung eines Contiki-Programms}{45}{subsection.255}%
+\contentsline {subsection}{\numberline {5.9.2}Programmieren eines Mikrocontrollers}{46}{subsection.274}%
+\contentsline {chapter}{\numberline {6}Tests und Evaluation}{48}{chapter.299}%
+\contentsline {section}{\numberline {6.1}Herleitung von Test-Cases}{48}{section.300}%
+\contentsline {subsection}{\numberline {6.1.1}Funktionale Tests}{48}{subsection.301}%
+\contentsline {subsection}{\numberline {6.1.2}Leistungstests/Performancetests}{48}{subsection.302}%
+\contentsline {section}{\numberline {6.2}Bewertung der Ergebnisse}{48}{section.303}%
+\contentsline {chapter}{\numberline {7}Fazit und Ausblick}{49}{chapter.304}%
+\contentsline {chapter}{\numberline {A}Ergänzende Systeminformationen}{51}{appendix.306}%
+\contentsline {section}{\numberline {A.1}Netzwerkkarten-Konfiguration (Ethtool)}{51}{section.307}%
+\contentsline {chapter}{\nonumberline Abbildungsverzeichnis}{53}{chapter*.308}%
+\contentsline {chapter}{\nonumberline Tabellenverzeichnis}{54}{chapter*.309}%
+\contentsline {chapter}{\nonumberline {Quelltextverzeichnis}}{55}{chapter*.310}%
+\contentsline {chapter}{\nonumberline {Literaturverzeichnis}}{56}{chapter*.311}%
+\contentsline {chapter}{\nonumberline Eigenständigkeitserklärung}{61}{chapter*.312}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 
