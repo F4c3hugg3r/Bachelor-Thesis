@@ -13,24 +13,6 @@ im Optimierungsschritt, sowie die Veränderungen, die im Laufe der Entwicklung s
 dargelegt und erklärt. Daraufhin werden die Schritte zur Qualitätssicherung, welche im Laufe der Entwicklung genutzt 
 wurden aufgezeigt und schlussendlich der konkrete Aufbau für die finale Testumgebung beschrieben.
 
-\section{Übersicht genutzter Crates}
-Für die Umsetzung der Komponenten sind folgende genutzte \textit{Crates} aufgrund ihres Einflussreichtums hervorzuheben:
-
-\begin{table}[htbp]
-\caption{Genutzte Crates}
-\begin{tabularx}{\textwidth}{|c|c|X|}\hline 
-\textbf{Crate} & \textbf{Version} & \textbf{Nutzung} \\ \hline
-\textit{tokio} & 1.47.1 & Nutzung für asynchrone Komponenten, Kommunikation über \textit{Channels}, Parsen des Standard-Inputs und Starten mehrerer asynchron laufender Tasks \\ \hline
-\textit{nix} & 0.30.1 & Erstellen der \textit{AF\_PACKET} Schnittstelle und Versenden darüber \\ \hline
-\textit{xdp-socket} & 0.1.4 & Erstellen der \textit{AF\_XDP} Schnittstelle und Versenden darüber \\ \hline
-\textit{aya} & 0.13.1 & Stellt Werkzeuge und Strukturen für die Erstellung und Nutzung von eBPF Programmen zur Verfügung \\ \hline
-\textit{dashmap} & 6.1.0 & Stellt für asynchrone Nutzung optimierte \textit{HashMaps} bereit und führt das Lock-Handling selbstständig durch \\ \hline
-\textit{pnet} & 0.35.0 & Eine abstrahierte Bibliothek für zahlreiche Anwendungen in der Netzwerkprogrammierung \\ \hline
-\textit{network\_types} & 0.1.0 & Parsen der Header Strukturen aus rohem Speicherbereich, ohne diese zu kopieren \\ \hline
-\end{tabularx}
-\label{tab:crates_all}
-\end{table}
-
 \section{Projektstruktur Basisimplementierung}
 Das Rust Projekt hat folgende Ordnerstruktur:
 
@@ -128,6 +110,24 @@ ein Minimum reduzieren, was große Performanzchancen mit sich bringt.
 	\label{fig:kernel_diag}
 \end{figure}
 
+\subsection{Übersicht genutzter Crates}
+Für die Umsetzung der Komponenten sind folgende genutzte \textit{Crates} aufgrund ihres Einflussreichtums hervorzuheben:
+
+\begin{table}[htbp]
+\caption{Genutzte Crates}
+\begin{tabularx}{\textwidth}{|c|c|X|}\hline 
+\textbf{Crate} & \textbf{Version} & \textbf{Nutzung} \\ \hline
+\textit{tokio} & 1.47.1 & Nutzung für asynchrone Komponenten, Kommunikation über \textit{Channels}, Parsen des Standard-Inputs und Starten mehrerer asynchron laufender Tasks \\ \hline
+\textit{nix} & 0.30.1 & Erstellen der \textit{AF\_PACKET} Schnittstelle und Versenden darüber \\ \hline
+\textit{xdp-socket} & 0.1.4 & Erstellen der \textit{AF\_XDP} Schnittstelle und Versenden darüber \\ \hline
+\textit{aya} & 0.13.1 & Stellt Werkzeuge und Strukturen für die Erstellung und Nutzung von eBPF Programmen zur Verfügung \\ \hline
+\textit{dashmap} & 6.1.0 & Stellt für asynchrone Nutzung optimierte \textit{HashMaps} bereit und führt das Lock-Handling selbstständig durch \\ \hline
+\textit{pnet} & 0.35.0 & Eine abstrahierte Bibliothek für zahlreiche Anwendungen in der Netzwerkprogrammierung \\ \hline
+\textit{network\_types} & 0.1.0 & Parsen der Header Strukturen aus rohem Speicherbereich, ohne diese zu kopieren \\ \hline
+\end{tabularx}
+\label{tab:crates_all}
+\end{table}
+
 \section{Implementierung und Funktionsweise der Komponenten}
 Um die Funktionsweise des Programmes im Detail zu erklären, werden im Folgenden die einzelnen Quelldateien vorgestellt und 
 Besonderheiten bezüglich performanzsteigernden oder ressourcensparendenden Maßnahmen erläutert. Der Relevanz für das Projekt
@@ -200,7 +200,7 @@ Schnittstelle. Die Socket Schnittstelle welche zum Versenden und somit zur
 Erfüllung der Anforderung \hyperref[req:F-02]{/F-02/} verwendet wird, wird beim Start des Senders initialisiert.
 % TODO hier wahlweise flowchart für Senden einfügen 
 
-\section{Ergebnisverarbeitung (capturing\_packets)}
+\subsection{Ergebnisverarbeitung (capturing\_packets)}
 In der Ergebnisverarbeitung werden die durch den eBPF vorgeprüften Daten der validen Antworten entgegengenommen und einer
 Duplikatsprüfung unterzogen. Anschließend werden die endgültig korrekten Ergebnisse ausgegeben.   
 
@@ -247,7 +247,7 @@ Um die Umsetzung der Anforderung \hyperref[req:F-06]{/F-06/} muss sich nicht exp
 nach einer gespeicherten Verbindung zu dieser Anfrage sucht, anschließend merkt, dass keine vorhanden ist, da das SYN-Paket über einen Raw-Socket verschickt
 wurde und automatisch eine Reset-Antwort zurückschickt [TODO Quelle?].
 
-\section{Programmstart und Jobverwaltung (job\_controlling)}
+\subsection{Programmstart und Jobverwaltung (job\_controlling)}
 Den Start des Programmes, die Konfiguration sowie das Starten und Verbinden der einzelnen Komponenten geht
 von den in dieser Sektion beschriebenen Komponenten aus. Des Weiteren übernehmen diese auch das Parsing und
 die Weiterleitung der Ziel-IP-Adressen zur Emitting Komponente.  
@@ -614,252 +614,4 @@ als valides RST Paket an den Sender der ursprünglichen SYN ACK Antwort zurückg
 % ALLGEMEINES TODO AUF RELEVANTE SUBSUBSECTIONS WIE RATE_LIMITER ODER SENDER KONKRETER EINGEHEN
 % PERFORMANCE MAßNAHMEN, SPEZIFISCHE FUNKTIONSWEISE -> ÄHNLICH WIE BEI std_in_parser / eBPF
 
-\section{Testumgebung}
-% TODO hier Text einfügen
-
-\subsection{Hardware-Spezifikation}
-Für die Umsetzung des Testes wurden die in \ref{tab:specs_combined} spezifizierten Systeme verwendet. Es wurden keine Veränderungen 
-vorgenommen, die das Betriebssystem von seinem nativen Zustand abbringen. am Betriebssystem um Anforderung \hyperref[req:F-10]{/F-10/} zu genügen. 
-Die einzige Konfigurationsmaßnahme außerhalb des Programmes ist eine softwareseitige Anpassung der Sende-, sowie Empfangsringe der Netzwerkkarte auf 
-das Maximum der bereitgestellten Hardware. Dies ist in diesem Szenario zu empfehlen, da es sich explizit um ein Hochleistungsszenario
-handelt. Das Anpassen der genutzten Puffer dient dem Abfangen von Lastspitzen, indem mehr Pakete gepuffert werden können. Für die genutzten
-Netzwerkkarten bedeutet dies eine Erhöhung der sogenannten Deskriptoren von 256 auf 4096 (siehe \textbf{Anhang \ref{app:ethtool_output}}).
-
-\begin{table}[htbp]
-\centering
-\caption{Hardware- und Software-Spezifikationen der Testumgebung im Vergleich}
-\begin{tabularx}{\textwidth}{|l|X|X|} \hline
-\textbf{Komponente} & \textbf{Scanner-Knoten} & \textbf{Ziel-Knoten} \\ \hline
-\multicolumn{3}{|c|}{\textbf{\textit{Hardware}}} \\ \hline
-CPU & Intel Core i5-11400F \newline (6 Kerne, 2.6 GHz) & Intel Core i5-7500 \newline (4 Kerne, 3.4 GHz) \\ \hline
-RAM & 48 GB DDR4 (2667 MHz) & 8 GB DDR4 (2400 MHz)\\ \hline
-Netzwerkkarte & Intel I210-T1 (Gbit) & Intel I350-T2 (Gbit) \\ \hline
-Verbindung & \multicolumn{2}{c|}{Direktverbindung via CAT 6 S/FTP Kabel (Gbit)} \\ \hline
-\multicolumn{3}{|c|}{\textbf{\textit{Software}}} \\ \hline
-Betriebssystem & Ubuntu 24.04.3 LTS & Ubuntu 24.04.3 LTS \\ \hline
-Kernel & 6.14.0-37-generic & 6.14.0-37-generic \\ \hline
-Treiber & igb (6.14.0-37) & igb (6.14.0-37) \\ \hline
-\end{tabularx}
-\label{tab:specs_combined}
-\end{table}
-
-\subsection{Inkompatibilitäten und Einschränkungen}
-% TODO hier text schreiben
-
-\subsubsection{zero-copy Modus}
-Da finanziell bedingt nur die Möglichkeit besteht die in \ref{tab:specs_combined} angegebene Hardware zu nutzen, muss für die Evaluation leider eine 
-Einschränkung gemacht werden. Der äußerst effiziente zero-copy Modus ist bei der Nutzung von Netzwerkkarten mit dem igb Treiber eingeschränkt. Aufgrund
-der niedrigen Anzahl an Sende- und Empfangsringen auf der Netzwerkkarte können dem XDP Programm keine dedizierten Queues \footnote{Warteschlangen} zugeteilt werden. Dies hat zur Folge,
-dass sich die Sende-Ringe mit dem Betriebssystem geteilt werden müssen und es somit zu sogenannter lock contention \footnote{Der Zugriff auf den Ring muss bei jeder Operation 
-ausgehandelt werden, sollten mehrere Parteien ihn gleichzeitig nutzen wollen} kommen kann \cite{igb}. Dies ist sehr Ressourcenaufwändig und führte in den Tests dazu,
-dass der AF\_XDP socket und das eBPF Programm um den Zugriff auf einen Sendering konkurrierten, sobald ein SYN ACK Paket
-über die gleiche Queue einging, über die auch versendet wurde. Dies ist unvermeidbar, da ein RST Paket per XDP\_TX zwangsweise über die selbe Queue verschickt wird, 
-über die es eingeht \cite{TODO} und die Pakete durch den ...TODO... gleichmäßig auf alle Queues verteilt werden \cite{TODO}.
-Aufgrund der sehr hohen Senderate und der vergleichbar kleinen Puffer der Netzwerkkartenringe \footnote{Für die Intel I210 und I350 sind es maximal 4096 ...TODO... (quelle ethtool)}
-laufen dieser durch die lock contention voll und blockieren das Versenden der RST antworten in dieser Queue.
-
-Diese Vermutungen wurden dadurch gestützt, dass bei den Tests unabhängig der gesendeten Menge immer 25\% der RST Pakete beim Ziel-Knoten fehlten. 
-Da das Scanner System 4 Queues besitzt und eine Queue für das Senden genutzt wurde entstehen somit ein viertel beziehungsweise 25\%, die aufgrund der lock contention
-verloren gingen. Tests mittels Beschränkung der Queue-Anzahl mithilfe des folgenden Befehls: sudo ethtool -L enp6s0 combined x auf die Anzahl x bestätigten dies auch. 
-Bei einer Queue wurden rund ~100\% und bei 3 Queues ~33\% der RST Pakete nicht gesendet. 
-
-Aufgrund dessen wird in den entgültigen Test der Copy Mode verwendet, welcher dieses Problem, durch die Entkopplung der Speicherverwaltung von der Netzwerkkarte eleminiert.
-Dies kommt leider mit erheblichen Performanzeinbußen, weshalb alle Tests ein zweites Mal ohne dem Senden der RST-Antworten durchgeführt werden, um die mit kompatibler 
-Hardware möglichen Ergebnisse zu beachten.
-
-\subsubsection{Paketrate}
-Die Durchsatzrate ist auch durch die genutzten Netzwerkkarten sowie dem LAN Kabel auf das Limit einer Gigabit Verbindung limitiert. Die Test zur maximalen Durchsatzrate 
-können deshalb nur beschränkt durchgeführt werden. Das theoretische Limit einer Gigabit Leitung liegt nach IEEE 802.3 \cite{IEEE_Standard_for_Ethernet}, 
-bei einer Paketgröße von 64 Byte plus 20 Byte Overhead, bei 1,488 Millionen pps. 
-
-\subsection{Aufbau des Zielknotens}
-Der Zielknoten besteht ähnlich wie die Empfangslogik des Scanners aus einem mithilfe des aya-Crates erstellten eBPF Programmes, welches die eingehenden Pakete mittels
-Zeiger-Operationen parst, anschließend validiert und bei Erfolg ein Antwortpaket via XDP\_TX versendet. Allerdings wird hier geprüft, ob es sich um ein IPV4 SYN Paket
-handelt und anschließend eine darauf zugeschnittene SYN ACK Antwort statt eines RST Paketes versendet. Die Modifikation passiert auch hier am selben Paket ohne dieses
-zuvor zu kopieren. 
-
-Zur Steuerung der Antwortwahrscheinlichkeit ist ein über die Kommandozeile beim Start des Programmes veränderbarer Parameter integriert. Wenn ein valides Paket erhalten wurde,
-wird eine Zufallszahl generiert und in Verbindung mit der eingegebenen Prozentzahl genutzt, um zu entscheiden ob eine Antowrt gesendet wird oder nicht.
-
-Auch die Statistiken werden mit der gleichen Datenstruktur wie beim Scanner - dem PerCpuArray - ermittelt, um eine lockfreihe, effiziente Erhebung zu gewährleisten.
-Es werden folgende Statistiken ermittelt, um die Funktionsweise des Scanners und des Laboraufbaus zu validieren:
-
-\begin{enumerate}
-    \item \textbf{Empfangene Pakete gesamt} 
-    \item \textbf{Valide SYN Pakete}
-    \item \textbf{Gesendete Antworten}
-\end{enumerate}
-
-%Immer gleich: 5 Durchläufe pro Scanner, 20% Antwortrate, Src IP Raum /26, rx und tx 4096 
-
-%Durchlauf 1: POC 
-%/10 IP Raum, 500.000pps, 20% Antwortrate, RST senden, port 80,443 dedup, 100 src_ports
-
-%SYN-Rust (XDP, Copy): /home/lennard/Bachelor/SYN-Rust/target/release/mock_program_c_1
-
-%SYN-Rust (XDP, Zero-Copy, kein RST): /home/lennard/Bachelor/SYN-Rust/target/release/mock_program_zc_1
-
-%SYN-Rust (AF_PACKET): /home/lennard/Bachelor/SYN-Rust/target/release/mock_program_afp_1
-
-%ZMap: zmap -q -p 80,443 -r 500000 -i enp6s0 -G 00:1b:21:da:fc:ef -S 192.168.0.0-192.168.0.63 -O json -o output_results.csv --source-port 60000-60100 --dedup-method=full 1.0.0.0/10
-
-%Masscan (kein dedup): masscan 1.0.0.0/10 -p80,443 --rate 500000 -e enp6s0 --router-mac 00:1b:21:da:fc:ef --adapter-ip 192.168.0.0-192.168.0.63 -oJ results.json --source-port 60000-60100
-
-
-%Durchlauf 2: Performance-Effizienz
-%/5 IP Raum, ohne RST, ohne dedup, port 80, src_port 60000
-
-%SYN-Rust (XDP, Copy): /home/lennard/Bachelor/SYN-Rust/target/release/mock_program_c_2
-
-%SYN-Rust (XDP, Zero-Copy): /home/lennard/Bachelor/SYN-Rust/target/release/mock_program_zc_2
-
-%SYN-Rust (AF_PACKET, 2 Threads): /home/lennard/Bachelor/SYN-Rust/target/release/mock_program_afp_2
-
-%ZMap: zmap -q -p 80 -B 2000M -T 1 -i enp6s0 -G 00:1b:21:da:fc:ef -S 192.168.0.0-192.168.0.63 -O json -o output_results.csv --source-port 60000 1.0.0.0/5
-
-%Masscan: masscan 1.0.0.0/5 -p80 --rate 2000000 -e enp6s0 --router-mac 00:1b:21:da:fc:ef --adapter-ip 192.168.0.0-192.168.0.63 -oJ results.json --source-port 60000
-
-%# Droppe eingehende Pakete auf den Scan-Ports, damit der Kernel sie nicht sieht.
-%sudo iptables -A INPUT -p tcp --dport 60000 -j DROP
-
-% TODO je nachdem wie viel Platz noch ist hier mglw. ein kleinen Flowchart mit Ablauf hin
-
-\subsection{Messdatenerfassung}
-
-% Benchmarkprogramm: Ablauf und Messtechnik; Validierungstechnik (Validierungstests)
-
-
-
-
-
-
-
-
-
-
-
-
-
-\section{Contiki-Verzeichnisstruktur}
-%\section{Contiki Verzeichnisstruktur}
-
-Die Contiki-Verzeichnisstruktur besteht aus verschiedenen Unterverzeichnissen, die verschiedene Bedeutungen haben.
-
-\begin{lstlisting}[caption=Contiki-Verzeichnisstruktur mit ausgewählten Unterverzeichnissen]{Contiki Dateistruktur}
-/apps                                     
-    /ftp                                      
-    /ping6                                
-    /telnet                               
-    /telnetd                              
-    /twitter                              
-    /webserver                            
-    /webserver-nano                       
-    ...                                   
-/core                                    
-    /lib                                  
-    /net                                  
-    /sys                                  
-    ...
-/cpu
-    /arm
-    /avr
-    ...
-/doc
-/examples
-    /webserver-ipv6-raven
-    ...
-/platform
-    /avr-raven
-    /avr-zigbit
-    ...
-/tools
-\end{lstlisting}
-
-Das Verzeichnis /core beinhaltet das Kernstück von Contiki. Hier wird zum Beispiel das System im Unterverzeichnis /sys definiert. Das beinhaltet das Prozesshandling und Protothreads sowie verschiedene Timer. Ebenfalls befindet sich hier im Unterverzeichnis /net der Netzwerk-Stack aufbauend auf uIP. Zum Netzwerk-Stack gehört auch IEEE 802.15.4 und 6LoWPAN. Im Unterverzeichnis /lib stehen verschiedene libraries zur Verfügung.
-
-In den beiden Verzeichnissen /cpu und /platform ist die unterschiedliche Hardware beschrieben, die von Contiki unterstützt wird. Ein Programm, das auf einem Zigbit-Modul vom Hersteller Atmel geladen werden soll, verwendet die Verzeichnisse /platform/avr-zigbit und /cpu/avr.
-
-Das Verzeichnis /examples beinhaltet Beispielprojekte. Hier gibt es ein Projekt webserver-ipv6-raven. Anhand dieses Beispiels wird deutlich, was notwendig ist, um eine Webserver-Applikation für das Ravenboard zu kompilieren.
-
-Im Hauptverzeichnis gibt es eine Datei Makefile.include. Diese Datei ist Teil des Contiki-Makefile-Systems. Sie wird innerhalb eines Contiki-Projektes aufgerufen und bindet, abhängig von der Konfiguration des Projektes, die richtigen Dateien des Contiki-Systems ein.
-
-\subsection{Übersetzung eines Contiki-Programms}
-
-Ein Programm wird in Contiki mithilfe des Befehls "`make"' übersetzt. Am Beispiel des Projekts webserver-ipv6-raven soll exemplarisch gezeigt werden, wie das Makefile System funktioniert. Durch den Befehl "`make"' wird die Datei Makefile im gleichen Verzeichnis abgearbeitet.
-
-\begin{lstlisting}[caption=Auszug aus examples/webserver-ipv6-raven/Makefile]
-ifndef TARGET
-  TARGET=avr-raven
-  MCU=atmega1284p
-endif
-all:
-  ${MAKE} -f Makefile.webserver TARGET=$(TARGET) NOAVRSIZE=1 webserver6.elf
-\end{lstlisting}
-
-Hier wird das TARGET, also die Plattform, und die MCU, die Microcontroller Unit, gesetzt und dann die Datei Makefile.webserver aufgerufen. Dabei wird der Parameter NOAVRSIZE gesetzt, um beim Übersetzen eine zusätzliche Ausgabe zur Speicherbelegung (avr-size) zu unterdrücken. Das Programm wird als Datei webserver6.elf erstellt.
-
-\begin{lstlisting}[caption=Auszug aus examples/webserver-ipv6-raven/Makefile.webserver]
-all: webserver6
-APPS=raven-webserver raven-lcd-interface
-UIP_CONF_IPV6=1
-CONTIKI = ../..
-include $(CONTIKI)/Makefile.include
-\end{lstlisting}
-
-In der Datei Makefile.webserver werden die Applikationen raven-webserver und raven-lcd-interface über die Variable APPS eingebunden. Die Compiler Variable \texttt{UIP\_CONF\_IPV6} wird gesetzt, um IPv6 zu aktivieren, weiterhin wird das Haupt-Makefile \texttt{Makefile.include} eingebunden.
-
-\begin{lstlisting}[caption=Auszug aus examples/webserver-ipv6-raven/webserver6.c]
-#include "webserver-nogui.h"
-/*--------------------------------------------------------------------*/
-AUTOSTART_PROCESSES(&webserver_nogui_process);
-/*--------------------------------------------------------------------*/
-\end{lstlisting}
-
-In der Datei webserver6.c wird ausgewählt, welche Contiki-Prozesse automatisch gestartet werden sollen. In unserem Beispiel ist das der Prozess "`webserver\_nogui\_process"'. Dieser Prozess ist Teil der Applikation raven-webserver.
-
-
-
-\subsection{Programmieren eines Mikrocontrollers}
-
-
-Durch Übersetzung des Contiki-Beispielprojektes webserver-ipv6-raven wird eine Datei "`webserver6.elf"' im ELF Format erzeugt. Hiervon wird eine Kopie "`webserver6-avr-raven.elf"' erstellt. Diese Datei enthält Informationen darüber, was in den Flash und in den EEPROM des AVR Mikrocontrollers geladen werden muss. Ebenfalls beinhaltet es Informationen über das Setzen der Fuse Bits. Fuse Bits sind Einstellungen des Mikrocontrollers, die nicht von der Software geändert werden können. Sie schalten gewisse Funktionen, zum Beispiel woher die Taktfrequenz bezogen wird, ein oder aus.
-
-\begin{lstlisting}[caption=Auszug aus examples/webserver-ipv6-raven/Makefile]
-TARGET=avr-raven
-MCU=atmega1284p
-OUTFILE=webserver6-$(TARGET)
-avr-objcopy -O ihex -R .eeprom -R .fuse -R .signature \
-            $(OUTFILE).elf $(OUTFILE).hex
-avr-size -C --mcu=$(MCU) $(OUTFILE).elf
-\end{lstlisting}
-
-Durch zusätzliche Befehle im Makefile wird eine Datei "`webserver6-avr-raven.hex"' erzeugt. Diese Datei enthält den Inhalt, der in den Flash geschrieben werden soll, im Intel-HEX-Format. Mit dem "`avr-size"'-Befehl wird die Anzahl der Bytes angezeigt, die im Flash, im RAM und im EEPROM benötigt werden. Dies kann mit dem zur Verfügung stehenden Speicher verglichen werden.
-
-\begin{lstlisting}[caption=Ausgabe vom Befehl "`avr-size"']
-AVR Memory Usage
-----------------
-Device: atmega1284p
-
-Program:   70874 bytes (54.1% Full)
-(.text + .data + .bootloader)
-
-Data:      13013 bytes (79.4% Full)
-(.data + .bss + .noinit)
-
-EEPROM:       63 bytes (1.5% Full)
-(.eeprom)
-\end{lstlisting}
-
-Durch Hinzufügen eines zusätzlichen Befehls ins Makefile kann eine Datei "`webserver6-avr-raven\_eeprom.hex"' erzeugt werden. Diese Datei enthält dann den Inhalt im Intel-HEX-Format, der in den EEPROM geschrieben werden soll. Mit den beiden Dateien im Intel-HEX-Format ist es möglich, den Mikrocontroller mit einem Programmiergerät zu beschreiben, das kein ELF Format lesen kann.
-
-\begin{lstlisting}[caption=Befehl um eeprom.hex zu erzeugen]
-avr-objcopy -O ihex -j .eeprom \
-            -set-section-flags=.eeprom="alloc,load" --change-section-lma \
-            .eeprom=0 $(OUTFILE).elf $(OUTFILE)_eeprom.hex
-\end{lstlisting}
-
-
-Mittels des Programms Atmel Studio 6 werden wahlweise die erzeugten Dateien im Intel-HEX-Format oder die erzeugte Datei im ELF Format in den Flash und in den EEPROM des Mikrocontrollers programmiert. Zu Beginn wurde das Beispielprojekt webserver-ipv6-raven auf den Mikrocontroller AT-Mega1284P eines Atmel Ravenboard programmiert. Dabei wurde die Programmierschnittstelle ISP und das Programmiergerät Atmel STK500 verwendet.
-
-Später bei der entwickelten Hardware wurde die Programmierschnittstelle JTAG und das Programmiergerät Atmel JTAGICE3 verwendet.
 

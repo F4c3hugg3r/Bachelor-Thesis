@@ -59,6 +59,7 @@ der Performance-Maximierung und der Verwendung von Rust ab.
 Standard-Gigabit-Schnittstelle bestmöglich auszunutzen. Zielgröße ist ein Sende-Durchsatz im mindestens fünfstelligen Paket-pro-Sekunde-Bereich, 
 um mit etablierten Tools vergleichbar zu sein.
 
+% ist das wirklich nicht funktional?
 \item \textbf{/NF-02/ \phantomsection\label{req:NF-02} Asynchrone Architektur:} Die Anwendung muss Gebrauch von Lastverteilenden Maßnahmen in Form
 von nebenläufiger Programmierung machen, um die Auslastung zu verteilen und Performance somit zu steigern.
 
@@ -105,12 +106,9 @@ Technologien zu validieren. Die Entwicklung teilt sich in 2 Hauptphasen:
 \end{enumerate}
 
 \section{Untersuchungsdesign}
-%Hier müssen Sie definieren, wie Sie vergleichen.
-%-	Definition der Metriken: Warum messen Sie pps? Warum RAM? Wie messen Sie CPU (User vs. System Time)?
-%-	Definition der Testumgebung: (Hier nur theoretisch – z.B. "Isolierte Laborumgebung um Netzwerrauschen zu minimieren").
 Es wird im Folgenden erklärt, wie Performanz im Kontext eines SYN-Scanners zu definieren ist. 
 Anschließend werden die in dieser Arbeit zur Evaluation genutzten Metriken erklärt und 
-daraufhin die Testumgebung konzeptionell vorgestellt und erläutert.  
+daraufhin die Anforderungen an die Testumgebung vorgestellt und erläutert.  
 
 \subsection{Metriken}
 Der Begriff \enquote{Performanz-Effizienz} wird
@@ -122,61 +120,28 @@ Basierend auf der Definition werden folgende Metriken zur Quantifizierung herang
 die Paketrate den Durchsatzparameter und die CPU Auslastung, sowie RAM Verbrauch die Ressourcennutzung 
 darstellen:
 
-\begin{table}[htbp]
-\caption{Metriken zur Performanz-orientierten Evaluation der SYN-Scanner}
-\begin{tabularx}{\textwidth}{|c|c|X|}\hline 
-\textbf{Metrik} & \textbf{Einheit} & \textbf{Beschreibung} \\ \hline
-\textit{Paketrate} & Pakete pro Sekunde (pps) & Durchschnittliche Anzahl der erfolgreich an den 
-Netzwerkadapter übergebenen Pakete pro Sekunde. \\ \hline
-\textit{CPU Auslastung} & Prozent (\%) & Die prozentuale Auslastung der CPU-Kerne, aufgeteilt 
-in \textit{User-Space} und \textit{Kernel-Space}. \\ \hline
-\textit{RAM Verbrauch} & Megabyte (MB) & Der Anteil 
-des Arbeitsspeichers, der physisch durch den Prozess belegt wird. \\ \hline
-\end{tabularx}
-\label{tab:evaluations-Metriken}
-\end{table}
+\begin{itemize}
+    \item \textbf{/M-01/\phantomsection\label{req:M-01} Paketrate:} Die Paketrate wird in Pakete pro Sekunde (pps) dargestellt und beschreibt die durchschnittliche Anzahl der erfolgreich an den 
+Netzwerkadapter übergebenen Pakete pro Sekunde. Da die Scanner nur sehr kleine Pakete verschicken ist die Paketrate in Performanz-orientierten Projekten dieser
+Art der limitierende Faktor \cite{TODO}, weshalb sie stellvertretend(<- anderes wort) als Metrik für die Performanz dient.
+    \item \textbf{/M-02/\phantomsection\label{req:M-02} CPU Auslastung:} Die CPU Auslastung von hochperformanten Netzwerkanwendungen findet maßgeblich im Userspace, im Kernelspace und im SoftIRQ statt \cite{TODO}.
+deshalb sollte alle drei Bereiche betrachtet werden. Gemessen wird die prozentuale Auslastung der CPU-Kerne.
+    \item \textbf{/M-03/\phantomsection\label{req:M-03} RAM Verbauch:} Der RAM-Verbrauch als zweiter primärer Teil der Ressourcenmetriken wird in Megabyte (MB) angegeben und stellt
+den Anteil des physisch durch den Scanner belegten Arbeitsspeicher dar. 
+\end{itemize}
 
-\subsection{Testumgebung}
-Um die Performanz des Scanners isoliert von externen Störfaktoren zu evaluieren, wird ein dedizierter 
-Laboraufbau gewählt. Dafür werden zwei Geräte per Ethernet-Kabel direkt miteinander verbunden.
-
-Der Aufbau besteht aus zwei physischen Knoten:
-\begin{enumerate}
-    \item \textbf{Der Scanner-Knoten:} Auf diesem System wird der zu evaluierende 
-    Rust-Prototyp ausgeführt. Gleichzeitig erfolgt hier die Erfassung der in Tabelle \ref{tab:evaluations-Metriken} 
-    definierten Metriken.
-    \item \textbf{Der Ziel-Knoten:} Dieses System simuliert ein Zielnetzwerk. Um 
-    sicherzustellen, dass das Zielsystem bei hohen Paketraten nicht zum Flaschenhals wird, wird 
-    ein dafür entwickeltes \texttt{eBPF/XDP}-Programm verwendet.
-\end{enumerate}
-
-Der Ziel-Knoten verfügt über einen konfigurierbaren Parameter für die Antwortwahrscheinlichkeit, um verschiedene 
-Netzwerkszenarien zu simulieren. Eingehender und ausgehender Verkehr wird über eBPF-Maps atomar 
-gezählt, um die vom Scanner berichtete Senderate auf der Empfängerseite, sowie die zurückgeschickten
-Antworten zu validieren.
-
-\subsection{Testablauf}
-Der experimentelle Ablauf gliedert sich in zwei definierte Szenarien, um sowohl die funktionale Stabilität als auch 
-die maximalen Leistungsgrenzen des Scanners zu evaluieren. Für beide Szenarien werden die zuvor definierten 
-Ressourcen-Metriken (CPU, RAM) sowie die Paketraten aufgezeichnet.
+\subsection{Geplante Testszenarien}
+Um die in Abschnitt \ref{Anforderungen} definierten Anforderungen zu validieren, werden drei Testszenarien definiert:
 
 \begin{enumerate}
-    \item \textbf{Anforderungsvalidierung} Im ersten Szenario wird der Scanner mit einer festen, limitierten Senderate 
-    von 100.000 Paketen pro Sekunde (pps) 
-betrieben. Dieser Test dient als Referenzmessung (\textit{Baseline}), um die Erfüllung der funktionalen 
-Anforderungen zu verifizieren. Bei 100.000 pps handelt es sich um eine signifikante Last, die jedoch weit unterhalb 
-der theoretischen Sättigungsgrenze einer Gigabit-Leitung liegt. Ziel ist der Nachweis, dass der Scanner bei dieser 
-definierten Last über einen längeren Zeitraum stabil arbeitet und ein deterministisches Ressourcenverhalten zeigt. 
-Dies stellt sicher, dass gemessene Ineffizienzen im zweiten Szenario 
-tatsächlich auf die Hardware- oder Software-Limitierung und nicht auf Implementierungsfehler zurückzuführen sind.
-Um die Erfüllung der funktionalen Anforderungen zu prüfen, wird der Ziel-Knoten außerdem auf eine gewisse Anzahl an
-Paketen mit validen \texttt{SYN/ACK} Paketen Antworten.
-    \item \textbf{Ermittlung der Performanzgrenze} Im zweiten Szenario wird die künstliche Drosselung des Scanners aufgehoben. Der Scanner versucht, Pakete so schnell 
-zu generieren und zu versenden, wie es die CPU oder das Netzwerkinterface zulassen. Dieses Szenario dient der Ermittlung des maximalen Durchsatzes. 
-Durch den Vergleich der CPU-Auslastung bei maximaler Last lässt sich feststellen, ob die Limitierung durch die Rechenleistung der Adressgenerierung
-oder durch den Overhead der Paketübertragung entsteht und wie viele Ressourcen dabei genutzt werden.
-    \item \textbf{Test mit realen Eingabeparametern} Im dritten Test werden Parameter gewählt, die in einem realen Szenario von Vorteil wären.
-Dabei soll eine feste Senderate gewählt werden, um die Vergleichbarkeit zu erhöhen. Um die Antwortrate in einem realen Szenario zu erhöhen, 
-indem der Scan schlechter von dem normalen Netzwerkrauschen zu unterscheiden ist, werden in der Regel mehrere verschiedene \textit{Source}-IP-Adressen zum Senden gewählt.
-Auch das Scannen mehrerer statt eines einzelnen \textit{Destination}-Ports hilft dabei \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024}.
+    \item \textbf{/S-01/ \phantomsection\label{req:S-01} Anforderungsvalidierung (Baseline):} Um die allgemeine Funktionsweise und Stabilität des Scanners zu validieren, soll ein Szenario mit einer künstlich limitierten, aber signifikanten Senderate durchgeführt werden. 
+    Ziel ist der Nachweis, dass der Scanner über einen längeren Zeitraum stabil arbeitet und die funktionalen Anforderungen erfüllt. 
+    Dies dient auch als Referenzmessung, um sicherzustellen, dass funktionale Anforderungen in späteren Tests nicht explizit getestet werden müssen.
+    
+    \item \textbf{/S-02/ \phantomsection\label{req:S-02} Ermittlung der Performanzgrenzen:} In diesem Szenario wird jegliche künstliche Drosselung aufgehoben. Das Ziel ist es, die maximalen Durchsatzraten zu ermitteln. 
+    Hierbei wird geprüft, wie effizient die Ressourcen unter Volllast genutzt werden, um die nicht funktionalen Anforderungen zu untersuchen.
+    
+    \item \textbf{/S-03/ \phantomsection\label{req:S-03} Simulation unter realen Parametern und Features:} Um die Vergleichbarkeit zu praxisrelevanten Szenarien zu erhöhen, sollen Parameter gewählt werden, die für echte Internet-Scans 
+    typisch sind. Dies soll die Performanz-Effizienz unter möglichst realen Bedingungen testen. Dabei wird auch ein Augenmerk auf die Nutzung von Features gelegt, die im Kontext
+    eines realen Scans von Nutzen sind.
 \end{enumerate}
