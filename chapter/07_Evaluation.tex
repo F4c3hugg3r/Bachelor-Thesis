@@ -8,38 +8,49 @@
 
 \chapter{Evaluation und Ausblick} \label{Evaluation}
 
-In diesem Kapitel wird die erstellte Lösung begutachtet. Es werden Anwendungsmöglichkeiten, allgemein von Smart Objects und speziell für die Implementierung, behandelt. Mögliche Erweiterungen werden vorgeschlagen und ein Fazit der Arbeit wird gezogen.
+In diesem Kapitel werden die in der Testumgebung ermittelten Messergebnisse vorgestellt, analysiert und diskutiert. Ziel ist es, die Leistungsfähigkeit des implementierten Rust-Scanners im Vergleich zu etablierten Tools zu bewerten und die Erfüllung der definierten Anforderungen zu überprüfen. Abschließend wird ein Ausblick auf mögliche Weiterentwicklungen gegeben.
 
-\begin{table}[btp]
-\small
-\caption{Materialkosten Steckdose}
-\begin{tabular}{|r|l|l|p{2cm}|p{2cm}|}\hline
-  \textbf{\#} & \textbf{Bauteil} & \textbf{Artikelnummer} & \textbf{Einzel-preis in~€} & \textbf{Massen-preis in~€} \\ \hline
-  \multicolumn{5}{|l|}{Zigbit-Platine} \\ \hline
-  1 & ATZB-24-A2 & 556-ATZB-24-A2 & 25,43 & 14,42 \\ \hline
-  1 & Widerstand 100kOhm & 71-CMF60100K00FKEB & 0,206 & 0,099 \\ \hline
-  1 & Widerstand 1kOhm & 71-CMF551K0000FHEK  & 0,116 & 0,005 \\ \hline
-  1 & Kondensator 3,3uF & 667-EEU-HD1H3R3 & 0,165 & 0,104 \\ \hline
-  1 & Spannungsregler LP2950CZ-3.0 & 926-2950CZ-3.0/NOPB & 0,676 & 0,27 \\ \hline
-  1 & Steckverbinder FFC 6 Pin & 538-52271-0679 & 1,30 & 0,583 \\ \hline
-  2 & Steckverbinder FFC 18 Pin & 538-52271-1879 & 1,71 & 0,94 \\ \hline
-  \multicolumn{5}{|l|}{Steckdosen-Platine} \\ \hline
-  1 & Kondensator X2 275V & 80-R46KN368050M2M & 0,66 & 0,263 \\ \hline
-  1 & Widerstand 560Ohm, 5Watt & 594-AC05W560R0J & 0,38 & 0,198 \\ \hline
-  2 & Widerstand 1MOhm & 594-MRS251M1\%TR & 0,074 & 0,038 \\ \hline
-  2 & Gleichrichterdiode & 512-1N4004 & 0,076 & 0,025 \\ \hline
-  2 & Zener-Diode 24V & 512-1N4749ATR & 0,203 & 0,036 \\ \hline
-  1 & Kondensator 470uF & 667-EEU-FR1E471YB & 0,248 & 0,152 \\ \hline
-  1 & NPN-Transistor BC547B & 512-BC547B & 0,186 & 0,05 \\ \hline
-  1 & Widerstand 220kOhm & 271-220K-RC & 0,125 & 0,012 \\ \hline
-  \multicolumn{5}{|l|}{Steckdosen-Gehäuse} \\ \hline
-  1 & Tchibo Digitale Zeitschaltuhr & 4 043002 669758 & 5,99 & 5,99 \\ \hline
-  \multicolumn{5}{|l|}{} \\ \hline
-  \multicolumn{3}{|l|}{\textbf{Gesamtpreis}} & \textbf{38,61} & \textbf{24,27} \\ \hline
-\end{tabular}
-\label{tab:hardwarekosten}
-\end{table}
+\section{Darstellung der Messergebnisse}
+% Hier präsentieren Sie die reinen Daten (Diagramme, Tabellen).
+% Orientieren Sie sich an den Szenarien aus Kap. 6 (S-01, S-02, S-03).
 
-Die Gesamtmaterialkosten der verwendeten Bauteile betragen 38,61€. Nicht berücksichtigt sind Verbrauchsmaterialien. Dazu zählen die Leiterplatte für die Zigbit-Platine, die aus einer vorhandenen Lochrasterplatine ausgesägt wurde, Leitungen für die Verkabelung und Lötzinn. Diese Kosten sollen hier vernachlässigt werden. Bei einer Kalkulation für eine Fertigung in einem Unternehmen müssen diese als Materialgemeinkostenzuschlag zu den Materialkosten hinzugefügt werden. Zusammen mit den Fertigungskosten, also die Arbeitskosten, die zum Fertigen der Steckdose notwendig sind, und den Verwaltungs- und Vertriebsgemeinkostenzuschlag ergeben sich die Selbstkosten je Stück.
+\subsection{Ergebnisse S-01: Anforderungsvalidierung}
+% War der Scanner stabil? Wurden alle Pakete korrekt gebaut?
+% Gab es Abstürze oder Memory Leaks bei moderater Last?
 
+\subsection{Ergebnisse S-02: Performanzgrenzen}
+% Das wichtigste Kapitel. Vergleich der Durchsatzraten (PPS).
+% Vergleich Rust-XDP (Copy vs ZeroCopy) vs Rust-AF_PACKET vs ZMap vs Masscan.
+% Grafiken: Durchsatz über Zeit, Drop-Raten.
 
+\subsection{Ergebnisse S-03: Reales Szenario}
+% Wie verhält sich der Scanner bei Antwortraten von 20%?
+% Funktioniert die Duplikaterkennung?
+
+\section{Diskussion der Ergebnisse}
+% Hier interpretieren Sie die Zahlen aus 7.1.
+
+\subsection{Analyse des Durchsatzes und der Latenz}
+% Warum ist XDP schneller als AF_PACKET?
+% Wo liegen die Flaschenhälse (CPU, PCIe-Bus, Kernel)?
+
+\subsection{Ressourceneffizienz (CPU und RAM)}
+% Bezug auf Anforderung /M-02/ und /M-03/.
+% Vergleich Rust vs. C (ZMap/Masscan).
+% Diskussion des Overheads durch Tokio/Async vs. Threading.
+
+\subsection{Vergleich mit dem Stand der Technik}
+% Expliziter Vergleich mit ZMap und Masscan.
+% Wo steht Ihre Lösung? (Schneller? Sicherer? Ressourcenhungriger?)
+
+\section{Abgleich mit den Anforderungen}
+% Gehen Sie die Liste aus Kap. 4 durch (/F-01/ bis /F-09/ und /NF-xx/).
+% Eine Tabelle eignet sich hier gut (Anforderung | Status | Bemerkung).
+
+\section{Ausblick}
+% Was konnte in dieser Arbeit nicht umgesetzt werden?
+% Ideen: IPv6 Support, Distributed Scanning, GUI, Output-Module (JSON/Redis).
+
+\section{Fazit}
+% Zusammenfassung der gesamten Arbeit.
+% Forschungsfrage beantworten: Ist Rust/eBPF geeignet für High-Speed Scanning?

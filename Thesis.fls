@@ -516,6 +516,7 @@ INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmbx12.tfm
 INPUT ./Thesis.toc
 INPUT ./Thesis.toc
 INPUT Thesis.toc
+INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmri12.tfm
 INPUT c:/texlive/2025/texmf-dist/tex/latex/lm/t1lmtt.fd
 INPUT c:/texlive/2025/texmf-dist/tex/latex/lm/t1lmtt.fd
 INPUT c:/texlive/2025/texmf-dist/tex/latex/lm/t1lmtt.fd
@@ -531,7 +532,6 @@ INPUT Abstract_en.tex
 INPUT ./chapter/01_Einfuehrung.tex
 INPUT ./chapter/01_Einfuehrung.tex
 INPUT chapter/01_Einfuehrung.tex
-INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmri12.tfm
 INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmr8.tfm
 INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmr10.tfm
 INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/rm-lmr10.tfm
@@ -578,6 +578,8 @@ INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmr8.tfm
 INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmr6.tfm
 INPUT c:/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc
 INPUT c:/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc
+INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmbxi10.tfm
+INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmbxi10.tfm
 INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmtk10.tfm
 INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmtk10.tfm
 INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmri10.tfm
@@ -586,7 +588,6 @@ INPUT ./pictures/RX_Kernel_hell_3.drawio.png
 INPUT ./pictures/RX_Kernel_hell_3.drawio.png
 INPUT ./pictures/RX_Kernel_hell_3.drawio.png
 INPUT ./pictures/RX_Kernel_hell_3.drawio.png
-INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmbxi10.tfm
 INPUT ./chapter/03_Stand_der_Technik.tex
 INPUT ./chapter/03_Stand_der_Technik.tex
 INPUT chapter/03_Stand_der_Technik.tex
@@ -619,12 +620,14 @@ INPUT ./pictures/capuring_sequence.drawio.png
 INPUT ./pictures/capuring_sequence.drawio.png
 INPUT ./pictures/capuring_sequence.drawio.png
 INPUT ./pictures/capuring_sequence.drawio.png
-INPUT ./pictures/scanjob_seq_1.drawio.png
-INPUT ./pictures/scanjob_seq_1.drawio.png
-INPUT ./pictures/scanjob_seq_1.drawio.png
-INPUT ./pictures/scanjob_seq_1.drawio.png
-INPUT ./pictures/scanjob_seq_1.drawio.png
 INPUT c:/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc
+INPUT ./pictures/scanjob_seq_1.drawio.png
+INPUT ./pictures/scanjob_seq_1.drawio.png
+INPUT ./pictures/scanjob_seq_1.drawio.png
+INPUT ./pictures/scanjob_seq_1.drawio.png
+INPUT ./pictures/scanjob_seq_1.drawio.png
+INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmtk10.tfm
+INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmtto10.tfm
 INPUT ./pictures/ebpf_component_2.drawio.png
 INPUT ./pictures/ebpf_component_2.drawio.png
 INPUT ./pictures/ebpf_component_2.drawio.png
@@ -637,12 +640,10 @@ INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmbx10.tfm
 INPUT ./chapter/06_Testumgebung.tex
 INPUT ./chapter/06_Testumgebung.tex
 INPUT chapter/06_Testumgebung.tex
+INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmtt10.tfm
 INPUT ./chapter/07_Evaluation.tex
 INPUT ./chapter/07_Evaluation.tex
 INPUT chapter/07_Evaluation.tex
-INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmbx10.tfm
-INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/eurosym/feybr10.tfm
-INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/eurosym/feymr10.tfm
 INPUT ./chapter/99_Anhang.tex
 INPUT ./chapter/99_Anhang.tex
 INPUT chapter/99_Anhang.tex
@@ -673,8 +674,6 @@ INPUT Eigenstaendigkeitserklaerung.tex
 INPUT Thesis.aux
 INPUT Thesis.run.xml
 OUTPUT Thesis.run.xml
-INPUT c:/texlive/2025/texmf-dist/fonts/type1/public/eurosym/feybr10.pfb
-INPUT c:/texlive/2025/texmf-dist/fonts/type1/public/eurosym/feymr10.pfb
 INPUT c:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx10.pfb
 INPUT c:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx12.pfb
 INPUT c:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbxi10.pfb
@@ -696,3 +695,4 @@ INPUT c:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy10.pfb
 INPUT c:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmtk10.pfb
 INPUT c:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmtt10.pfb
 INPUT c:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmtt12.pfb
+INPUT c:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmtto10.pfb

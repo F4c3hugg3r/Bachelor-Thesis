@@ -6,11 +6,7 @@
 %%
 %%
 
-% Checklist Formatierung
-% alle englischen Begriffe und Fachbegriffe konsistent mit \textit{} umschließen
-% alle programmierspezifischen Begriffe konsistent mit \texttt{} umschließen
-% Referenzen korrekt setzen
-% ("spawnt" durch "erstellen" ersetzen)
+% Referenzen korrekt setzen -> Falls eine Referenz nicht gülit ist, oder TODO dran steht, Referenz am 
 
 % Checkliste Quellen und Zitation
 % Bei mehrfachzitierung der gleichen Quelle folgendes beachten:
@@ -35,58 +31,60 @@
 
 \section{Motivation und Einführung in das Themengebiet} \label{Einführung}
 
-Netzwerk-Scanning macht einen großen Teil des Internet-Verkehrs im IPv4 Adressraumes aus. So ist 98 Prozent des gesamten TCP Verkehrs weltweit auf \texttt{SYN}-Scans zurückzuführen \cite{griffioen2024have}. 
-Bekannte Tools wie \textit{ZMap} werden stetig weiterentwickelt \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024} und sind seit der Entwicklung von performanten Open-Source Scannern wie \textit{ZMap} 
-oder \textit{Masscan} \cite{Durumeric_Wustrow_Halderman}\cite{Graham_2026} dazu fähig,
-den gesamten IPv4 Adressraum in weniger als 45min zu scannen. Das Scannen von Netzwerken nach offenen Ports ermöglicht es Organisationen Schwachstellen ausfindig zu machen, 
-bevor Angreifer es tun. Außerdem lassen sich durch das breitflächige Scannen von ausgewählten Adressräumen oder dem gesamten IPv4 Raum Informationen über Trends und Veränderungen 
+Das Netzwerk-Scanning macht einen nicht zu vernachlässigenden Teil des Internet-Verkehrs im
+IPv4-Adressraum aus. So waren 98 Prozent des unaufgeforderten TCP-Verkehrs im Jahre
+2024 weltweit auf \texttt{SYN}-Scans zurückzuführen \cite{griffioen2024have}. 
+Bekannte \eng{Open-Source}-Internet-Scanning-Projekte wie ZMap, welches über 10 Jahre stetig weiterentwickelt wurde \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024} oder Masscan \cite{Graham_2026} 
+sind dazu in der Lage \cite{Durumeric_Wustrow_Halderman} den gesamten IPv4-Adressraum in der Größenordnung von Minuten zu scannen. Das Scannen von Netzwerken nach offenen Ports ermöglicht es Organisationen Schwachstellen ausfindig zu machen, 
+bevor Angreifer es tun. Außerdem lassen sich durch das breitflächige Scannen von ausgewählten Adressräumen oder dem gesamten IPv4-Raum Informationen über Trends und Veränderungen 
 dieser ableiten. Cyberangriffe haben Auswirkungen auf den Ruf und die finanzielle Stabilität von Unternehmen \cite{Rudnev_Zolkin_Artemyev_Tychkov_2024}. Die gegenwärtig hohen Angriffszahlen zum Beispiel bei 
-\textit{Denial-of-Service} Angriffen \cite{Falowo_Okpala_Kojo_Azumah_Li_2023} unterstreichen die Wichtigkeit.
+\eng{Denial-of-Service}-Angriffen \cite{Falowo_Okpala_Kojo_Azumah_Li_2023} unterstreichen die Wichtigkeit.
 
 Bisherige Hochleistungsscanner, wie die soeben genannten, wurden überwiegend in C entwickelt \cite{Durumeric_Wustrow_Halderman}\cite{Graham_2026}\cite{Li_2026}\cite{Li_Zhang_Guo_Bao_Xu_Hu_Li_2022}. 
 C ist häufig die Standardwahl für maschinennahe Anwendungen, da sie zum einen ein 
-niedriges Level an Abstraktion und zum anderen hochperformant sein kann [TODO]. Allerdings ist C anfällig für menschengemachte Fehler \cite{Al_Boghdady_Wassif_El_Ramly_2021} wie ..TODO.. [TODO], von welchen
-die meisten sicherheitsrelevanten aus der Fraktion der Speicherverwaltung stammen \cite{bugden2022safety}. Andere Sprachen wie Go oder Python lösen einige dieser Probleme durch die Nutzung einer 
-automatischen Speicherverwaltung [TODO]. Diese Sprachen sind allerdings im Vergleich zu Sprachen wie C weniger performant \cite{bugden2022safety}. 
+niedriges Level an Abstraktion und zum anderen hochperformant sein kann \cite{Peta_2022}. Allerdings ist C anfällig für menschengemachte Fehler \cite{Al_Boghdady_Wassif_El_Ramly_2021} 
+wie doppelte Speicher-Freigaben, Zugriffe auf bereits freigegebenen Speicher und Pufferüberläufe welche teils zu Speicherbeschädigungen und Sicherheitslücken führen können \cite{bugden2022safety} \cite{van_Oorschot_2023}. 
+Andere Sprachen wie Go oder Python lösen einige dieser Probleme durch die Nutzung einer lösen viele Speicherprobleme durch automatische Speicherverwaltung, insbesondere durch \eng{Garbage Collection} 
+und andere Techniken. Diese Sprachen sind allerdings im Vergleich zu Sprachen ohne automatischer Speicherverwaltung wie C weniger performant \cite{bugden2022safety}. 
 
-Rust hingegen schneidet in Vergleichen bezüglich der Performance auf ähnlichem Niveau wie C ab, bringt gleichzeitig aber das höchste Sicherheitsniveau der genannten 
-Sprachen mit \cite{bugden2022safety}\cite{Costanzo_Rucci_Naiouf_Giusti_2021}. Außerdem unterstützt Rust Konzepte von Sprachen hoher Abstraktionsebene, wie beispielsweise die der funktionalen 
+Rust hingegen schneidet in Vergleichen bezüglich der \eng{Performance} auf ähnlichem Niveau wie C ab, bringt gleichzeitig aber das höchste Sicherheitsniveau der genannten 
+Sprachen mit, indem es Speicherfehler weitestgehend verhindert \cite{bugden2022safety}\cite{Costanzo_Rucci_Naiouf_Giusti_2021}. Außerdem unterstützt Rust Konzepte von Sprachen hoher Abstraktionsebene, wie beispielsweise die der funktionalen 
 Programmierung oder Objektorientierung \cite{Costanzo_Rucci_Naiouf_Giusti_2021}, während zudem in der
 zuletzt zitierten Untersuchung, auch die Anzahl der Zeilen niedriger als im Vergleich zu dem in C geschriebenen Code ist.
 
-Bisher fehlt eine fundierte Untersuchung darüber, ob Rust als moderne Sprache, welche Sicherheitsgarantien, \textit{high-level} \footnote{Auf hoher Abstraktionsebene} Konzepte und Performance vereint,
+Bisher fehlt eine fundierte Untersuchung darüber, ob Rust als moderne Sprache, welche Sicherheitsgarantien, \eng{High-Level}\footnote{Auf hoher Abstraktionsebene} Konzepte und \eng{Performance} vereint,
 in Kombination mit aktuellen Linux-Schnittstellen, in der Lage ist, eine konkurrenzfähige Alternative zu gängigen Hochleistungsscannern, welche überwiegend in C geschrieben sind, darzustellen.
-Es ist ungeklärt, ob der potenzielle Performanceunterschied gering genug ist, um durch die gewonnene Sicherheit kompensiert zu werden, weshalb
+Es ist ungeklärt, ob der potenzielle \eng{Performance}-Unterschied gering genug ist, um durch die gewonnene Sicherheit kompensiert zu werden, weshalb
 diese Arbeit an diesem Punkt ansetzt.
 
 \section{Zielsetzung und Forschungsfrage} \label{Zielsetzung}
 
 In dieser Arbeit wird ein prototypischer \texttt{SYN}-Portscanner zum breitflächigen Scannen von Netzwerken in Rust entwickelt. 
-Der Fokus des Scanners liegt auf einer hohen Performance, weshalb die Architektur teilweise asynchron gestaltet und leistungsfähige Linux-Schnittstellen 
-wie \texttt{AF\_PACKET} und \texttt{XDP} verwendet werden. Anschließend wird dieser bezüglich ausgewählter Performance Metriken
+Der Fokus des Scanners liegt auf einer hohen \eng{Performance} sowie hohen Effizienz, weshalb die Architektur teilweise asynchron gestaltet und leistungsfähige Linux-Schnittstellen 
+wie \texttt{AF\_PACKET}, \texttt{AF\_XDP} und \texttt{eBPF} verwendet werden. Anschließend wird dieser bezüglich ausgewählter \eng{Performance}-Metriken
 mit einer repräsentativen Auswahl an bestehenden Scannern verglichen und die Ergebnisse daraufhin evaluiert.
 
 Es ergibt sich folgende Forschungsfrage: Inwieweit kann ein in Rust implementierter asynchroner \texttt{SYN}-Scanner hinsichtlich des Durchsatzes und der 
-Ressourceneffizienz mit etablierten Hochleistungsscannern konkurrieren und durch spracheigene Sicherheitsgarantien eine tragfähige Alternative für den produktiven 
-Einsatz darstellen?
+Ressourceneffizienz mit etablierten Hochleistungsscannern konkurrieren und durch sprach-eigene Sicherheitsgarantien eine tragfähige Alternative für den 
+produktiven Einsatz darstellen?
 
 \section{Abgrenzung des Themas} \label{Abgrenzung}
-%The best port scanning technique is TCP SYN scan as it has the lowest response time and thus the least impact on the target host.
-%TCP SYN scan is also well-known as the stealthiest port scanning technique. cite A Comparative Performance of Port Scanning Techniques
-% -> Es geht nur um SYN Scan weil ...
+Die Scanning-Methode beschränkt sich explizit auf das \texttt{SYN}-Scanning. Es ist die de facto Standard Methode und 
+weist in Tests den niedrigsten Einfluss auf das Zielsystem, sowie die kürzeste Scan-Dauer auf \cite{Universiti_Tun_Hussein_Onn_Malaysia_Roslan_2023}. 
 
 Bei der in dieser Arbeit entwickelten Implementierung handelt es sich um einen horizontalen Scanner \ref{Grundlagen}.
-Anders als beispielsweise beim regulären \texttt{SYN}-Scan des Tools \textit{Nmap} \cite{Lyon_2010}, welcher in der Regel vertikal erfolgt.
-% Begründen (gibt explizit Punkte)
+Anders als beispielsweise beim regulären \texttt{SYN}-Scan des Tools Nmap \cite{Lyon_2010}, welcher in der Regel vertikal erfolgt.
+Vertikales Scanning ist für Netzwerk- beziehungsweise Internetscanner weniger relevant, da dabei das individuelle Ziel 
+im Vordergrund steht. (TODO muss das belegt werden? Falls ja Nmap)
 
 Zusätzliche Mechanismen zur Verschleierung des Scans oder weiterführende Maßnahmen zur Treffererhöhung
 werden in dieser Implementierung rudimentär oder gar nicht behandelt, da der Fokus
-auf der Nutzung von Rust, sowie der Entwicklung eines Performanz-orientieren Netzwerkscanners liegt. 
-Da der normale Ablauf des SYN-Scans bereits grundlegende Mechanismen in den Bereichen mitbringt \cite{Universiti_Tun_Hussein_Onn_Malaysia_Roslan_2023}, 
+auf der Nutzung von Rust, sowie der Entwicklung eines \eng{Performance}-orientieren Netzwerkscanners liegt. 
+Da der normale Ablauf des \texttt{SYN}-Scans bereits grundlegende Mechanismen in den Bereichen mitbringt \cite{Universiti_Tun_Hussein_Onn_Malaysia_Roslan_2023}, 
 sind diese Gebiete für die Beantwortung der Forschungsfrage nicht notwendig. Die weiterführende 
 Untersuchung der Ergebnisse bildet einen eigenen Forschungszweig und ist somit auch ausgeschlossen.
 
-Außerdem beschränkt sich diese Arbeit auf den IPv4 Adressraum, da dies genügt, um der Forschungsfrage nachzugehen.
+Außerdem beschränkt sich diese Arbeit auf den IPv4-Adressraum, da dies genügt, um der Forschungsfrage nachzugehen.
 % oder maybe da es eine prototypische Implementierung ist oder so idk
 
 

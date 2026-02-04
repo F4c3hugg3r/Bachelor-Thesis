@@ -1,0 +1,30 @@
+% Checklist Formatierung (wichtig: einheitlich!):
+
+% 1. Eigennamen (Sprachen, Firmen): 
+% "Rust", "C", "Linux", "Windows" sind Eigennamen. Auch Projekte oder Tools wie "ZMap" gelten zu Eigennamen, 
+% wenn sie nicht im Kontext der Programmierung besprochen werden.
+% -> Normale Schrift (kein \texttt, kein \textit).
+
+% 2. \textit{} (Kursiv) wird verwendet für:
+% -> Ersteinführung von DEUTSCHEN Fachbegriffen: "Dies nennt man \textit{Lebenszeit}."
+% -> Mathematische Variablen im Fließtext: "Der Wert $x$ wird um $y$ erhöht."
+% -> NICHT für Einheiten (falsch: $100 ms$, richtig: $100\,\text{ms}$ oder siunitx).
+
+% 3. \eng{} (oder \textit{}) für fremdsprachige Begriffe (Vorgabe Erstprüfer):
+% -> Für Begriffe, die nicht im Duden stehen (Thread, Crate, Scheduling, Overhead).
+% -> WICHTIG: Grammatikalisch als DEUTSCHE Substantive behandeln (Großschreibung!).
+% Richtig: „Der \eng{Thread} bricht ab.“ (Groß, da Substantiv).
+% Richtig: „Das \eng{Polling} verursacht Last.“
+% Falsch: „Der \eng{thread} bricht ab.“
+
+% 4. \texttt{} (Monospace) für alles Computerlesbare:
+% -> Befehle & Tools: „Der Compiler \texttt{rustc}...“, „Das Tool \texttt{ethtool}...“
+% -> Dateinamen & Pfade: „In \texttt{/proc/net/dev} steht...“, „Die Datei \texttt{main.rs}...“
+% -> Code-Schnipsel & Funktionen: „Die Funktion \texttt{unwrap()}...“, „\texttt{println!}...“
+% -> Keywords & Flags: „Das Flag \texttt{--release}...“, „Keyword \texttt{impl}...“
+% -> Konkrete Artefakte (Pakete/Crates): „Das Crate \texttt{serde} wird importiert.“
+%    (Merke: Crate-Namen meist kleingeschrieben, Konzept "Crate" groß).
+
+% 5. URLs (WICHTIG für Fußnoten/Quellen):
+% -> Nutze \url{https://...} (benötigt \usepackage{url} oder hyperref).
+% -> Nicht einfach \texttt{} nehmen, da \url{} den Zeilenumbruch besser kann.
