@@ -26,15 +26,16 @@
 
 
 % TODO Grafiken als PDF statt png importieren 
-
+% TODO statt (siehe \ref{}) -> \cite{} nutzen
+% Leerzeichen vor cites entfernen
 \chapter{Einleitung} \label{Einleitung}
 
 \section{Motivation und Einführung in das Themengebiet} \label{Einführung}
 
-Das Netzwerk-Scanning macht einen nicht zu vernachlässigenden Teil des Internet-Verkehrs im
+Das Scannen von Netzwerken oder gar dem gesamten Internet macht einen nicht zu vernachlässigenden Teil des Datenverkehrs im
 IPv4-Adressraum aus. So waren 98 Prozent des unaufgeforderten TCP-Verkehrs im Jahre
 2024 weltweit auf \texttt{SYN}-Scans zurückzuführen \cite{griffioen2024have}. 
-Bekannte \eng{Open-Source}-Internet-Scanning-Projekte wie ZMap, welches über 10 Jahre stetig weiterentwickelt wurde \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024} oder Masscan \cite{Graham_2026} 
+Bekannte \eng{Open-Source}-Internetscanning-Projekte wie ZMap, welches über 10 Jahre stetig weiterentwickelt wurde \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024} oder Masscan \cite{Graham_2026} 
 sind dazu in der Lage \cite{Durumeric_Wustrow_Halderman} den gesamten IPv4-Adressraum in der Größenordnung von Minuten zu scannen. Das Scannen von Netzwerken nach offenen Ports ermöglicht es Organisationen Schwachstellen ausfindig zu machen, 
 bevor Angreifer es tun. Außerdem lassen sich durch das breitflächige Scannen von ausgewählten Adressräumen oder dem gesamten IPv4-Raum Informationen über Trends und Veränderungen 
 dieser ableiten. Cyberangriffe haben Auswirkungen auf den Ruf und die finanzielle Stabilität von Unternehmen \cite{Rudnev_Zolkin_Artemyev_Tychkov_2024}. Die gegenwärtig hohen Angriffszahlen zum Beispiel bei 
@@ -44,8 +45,8 @@ Bisherige Hochleistungsscanner, wie die soeben genannten, wurden überwiegend in
 C ist häufig die Standardwahl für maschinennahe Anwendungen, da sie zum einen ein 
 niedriges Level an Abstraktion und zum anderen hochperformant sein kann \cite{Peta_2022}. Allerdings ist C anfällig für menschengemachte Fehler \cite{Al_Boghdady_Wassif_El_Ramly_2021} 
 wie doppelte Speicher-Freigaben, Zugriffe auf bereits freigegebenen Speicher und Pufferüberläufe welche teils zu Speicherbeschädigungen und Sicherheitslücken führen können \cite{bugden2022safety} \cite{van_Oorschot_2023}. 
-Andere Sprachen wie Go oder Python lösen einige dieser Probleme durch die Nutzung einer lösen viele Speicherprobleme durch automatische Speicherverwaltung, insbesondere durch \eng{Garbage Collection} 
-und andere Techniken. Diese Sprachen sind allerdings im Vergleich zu Sprachen ohne automatischer Speicherverwaltung wie C weniger performant \cite{bugden2022safety}. 
+Andere Sprachen wie zum Beispiel Go, Java oder Python lösen diese Probleme durch automatische Speicherverwaltung, insbesondere durch \eng{Garbage Collection} 
+und weitere Techniken. Diese Sprachen sind allerdings im Vergleich zu Sprachen ohne automatischer Speicherverwaltung wie C weniger performant \cite{bugden2022safety}. 
 
 Rust hingegen schneidet in Vergleichen bezüglich der \eng{Performance} auf ähnlichem Niveau wie C ab, bringt gleichzeitig aber das höchste Sicherheitsniveau der genannten 
 Sprachen mit, indem es Speicherfehler weitestgehend verhindert \cite{bugden2022safety}\cite{Costanzo_Rucci_Naiouf_Giusti_2021}. Außerdem unterstützt Rust Konzepte von Sprachen hoher Abstraktionsebene, wie beispielsweise die der funktionalen 
@@ -72,18 +73,16 @@ produktiven Einsatz darstellen?
 Die Scanning-Methode beschränkt sich explizit auf das \texttt{SYN}-Scanning. Es ist die de facto Standard Methode und 
 weist in Tests den niedrigsten Einfluss auf das Zielsystem, sowie die kürzeste Scan-Dauer auf \cite{Universiti_Tun_Hussein_Onn_Malaysia_Roslan_2023}. 
 
-Bei der in dieser Arbeit entwickelten Implementierung handelt es sich um einen horizontalen Scanner \ref{Grundlagen}.
+Bei der in dieser Arbeit entwickelten Implementierung handelt es sich um einen horizontalen Scanner (siehe \ref{Portscanning}).
 Anders als beispielsweise beim regulären \texttt{SYN}-Scan des Tools Nmap \cite{Lyon_2010}, welcher in der Regel vertikal erfolgt.
 Vertikales Scanning ist für Netzwerk- beziehungsweise Internetscanner weniger relevant, da dabei das individuelle Ziel 
-im Vordergrund steht. (TODO muss das belegt werden? Falls ja Nmap)
+im Vordergrund steht. 
 
 Zusätzliche Mechanismen zur Verschleierung des Scans oder weiterführende Maßnahmen zur Treffererhöhung
-werden in dieser Implementierung rudimentär oder gar nicht behandelt, da der Fokus
+werden in dieser Implementierung rudimentär behandelt, da der Fokus
 auf der Nutzung von Rust, sowie der Entwicklung eines \eng{Performance}-orientieren Netzwerkscanners liegt. 
-Da der normale Ablauf des \texttt{SYN}-Scans bereits grundlegende Mechanismen in den Bereichen mitbringt \cite{Universiti_Tun_Hussein_Onn_Malaysia_Roslan_2023}, 
-sind diese Gebiete für die Beantwortung der Forschungsfrage nicht notwendig. Die weiterführende 
-Untersuchung der Ergebnisse bildet einen eigenen Forschungszweig und ist somit auch ausgeschlossen.
-
+Da der normale Ablauf des \texttt{SYN}-Scans bereits grundlegende Mechanismen diesbezüglich mitbringt \cite{Universiti_Tun_Hussein_Onn_Malaysia_Roslan_2023}, 
+sind diese Gebiete für die Beantwortung der Forschungsfrage nicht notwendig.
 Außerdem beschränkt sich diese Arbeit auf den IPv4-Adressraum, da dies genügt, um der Forschungsfrage nachzugehen.
 % oder maybe da es eine prototypische Implementierung ist oder so idk
 

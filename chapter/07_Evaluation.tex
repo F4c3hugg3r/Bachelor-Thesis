@@ -8,24 +8,108 @@
 
 \chapter{Evaluation und Ausblick} \label{Evaluation}
 
-In diesem Kapitel werden die in der Testumgebung ermittelten Messergebnisse vorgestellt, analysiert und diskutiert. Ziel ist es, die Leistungsfähigkeit des implementierten Rust-Scanners im Vergleich zu etablierten Tools zu bewerten und die Erfüllung der definierten Anforderungen zu überprüfen. Abschließend wird ein Ausblick auf mögliche Weiterentwicklungen gegeben.
+In diesem Kapitel werden die in der Testumgebung ermittelten Messergebnisse vorgestellt, analysiert und diskutiert. Ziel ist es, 
+die Leistungsfähigkeit des implementierten Rust-Scanners im Vergleich zu etablierten Tools zu bewerten und die Erfüllung der 
+definierten Anforderungen zu überprüfen. Abschließend wird ein Ausblick auf mögliche Weiterentwicklungen gegeben.
 
-\section{Darstellung der Messergebnisse}
-% Hier präsentieren Sie die reinen Daten (Diagramme, Tabellen).
-% Orientieren Sie sich an den Szenarien aus Kap. 6 (S-01, S-02, S-03).
+\section{Darstellung und Reproduzierbarkeit der Messergebnisse}
+Die Messergebnisse wurden mittels der in \ref{Versuchsablauf.Datenaufbereitung} beschriebenen Skripte aufbereitet und stehen im Anhang zur
+Verfügung. Im Folgenden wird nur auf die ausschlaggebenden Ergebnisse eingegangen. Für jede Messung liegen allerdings umfangreiche
+Daten, sowie Diagramme und Tabellen im bereitgestellten GitHub Repository \ref{TODO} zur Verfügung. Der Ablauf, inklusive Erhebung und konkrete
+Parameter, sowie die Ausgaben der Tests lässt sich dort unter logs\_benchmark\_suite.txt anhand der Ein- und Ausgaben im Terminal nachvollziehen. 
+Mittels dessen und der README.md Datei können die Benchmarks exakt reproduziert und nachvollzogen werden. 
 
 \subsection{Ergebnisse S-01: Anforderungsvalidierung}
 % War der Scanner stabil? Wurden alle Pakete korrekt gebaut?
 % Gab es Abstürze oder Memory Leaks bei moderater Last?
+Gemäß \ref{Versuchsablauf.Datenaufbereitung}
+wird in \textit{Aktiv} (Zeitraum während Paketfluss besteht) und \textit{Gesamt} (Gesamte Laufzeit des Programmes)
+unterschieden. \textit{Netto} beschreibt dabei, dass die Werte von der Grundlast bereinigt wurden.
 
-\subsection{Ergebnisse S-02: Performanzgrenzen}
-% Das wichtigste Kapitel. Vergleich der Durchsatzraten (PPS).
-% Vergleich Rust-XDP (Copy vs ZeroCopy) vs Rust-AF_PACKET vs ZMap vs Masscan.
-% Grafiken: Durchsatz über Zeit, Drop-Raten.
+\subsection{Ergebnisse S-02: Performanzgrenzen} \label{Ergebnisse.S-02}
+Aus den Ergebnissen des Tests zum Szenario \hyperref[req:S-02]{/S-02/} erschließen sich nach [TODO Ergebnisse] und [TODO Validierung] die
+in \ref{tab:performance_comparison_rounded} dargestellten Werte. Aufgrund von Einschränkungen durch die eigene \eng{Blacklist} hat ZMap 
+weniger IP-Adressen gescannt, weshalb es weniger Ergebnisse hervorbrachte. Außerdem ist zu beachten, dass sowohl Masscan als auch ZMap 
+keine Option zur Vermeidung des Sendens von RST-Antworten besitzen. Da Masscan die Pakete in dessen eigens gefertigtem Userspace-TCP-Stack
+erstellt und versendet, fließen diese auch in die PPS Metrik ein. Die durch ZMap bedingten RST-Antworten werden automatisch vom Kernel 
+gesendet und nicht in den genutzten Kernel-Logs erfasst. 
+
+\begin{table}[htbp]
+\label{tab:performance_comparison_rounded}
+\centering
+\small
+\begin{tabularx}{\textwidth}{|X|r|r|r|r|r|r|}\hline 
+\textbf{Scanner} & \textbf{PPS} & \multicolumn{2}{c|}{\textbf{Netto (Aktiv)}} & \multicolumn{2}{c|}{\textbf{Netto (Gesamt)}} & \textbf{Ergebnisse} \\ 
+& \scriptsize{(aktiv) [Mio]} & \scriptsize{CPU [\%]} & \scriptsize{RAM [MB]} & \scriptsize{CPU [\%]} & \scriptsize{RAM [MB]} & \scriptsize{[Mio]} \\ \hline
+
+SYN-Rust \newline \scriptsize{(XDP, Zero-Copy)} & 
+ 1,48 & 5,7 & 190,8 & 4,7 & 160,7 & 13,42\\ \hline
+
+SYN-Rust \newline \scriptsize{(XDP, Copy)} & 
+1,23 & 9,2 & 237,7 & 7,7 & 203,7 & 13,42 \\ \hline
+
+SYN-Rust \newline \scriptsize{(XDP, Generic)} & 
+ 1,23 & 10,4 & 263,8 & 8,7 & 231,8 & 13,42 \\ \hline
+
+Masscan & 
+ 1,05 & 13,5 & 42,6 & 12,3 & 42,1 & 13,42 \\ \hline
+
+SYN-Rust \newline \scriptsize{(AF\_PACKET)} & 
+ 1,06 & 14,2 & 265,6 & 12,1 & 240,9 & 13,42 \\ \hline
+
+ZMap  & 
+ 1,35 & 21,1 & 13,0 & 17,8 & 12,4 & 10,07 \\ \hline
+\end{tabularx}
+\caption{Vergleich der Performance-Metriken}
+\end{table}
+
+
+Zur Berechnung der in \ref{fig:performance_efficiency_diag} gezeigten Werte zur Effizienz der Scanner während der aktiven Phase, wurde der Durchsatz 
+pro CPU-Prozent in jedem Durchlauf berechnet und daraus anschließend der Durchschnittswert gebildet. 
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{pictures/vergleich_balken_4_effizienz.png}
+	\caption{Effizienz der SYN-Scanner im Benchmark (aktiv)}
+	\label{fig:performance_efficiency_diag}
+\end{figure}
+% TODO Namen größer und steiler nach unten
 
 \subsection{Ergebnisse S-03: Reales Szenario}
-% Wie verhält sich der Scanner bei Antwortraten von 20%?
-% Funktioniert die Duplikaterkennung?
+Die Ergebnisse mancher Variationen des SYN-Rust in der Tabelle \ref{tab:performance_comparison_low_rate_efficiency} weichen bezüglich der PPS Metrik 
+von der Durchsatzlimitierung  (500.000 PPS) ab. Dies ist in diesem Szenario \hyperref[req:S-03]{/S-03/} explizit erwünscht. Die Daten der Tabelleneinträge
+sind in [TODO Ergebnisse] und [TODO Validierung] zu finden. Für ZMap gilt bezüglich der RST-Antworten das gleiche wie auch in \ref{Ergebnisse.S-02}.  
+
+\begin{table}[htbp]
+\centering
+\footnotesize % Schriftgröße angepasst für 8 Spalten
+% Definition: X für Name, dann 7 Spalten für Zahlen (r)
+\begin{tabularx}{\textwidth}{|X|r|r|r|r|r|r|r|}\hline 
+\textbf{Scanner} & \textbf{Effizienz} & \textbf{PPS} & \multicolumn{2}{c|}{\textbf{Netto (Aktiv)}} & \multicolumn{2}{c|}{\textbf{Netto (Gesamt)}} & \textbf{Erg.} \\ 
+ & \scriptsize{[PPS/\%]} & \scriptsize{(aktiv) [Mio]} & \scriptsize{CPU [\%]} & \scriptsize{RAM [MB]} & \scriptsize{CPU [\%]} & \scriptsize{RAM [MB]} & \scriptsize{[Mio]} \\ \hline
+
+SYN-Rust \newline \scriptsize{(XDP, Zero-Copy,}  \newline \scriptsize{kein RST)} & 
+ 184353 & 0,51 & 2,8 & 82,2 & 1,8 & 62,0 & 1,64 \\ \hline
+
+SYN-Rust \newline \scriptsize{(XDP, Copy)} & 
+ 106118 & 0,60 & 5,7 & 77,0 & 3,6 & 57,7 & 1,64 \\ \hline
+
+SYN-Rust \newline \scriptsize{(XDP, Generic)} & 
+ 103087 & 0,60 & 5,9 & 96,9 & 3,7 & 74,7 & 1,64 \\ \hline
+
+SYN-Rust \newline \scriptsize{(AF\_PACKET)} & 
+ 99871 & 0,61 & 6,1 & 112,2 & 3,8 & 88,3 & 1,64 \\ \hline
+
+Masscan \newline \scriptsize{(ohne Deduplizierung,}  \newline \scriptsize{RST automatisch)} & 
+ 75534 & 0,60 & 6,6 & 34,8 & 4,8 & 31,4 & 1,68 \\ \hline
+
+ZMap  \newline \scriptsize{(RST automatisch)} & 
+ 13272 & 0,59 & 37,2 & 62,3 & 26,5 & 58,3 & 1,68 \\ \hline
+
+\end{tabularx}
+\caption{Vergleich der Performance-Metriken (Unter Berücksichtigung der RST-Pakete)}
+\label{tab:performance_comparison_low_rate_efficiency}
+\end{table}
 
 \section{Diskussion der Ergebnisse}
 % Hier interpretieren Sie die Zahlen aus 7.1.

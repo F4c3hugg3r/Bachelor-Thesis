@@ -15,7 +15,7 @@ Des Weiteren wird auf asynchrone Programmierung eingegangen, sodass ein Verstän
 der Implementierung gegeben ist.
 
 Anschließend werden die zum Vergleich genutzten Scanner vorgestellt und eingeordnet. Auch Rust und dessen 
-Besonderheiten wird genauer vorgestellt.
+Besonderheiten werden genauer vorgestellt.
 
 \section{Grundlagen der Netzwerkkommunikation}
 Bei der Kommunikation in TCP/IP \footnote{Eine grundlegende Kenntnis über das TCP/IP-Modell wird angenommen} 
@@ -44,6 +44,61 @@ Transportprotokolle des Internets \cite[S.~71]{Wendzel_2021}. Es gewährleistet 
 Datenübertragung zwischen den Prozessen der \eng{Hosts}. Die ursprüngliche Spezifikation erfolgte im RFC 793 \cite{Postel_1981},
 welches durch RFC 9293 \cite{Eddy_2022} konsolidiert wurde. Für die Entwicklung eines \texttt{SYN}-Scanners sind insbesondere
 der Aufbau des TCP-Headers und der Mechanismus des Verbindungsaufbaues entscheidend. 
+
+\begin{figure}[htbp]
+    \centering
+    % Skalierung vergrößert (x für Breite, y für Höhe der Zeilen)
+    \begin{tikzpicture}[x=0.45cm, y=1.1cm, every node/.style={font=\scriptsize, align=center}]
+        % Bit indices - 10 entfernt
+        \node[anchor=south] at (0,6.15) {0};
+        \node[anchor=south] at (16,6.15) {16};
+        \node[anchor=south] at (32,6.15) {31};
+
+        % Row 1: Source / Destination Port
+        \draw (0,6) rectangle (16,5) node[midway] {Source Port};
+        \draw (16,6) rectangle (32,5) node[midway] {Destination Port};
+
+        % Row 2: Sequence Number
+        \draw (0,5) rectangle (32,4) node[midway] {Sequence Number};
+
+        % Row 3: Acknowledgment Number
+        \draw (0,4) rectangle (32,3) node[midway] {Acknowledgment Number};
+
+        % Row 4: Offset, Reserved, Flags, Window
+        % Data Offset (4 Bits: 0-3)
+        \draw (0,3) rectangle (4,2) node[midway] {Data\\Offset};
+        
+        % Reserved (4 Bits: 4-7) - "Rsrvd" wie in Vorlage
+        \draw (4,3) rectangle (8,2) node[midway] {Reserved};
+
+        % Flags (8 Bits: 8-15) - Einzelne Kästchen mit tiny Schrift gestapelt
+        \draw (8,3) rectangle (9,2) node[midway, font=\tiny, inner sep=0pt] {C\\W\\R};
+        \draw (9,3) rectangle (10,2) node[midway, font=\tiny, inner sep=0pt] {E\\C\\E};
+        \draw (10,3) rectangle (11,2) node[midway, font=\tiny, inner sep=0pt] {U\\R\\G};
+        \draw (11,3) rectangle (12,2) node[midway, font=\tiny, inner sep=0pt] {A\\C\\K};
+        \draw (12,3) rectangle (13,2) node[midway, font=\tiny, inner sep=0pt] {P\\S\\H};
+        \draw (13,3) rectangle (14,2) node[midway, font=\tiny, inner sep=0pt] {R\\S\\T};
+        \draw (14,3) rectangle (15,2) node[midway, font=\tiny, inner sep=0pt] {S\\Y\\N};
+        \draw (15,3) rectangle (16,2) node[midway, font=\tiny, inner sep=0pt] {F\\I\\N};
+
+        % Window (16 Bits: 16-31)
+        \draw (16,3) rectangle (32,2) node[midway] {Window};
+
+        % Row 5: Checksum, Urgent Pointer
+        \draw (0,2) rectangle (16,1) node[midway] {Checksum};
+        \draw (16,2) rectangle (32,1) node[midway] {Urgent Pointer};
+
+        % Row 6: Options / Padding
+        \draw (0,1) rectangle (32,0) node[midway] {Options / Padding};
+    \end{tikzpicture}
+    \caption{Aufbau des TCP-Headers nach RFC 9293 \cite{Eddy_2022}.}
+    \label{fig:tcp_header}
+\end{figure}
+
+Da das TCP-Protokoll Daten als \eng{Stream} statt einzeln (\eng{Message}) versendet, 
+wird vorher eine Verbindung in einem sogenannten \eng{Three-Way-Handshake} aufgebaut \cite{Wendzel_2021} S71/72. 
+Bei diesem werden TCP-Pakete mit jeweils unterschiedlichen Werten in den \eng{Control Bits} (\eng{Flags}) 
+des TCP-Headers nach dem in \ref{fig:tcp_handshake} beschriebenen Muster ausgetauscht.
 
 \begin{figure}[htbp]
     \centering
@@ -117,64 +172,9 @@ der Aufbau des TCP-Headers und der Mechanismus des Verbindungsaufbaues entscheid
     \label{fig:tcp_handshake}
 \end{figure}
 
-Da das TCP-Protokoll Daten als \eng{Stream} statt einzeln (\eng{Message}) versendet, 
-wird vorher eine Verbindung in einem sogenannten \eng{Three-Way-Handshake} aufgebaut \cite{Wendzel_2021} S71/72. 
-Bei diesem werden TCP-Pakete mit jeweils unterschiedlichen Werten in den \eng{Control Bits} (\eng{Flags}) 
-des TCP-Headers nach folgendem Muster ausgetauscht:
 
-\begin{figure}[htbp]
-    \centering
-    % Skalierung vergrößert (x für Breite, y für Höhe der Zeilen)
-    \begin{tikzpicture}[x=0.45cm, y=1.1cm, every node/.style={font=\scriptsize, align=center}]
-        % Bit indices - 10 entfernt
-        \node[anchor=south] at (0,6.15) {0};
-        \node[anchor=south] at (16,6.15) {16};
-        \node[anchor=south] at (32,6.15) {31};
-
-        % Row 1: Source / Destination Port
-        \draw (0,6) rectangle (16,5) node[midway] {Source Port};
-        \draw (16,6) rectangle (32,5) node[midway] {Destination Port};
-
-        % Row 2: Sequence Number
-        \draw (0,5) rectangle (32,4) node[midway] {Sequence Number};
-
-        % Row 3: Acknowledgment Number
-        \draw (0,4) rectangle (32,3) node[midway] {Acknowledgment Number};
-
-        % Row 4: Offset, Reserved, Flags, Window
-        % Data Offset (4 Bits: 0-3)
-        \draw (0,3) rectangle (4,2) node[midway] {Data\\Offset};
-        
-        % Reserved (4 Bits: 4-7) - "Rsrvd" wie in Vorlage
-        \draw (4,3) rectangle (8,2) node[midway] {Reserved};
-
-        % Flags (8 Bits: 8-15) - Einzelne Kästchen mit tiny Schrift gestapelt
-        \draw (8,3) rectangle (9,2) node[midway, font=\tiny, inner sep=0pt] {C\\W\\R};
-        \draw (9,3) rectangle (10,2) node[midway, font=\tiny, inner sep=0pt] {E\\C\\E};
-        \draw (10,3) rectangle (11,2) node[midway, font=\tiny, inner sep=0pt] {U\\R\\G};
-        \draw (11,3) rectangle (12,2) node[midway, font=\tiny, inner sep=0pt] {A\\C\\K};
-        \draw (12,3) rectangle (13,2) node[midway, font=\tiny, inner sep=0pt] {P\\S\\H};
-        \draw (13,3) rectangle (14,2) node[midway, font=\tiny, inner sep=0pt] {R\\S\\T};
-        \draw (14,3) rectangle (15,2) node[midway, font=\tiny, inner sep=0pt] {S\\Y\\N};
-        \draw (15,3) rectangle (16,2) node[midway, font=\tiny, inner sep=0pt] {F\\I\\N};
-
-        % Window (16 Bits: 16-31)
-        \draw (16,3) rectangle (32,2) node[midway] {Window};
-
-        % Row 5: Checksum, Urgent Pointer
-        \draw (0,2) rectangle (16,1) node[midway] {Checksum};
-        \draw (16,2) rectangle (32,1) node[midway] {Urgent Pointer};
-
-        % Row 6: Options / Padding
-        \draw (0,1) rectangle (32,0) node[midway] {Options / Padding};
-    \end{tikzpicture}
-    \caption{Aufbau des TCP-Headers nach RFC 9293 \cite{Eddy_2022}.}
-    \label{fig:tcp_header}
-\end{figure}
-
-
-\section{Port-Scanning}
-Port-Scanning, als Art des Netzwerk-Scannings, ist eines der fundamentalen Verfahren in der Netzwerksicherheit zum Auffinden von 
+\section{Portscanning} \label{Portscanning}
+Portscanning, als Art des Netzwerkscannings, ist eines der fundamentalen Verfahren in der Netzwerksicherheit zum Auffinden von 
 potenziellen Schwachstellen \cite{Chapter_4._Port_Scanning_Overview_|_Nmap_Network_Scanning}. Ein Portscanner verschickt Pakete an ein Zielsystem und
 zieht anhand der Antworten, oder auch ausbleibenden Antworten, Rückschlüsse auf den Zustand des Systems. Das Ziel ist die Identifikation
 von offenen Ports bzw. aktiven Diensten, was als erster Schritt für weiterführende Sicherheitsanalysen oder aber auch Angriffe dienen kann \cite[S.~4-3]{Scarfone_Souppaya_Cody_Orebaugh_2008}. 
@@ -192,28 +192,27 @@ die Verbreitung von Schwachstellen zu untersuchen \cite{Durumeric_Wustrow_Halder
 % bis hier Rechtschreibung kontrolliert
 
 \subsection{SYN-Scanning}
-Für einen \eng{Half-Open} \texttt{SYN}-Scan wie er in dieser Arbeit behandelt wird, sind lediglich die ersten beiden Schritte des Verbindungsablaufes
-relevant. Es wird davon gebraucht gemacht, dass bereits und ausschließlich eine \texttt{SYN/ACK}-Antwort den Port als offen klassifiziert, 
+Für einen \eng{Half-Open} \texttt{SYN}-Scan wie er in dieser Arbeit behandelt wird, sind lediglich die ersten beiden Schritte des in \ref{fig:tcp_handshake} 
+dargestellten Verbindungsablaufes relevant. Es wird davon gebraucht gemacht, dass bereits und ausschließlich eine \texttt{SYN/ACK}-Antwort den Port als offen klassifiziert, 
 was den weiteren Verbindungsaufbau irrelevant macht \cite{Lyon_2010}. Um den Scan zu verschleiern und den Verbindungsversuch trotz dessen sauber
 abzuschießen, kann anschließend noch ein Paket, bei welchem die \texttt{RST}-Flag der \eng{Control Bits} gesetzt ist gesendet werden \cite{Lyon_2010}.
 
 Um antwortende \eng{Hosts} effizient zu identifizieren, wird das Prinzip des \texttt{SYN}-Cookies adaptiert \cite{Durumeric_Wustrow_Halderman}, welches ursprünglich als 
 Abwehrmechanismus gegen \eng{Denial-of-Service}-Angriffe spezifiziert wurde \cite[S. 8]{Eddy_2007}. Dafür werden verbindungsspezifische 
-Informationen unter Verwendung eines \eng{Hash}-Algorithmus (z. B. \eng{Keyed SipHash}) kodiert 
+Informationen unter Verwendung eines \eng{Hash}-Algorithmus (z. B. \eng{Keyed SipHash} TODO opt. Quelle) kodiert 
 und als \eng{Sequence Number} in den TCP-Header des ausgehenden \texttt{SYN}-Pakets eingetragen.
 Antwortet ein Ziel-\eng{Host} mit einem \texttt{SYN-ACK}-Paket, so enthält dessen \eng{Acknowledgment Number} gemäß TCP-Spezifikation den inkrementierten 
 Wert der ursprünglichen \eng{Sequence Number}. Die Validierung lässt sich abstrahiert wie folgt beschreiben:
 
-\begin{verbatim}is_valid = hash(value_0, value_1, ..., secret) == answer.ack_num - 1\end{verbatim}
+\begin{verbatim}is_valid = hash(value_0, value_1, ..., secret) == answer.ack_num - 1\end{verbatim} \label{equ:syn_cookie_auswertung}
 
-Da die Validierung einer Antwort somit rein mathematisch erfolgt und keine Speicherung in - oder Zugriff auf eine lokale Zustandstabelle benötigt, 
-wird eine sowohl zeitliche als auch logische Entkopplung von Sende- und Empfangsprozessen erwirkt, was wiederum eine asynchrone 
-Architektur ermöglicht. 
+Die Validierung der Antwort erfolgt somit rein mathematisch und benötigt keine Speicherung in einer lokalen
+Zustandstabelle. Dies erwirkt eine sowohl zeitliche als auch logische Entkopplung von Sende- und Empfangsprozessen,
+was wiederum eine asynchrone Architektur ermöglicht.
 
-Entscheidend für den Scanner sind also folgende Header Felder: 
+Entscheidend für den Scanner sind demnach die in \ref{tab:TCP-header-fields} aufgeführten Header Felder. 
 
 \begin{table}[htbp]
-\caption{Relevante TCP-Header Felder}
 \begin{tabularx}{\textwidth}{|c|X|}\hline 
 \textbf{Header Feld} & \textbf{Beschreibung} \\ \hline
 \eng{Source Port} & Beschreibt den genutzten Port des Ausgangsdienstes. \\ \hline
@@ -223,6 +222,7 @@ Entscheidend für den Scanner sind also folgende Header Felder:
 \eng{Control Bits} (\eng{Flags}) & Wird für die verschiedenen Phasen des Verbindungsaufbaues angepasst oder ausgelesen.  \\ \hline
 \end{tabularx}
 \label{tab:TCP-header-fields}
+\caption{Relevante TCP-Header Felder}
 \end{table}
 
 \section{Schnittstellen zur Paketverarbeitung unter Linux}
@@ -233,15 +233,15 @@ Rechenressourcen verbraucht werden.
 \subsection{Linux}
 Linux ist ein \eng{Open-Source}-Betriebssystem-Kernel \cite[S.~1]{Kerrisk_2018}, welcher aufgrund neuartiger Subsysteme (wie beispielsweise \texttt{eBPF} (siehe \ref{Grundlagen.eBPF}) oder
  \texttt{XDP} (siehe \ref{Grundlagen.XDP})), eine programmierbare Paketverarbeitung nahe an der Hardware ermöglicht. 
- Dies ist für die Entwicklung eines Hochleistungs-Scanners von großem Vorteil.
+ Dies ist für die Entwicklung eines Hochleistungsscanners von großem Vorteil.
 
 Ein zentrales Konzept zum Verständnis der \eng{Performance}-Grenzen ist die Unterscheidung 
 zwischen \eng{User Space} und \eng{Kernel Space} im Linux Ökosystem \cite[S.~23]{Kerrisk_2018}: 
 
 \begin{itemize} 
-	\item \textbf{\eng{Kernel Space}:} Hier läuft der Kern des Betriebssystems mit vollem Zugriff 
+	\item \textbf{\eng{Kernel-Space}:} Hier läuft der Kern des Betriebssystems mit vollem Zugriff 
 	auf die Hardware und den Speicher. Treiber und der Netzwerk-Stack operieren auf dieser Ebene. 
-	\item \textbf{\eng{User Space}:} Hier laufen reguläre Anwendungen in isolierten Speicherbereichen. 
+	\item \textbf{\eng{User-Space}:} Hier laufen reguläre Anwendungen in isolierten Speicherbereichen. 
 	Diese haben keinen direkten Zugriff auf den \eng{Kernel Space}. 
 \end{itemize} 
 Die Kommunikation zwischen diesen Ebenen erfolgt über \eng{System Calls} \cite[S.~44]{Kerrisk_2018}. Jeder Wechsel (\eng{Context Switch}) 
@@ -259,29 +259,33 @@ registrieren will, ohne eine vollwertige Verbindung aufzubauen, welche Ressource
 
 \eng{Raw-Sockets} erlauben der Anwendung, Netzwerkpakete unter Umgehung bestimmter \eng{Layer} des Kernel-Stacks zu senden 
 und zu empfangen \cite{raw7_linux_manpage}. Der Entwickler muss die Protokoll-Header selbst konstruieren. 
-Dies ist für \eng{Half-Open} Port-Scanner essenziell, um individuelle Pakete zu generieren, ohne dass der Kernel 
+Dies ist für \eng{Half-Open} Portscanner essenziell, um individuelle Pakete zu generieren, ohne dass der Kernel 
 automatisch in den Verbindungsaufbau eingreift. 
 
+% TODO eindeutschen
 Die \eng{Address Families} definieren dabei die Interpretation der Adressen und die Ebene des Zugriffs \cite{address_families7_linux_manpage}. 
-Hier ein paar Beispiele: <- TODO Besser formulieren
+Der Linux-Kernel stellt diverse Address-Familien bereit. Zum Verständnis, im Rahmen dieses Projektes, sind folgende Varianten von zentraler 
+Bedeutung:
+
 \begin{itemize} 
 	\itemsep 0pt
-	\item \textbf{\texttt{AF\_INET} (Standard):} \texttt{AF\_INET} Operiert auf Layer 3 (IP Ebene), deshalb fügt der Kernel den IP-Header hinzu. 	
-	Auch das Routing wird (TODO vollständig?) durch den Kernel vorgenommen. 
- 	\item \textbf{\texttt{AF\_PACKET} (Performant):} Diese Familie ermöglicht direkten Zugriff auf Layer 2 (Ethernet-Ebene). 
-	Anwendungen können rohe \eng{Ethernet-Frames} lesen und schreiben. Dies bietet die vollständige Kontrolle
-	über die Paketerstellung. 
-	% TODO wie weit durch Kernel geschickt? Was ist mit V1/V2/V3?
-	\item \textbf{\texttt{AF\_XDP} (Sehr Performant):} Hierbei handelt es sich um eine für Hochleistungspaketverarbeitung optimierte \eng{Address Family}. 
-	Sie ermöglicht das Senden und Empfangen von Paketen unter fast vollständiger Umgehung des Kernel-Stacks. 
+	\item \textbf{\texttt{AF\_INET} (Netzwerk-Ebene):} Diese Familie operiert auf Layer 3 der IP-Ebene \cite{raw7_linux_manpage}. Bei Nutzung von \eng{Raw-Sockets} fügt der Kernel 
+    standardmäßig den IP-Header hinzu und übernimmt das vollständige Routing zur korrekten Netzwerkschnittstelle \cite[S.~1202]{Kerrisk_2018}.
+ 	\item \textbf{\texttt{AF\_PACKET} (Sicherungsschicht):} Diese Familie ermöglicht direkten Zugriff auf Layer 2 (Ethernet-Ebene). 
+	Anwendungen erzeugen vollständige \eng{Ethernet-Frames} und haben somit die volle Kontrolle.
+    Das Versenden oder Empfangen von Paketen erfordert jedoch weiterhin die Allokation von Kernel-internen Datenstrukturen \cite{packet_7_-_Linux_manual_page}.
+    \item \textbf{\texttt{AF\_XDP} (Hochperformant):} Hierbei handelt es sich um eine speziell für Hochleistungsanwendungen optimierte \eng{Address Family}.
+	Sie ermöglicht das Senden und Empfangen von Paketen unter Umgehung des regulären Kernel-Netzwerkstacks. Dabei ist zwischen dem universell verfügbaren \eng{Copy-Mode},
+    in welchem Daten zwischen Kernel und User Space kopiert werden und dem Treiber-abhängigen \eng{Zero-Copy-Mode}, in welchem Daten direkt in den Speicher der 
+    Anwendung geschrieben werden zu unterscheiden \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}. 
 \end{itemize}
 
 \subsection{Erweiterte Berkeley Packet Filter (\texttt{eBPF})} \label{Grundlagen.eBPF}
 Ursprünglich als \textit{Berkeley Packet Filter} (\texttt{BPF}) für Werkzeuge wie \texttt{tcpdump} entwickelt, um Pakete effizient zu filtern \cite{260309}, 
-wurde die Technologie zum erweitert, sodass grundlegend neue Möglichkeiten erschlossen wurden. 
+wurde die Technologie erweitert, sodass grundlegend neue Möglichkeiten außerhalb des reinen filtern von Paketen erschlossen wurden. 
 
 \texttt{eBPF} ist eine im Linux-Kernel integrierte virtuelle Maschine (VM), die es erlaubt, benutzerdefinierten 
-\eng{Bytecode} sicher und effizient im \eng{Kernel}-Kontext auszuführen, ohne Kernel-Module schreiben oder den Kernel 
+\eng{Bytecode} sicher und effizient im \eng{Kernel}-Kontext (siehe \ref{fig:rx_xdp}) auszuführen, ohne Kernel-Module schreiben oder den Kernel 
 neu kompilieren zu müssen \cite{Nishanth_Reddy_Pinnapareddy_2025}. \texttt{eBPF}-Programme werden zur Laufzeit 
 durch einen \eng{JIT-Compiler} (\eng{Just-In-Time}) in native Maschinensprache übersetzt. Ein \eng{Verifier} stellt 
 vor der Ausführung sicher, dass der Code sicher ist \cite{Vieira_Castanho_Pacífico_Santos_Júnior_Vieira_2021}. 
@@ -299,7 +303,7 @@ So werden nur relevante Daten an den \eng{User Space} weitergereicht.
 Netzwerktreibers ausgeführt werden.
 Dies ermöglicht eine programmierbare und hochperformante Paketverarbeitung direkt im Betriebssystemkern. 
 Im Gegensatz zu früheren Ansätzen, die den Kernel vollständig umgehen (z.B. \texttt{DPDK}), 
-integriert sich \texttt{XDP} kooperativ in den bestehenden Stack \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}. 
+integriert sich \texttt{XDP} kooperativ in den bestehenden Stack. \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018} 
 
 Ein \texttt{XDP}-Programm kann Pakete verwerfen (\texttt{XDP\_DROP}), an den regulären Netzwerkstack weiterleiten (\texttt{XDP\_PASS}), 
 über dieselbe Schnittstelle zurücksenden (\texttt{XDP\_TX}) oder an eine andere CPU bzw. einen \eng{Userspace-Socket} 
@@ -309,7 +313,7 @@ Die Effizienz von \texttt{XDP} resultiert aus der Positionierung im Datenpfad. I
 Linux-Netzwerkarchitekturen durchläuft ein Paket nach dem Empfang durch die Netzwerkkarte den 
 gesamten Netzwerk-Stack. Erst danach erreichen die Daten den \eng{User Space}. Dies erfordert CPU und Speicher-
 aufwendige \eng{Context Switches} (\eng{Context Switches}) zwischen \eng{Kernel-} und \eng{User-Mode}, sowie die Allokation 
-komplexer Metadatenstrukturen (\texttt{sk\_buff}) \footnote{\eng{Socket Buffer}} \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}\cite{Zhang_Shu_Chen_Xie_2024}.
+komplexer Metadatenstrukturen (eines \texttt{sk\_buff} \footnote{\eng{Socket Buffer}}) \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}\cite{Zhang_Shu_Chen_Xie_2024}.
 \texttt{XDP} greift vor dieser Allokation ein (siehe Abbildung \ref{fig:rx_xdp}). Tests zeigen, dass \texttt{XDP} auf einem einzelnen CPU-Kern bis zu 
 fünfmal mehr Pakete pro Sekunde verarbeiten kann als der Standard Linux-Stack \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}.
 
@@ -335,10 +339,9 @@ lassen sich drei Modi unterscheiden:
 	\eng{Performance}, da die Host-CPU vollständig von der Paketverarbeitung entlastet wird, setzt aber
 	die Nutzung einer sogenannten \eng{Smart NIC} Netzwerkkarte voraus. 
 	\item \textbf{\eng{Generic Mode} (\eng{SKB Mode}):} Dieser Modus dient der Kompatibilität. Wenn ein Treiber \texttt{XDP} 
-	nicht nativ unterstützt, führt der Kernel das \texttt{XDP}-Programm an einer späteren Stelle im Netzwerkstack 
+	nicht nativ unterstützt, führt der Kernel das \texttt{XDP}-Programm im Netzwerkstack des Kernels
 	aus. Zwar gehen hier die massiven \eng{Performance}-Vorteile der Speicherersparnis verloren, 
 	jedoch wird sichergestellt, dass \texttt{XDP}-Anwendungen auf jeder Hardware funktionsfähig bleiben. 
-	Trotzdem profitiert es von effizienteren, sperrfreien \eng{Ring-Buffer}-Strukturen (<- TODO bessere Argumente)
 \end{itemize}
 
 \section{Die Programmiersprache: Rust} \label{rust}
@@ -370,20 +373,20 @@ durch drei zentrale Konzepte bestimmt wird:
 \end{itemize}
 
 Die Einhaltung dieser Regeln wird zur Kompilierzeit vom \eng{Borrow-Checker} verifiziert. 
-Außerdem hat Rust noch weitere Konzepte zur Steigerung der Sicherheit, 
+Außerdem hat Rust noch weitere Konzepte zur Steigerung der Sicherheit. 
 Budgen et al. \cite{Bugden_Alahmar_2022} führen weitere Konzepte wie das
 \eng{Bounds Checking}, welches auf ungültige Indexzugriffe prüft oder 
 die Nutzung von \texttt{Option}s, welche Zugriffe auf nicht initialisierte Werte vermeiden, indem
-sie eine Struktur welche entweder den gewünschten Wert x als \texttt{Some(x)} oder \texttt{None} enthält zurückgeben auf. 
-Außerdem müssen \eng{Pointer}-Arithmetik in sogenannte \texttt{unsafe}-Blöcke ausgelagert werden.
-Diese dienen als einer Art Umgehungsmöglichkeit der anderen Konzepte und lösen
-einen Programm-beendenden \texttt{panic} aus, welcher verhindert, dass das Programm
+sie eine Struktur, welche entweder den gewünschten Wert x als \texttt{Some(x)} oder \texttt{None} enthält, zurückgeben auf. 
+Außerdem muss \eng{Pointer}-Arithmetik in sogenannte \texttt{unsafe}-Blöcke ausgelagert werden.
+Diese dienen als eine Art Umgehungsmöglichkeit der anderen Konzepte. Sie lösen
+im Fehlerfall eine Programm-beendenden \texttt{panic} aus, welche verhindert, dass das Programm
 in einem undefinierten Zustand weiter läuft.
 
 Trotz der Möglichkeit und Notwendigkeit, \texttt{unsafe}-Blöcke zu nutzen (beispielsweise für hardwarenahe
-Operationen oder der Arbeit mit C Bibliotheken), was dem Sicherheitskonzept der Sprache
+Operationen oder der Arbeit mit C-Bibliotheken), was dem Sicherheitskonzept der Sprache
 widerspricht, sind laut Jung et al. \enquote{zahlreiche wichtige Rust Bibliotheken} \cite{RustBelt}
-sicher, da die \texttt{unsafe}-Blöcke korrekt gekapselt sind \cite{RustBelt}.
+sicher, da sie die \texttt{unsafe}-Blöcke korrekt kapseln \cite{RustBelt}.
 
 Durch das Zusammenspiel dieser Konzepte können Speicherfehler verschiedenster Art 
 bereits zur Kompilierzeit vermieden werden, was Rust zur sichersten unter den derzeit
@@ -394,9 +397,9 @@ steile Lernkurve zugeschrieben wird \cite{Cui_Xu_2025}.
 \subsection{Asynchrone Programmierung und \eng{Performance} von Rust}
 Die im letzten Abschnitt genannten Konzepte schließen auch \eng{Data Races}, 
 welche beim Zugriff mehrerer \eng{Threads} \footnote{Untergeordnete Arbeitseinheiten eines Prozesses} auf 
-den gleichen Speicher entstehen können und eine häufige Fehlerquelle in der asynchronen 
-Programmierung darstellen \cite{Bugden_Alahmar_2022} bereits zur Kompilierzeit aus \cite{Costanzo_Rucci_Naiouf_Giusti_2021}. 
-Dies macht Rust zu einer guten Wahl für sowohl nebenläufige als auch parallele Programmierung. 
+den gleichen Speicher entstehen können, bereits zur Kompilierzeit aus \cite{Costanzo_Rucci_Naiouf_Giusti_2021}. 
+Dies macht \eng{Data Races} zu einer häufigen Fehlerquelle in der asynchronen Programmierung \cite{Bugden_Alahmar_2022}.
+Die Beseitigung derer, macht Rust zu einer guten Wahl für sowohl nebenläufige als auch parallele Programmierung. 
 
 \subsubsection{Nebenläufige und Parallele Programmierung}
 Die nebenläufige Programmierung, welche in Rust durch das 
@@ -404,12 +407,12 @@ Die nebenläufige Programmierung, welche in Rust durch das
 in unabhängige Kontrollflüsse. Diese agieren zeitlich verschränkt, wobei der primäre Zweck nicht 
 die gleichzeitige Ausführung, sondern die Entkopplung von Aufgaben ist. So werden Ressourcen effektiv genutzt,
 indem sie während möglicher Wartezeiten z.B. bei \eng{I/O}-Operationen\footnote{Input-/Output-Operationen}, für andere
-Prozesse freigegeben werden. Dadurch kann die Effizienz und die Responsivität des Systems erhöht werden \cite{Silberschatz_Galvin_Gagne_2018, Arpaci-Dusseau_Arpaci-Dusseau_2018}.
+Prozesse freigegeben werden. Dadurch kann die Effizienz und die Responsivität des Systems erhöht werden \cite{Silberschatz_Galvin_Gagne_2018} \cite{Arpaci-Dusseau_Arpaci-Dusseau_2018}.
 
 Die Parallelität hingegen, bezieht sich auf die tatsächliche physikalische Ausführung mehrerer 
 Aufgaben zum gleichen Zeitpunkt \cite{Silberschatz_Galvin_Gagne_2018}, was eine entsprechende \eng{Multi-Core}-Hardware voraussetzt \cite{Concurrency_is_not_parallelism_-_The_Go_Programming_Language}. 
 Der Vorteil der Parallelität liegt in der Leistungssteigerung und der Maximierung des 
-Datendurchsatzes bei rechenintensiven Problemen \cite{Silberschatz_Galvin_Gagne_2018, Arpaci-Dusseau_Arpaci-Dusseau_2018}.
+Datendurchsatzes bei rechenintensiven Problemen \cite{Silberschatz_Galvin_Gagne_2018}\cite{Arpaci-Dusseau_Arpaci-Dusseau_2018}.
 
 \subsubsection{Rusts Konzepte zur \eng{Performance}-Steigerung}
 Neben den möglichen \eng{Performance}-Vorteilen durch die nebenläufige Programmierung, welche

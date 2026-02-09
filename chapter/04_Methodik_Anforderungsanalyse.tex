@@ -18,66 +18,65 @@ um einen korrekten \texttt{SYN}-Scan durchzuführen.
 
 \begin{itemize} 
     \item \textbf{/F-01/ \phantomsection\label{req:F-01} Konstruktion valider TCP-\texttt{SYN}-Pakete:} Das System muss in der Lage sein, rohe TCP-Pakete so zu konstruieren, 
-    dass \eng{IP}-Header und \eng{TCP}-Header (inklusive \texttt{SYN}-Cookie) korrekt manuell gesetzt und die Prüfsummen korrekt berechnet werden,
-    um vom Zielsystem als legitime Verbindungsanfragen akzeptiert zu werden. 
+    dass \eng{IP}-Header und \eng{TCP}-Header (inklusive \texttt{SYN}-Cookie) korrekt manuell gesetzt und die Prüfsummen valide berechnet werden,
+    damit sie vom Zielsystem als legitime Verbindungsanfragen akzeptiert werden. 
 
-    \item \textbf{/F-02/ \phantomsection\label{req:F-02} Senden von Paketen:} Das System muss in der Lage sein, TCP-Pakete an andere Zielsysteme zu senden. 
+    \item \textbf{/F-02/ \phantomsection\label{req:F-02} Senden von Paketen:} Das System muss in der Lage sein, die konstruierten TCP-Pakete über die Netzwerkschnittstelle an definierte Zielsysteme zu versenden. 
     
-    \item \textbf{/F-03/ \phantomsection\label{req:F-03} Empfang von Paketen:} Das System muss in der Lage sein, eingehende Netzwerkpakete
-    abzufangen und zu untersuchen.
+    \item \textbf{/F-03/ \phantomsection\label{req:F-03} Empfang von Paketen:} Das System muss in der Lage sein, eingehende Netzwerkpakete unabhängig vom Sendeprozess abzufangen und zur Auswertung bereitzustellen.
 
-    \item \textbf{/F-04/ \phantomsection\label{req:F-04} Zustandsloses Scanning:} Zwischen den Sende- und Empfangskomponenten darf keine Kommunikation über die Zielsysteme
-    bestehen, sodass kein Zustand über bereits kontaktierte Zielsysteme gespeichert wird.
+    \item \textbf{/F-04/ \phantomsection\label{req:F-04} Zustandsloses Scanning:} Die Sende- und Empfangskomponenten dürfen keine statusbehaftete Kommunikation über die Zielsysteme austauschen. 
+    Die Zuordnung muss ausschließlich über Informationen im Paket-Header erfolgen.
 
     \item \textbf{/F-05/ \phantomsection\label{req:F-05} Validierung eingehender Antworten:} Die Empfangskomponente muss eingehende \texttt{SYN-ACK}-Pakete validieren. 
     Dafür muss der Hash-Werte des \texttt{SYN}-Cookies korrekt erstellt und mit dem aus der \eng{Acknowledgement Number} extrahierten Wert verglichen werden.
 
-    \item \textbf{/F-06/ \phantomsection\label{req:F-06} Schließen der Verbindung auf Zielsystem:} Nach der Identifikation eines offenen Ports, sollte der Scanner 
-    ein \texttt{RST}-Paket senden, um die \eng{Half-Open} Verbindung auf dem Zielsystem sauber zu schließen und Ressourcenfreigabe zu ermöglichen.
+    \item \textbf{/F-06/ \phantomsection\label{req:F-06} Schließen der Verbindung:} Nach der Identifikation eines offenen Ports muss der Scanner 
+    ein \texttt{RST}-Paket senden, um die halboffene-Verbindung auf dem Zielsystem sauber zu beenden.
 
-    \item \textbf{/F-07/ \phantomsection\label{req:F-07} Endausgabe und Vermeidung von Duplikaten:} Die Endausgabe muss die ausgewerteten Scanergebnisse inklusive IP-Adresse und Ziel-Port
-    der offenen Zielsysteme enthalten und muss von Duplikaten bereinigt sein.
+    \item \textbf{/F-07/ \phantomsection\label{req:F-07} Endausgabe:} Es muss eine Endausgabe in einer Datei oder dem \eng{Standard Output} 
+    geben in welcher die ausgewerteten Scanergebnisse bestehend aus IP-Adresse und Ziel-Port der offenen Zielsysteme enthalten sind.
 
-    \item \textbf{/F-08/ \phantomsection\label{req:F-08} Durchsatzlimitierung (\eng{Rate Limiting}):} Das Programm muss in der Lage sein, eine angegebene Durchsatzrate (in Byte pro Sekunde)
+    \item \textbf{/F-08/ \phantomsection\label{req:F-08} Durchsatzlimitierung:} Das Programm muss in der Lage sein, eine angegebene Durchsatzrate (in Byte pro Sekunde)
     nicht zu überschreiten, sodass eine konsistente \eng{Performance}-Messung möglich ist.
 
-    \item \textbf{/F-9/ \phantomsection\label{req:F-09} Anpassung an bestehende Infrastruktur:} Das Programm muss die zu scannenden Ziel-IP-Adressen aus dem \eng{Standard Input}
+    \item \textbf{/F-9/ \phantomsection\label{req:F-09} Eingabeschnittstelle:} Das Programm muss die zu scannenden Ziel-IP-Adressen aus dem \eng{Standard Input}
     des Programmes entnehmen, um in die Infrastruktur des Unternehmens, welches diese Arbeit begleitet, zu passen.
-
-    % TODO besser formulieren
-    \item \textbf{/F-10/ \phantomsection\label{req:F-10} Linux-native Technologien:} Das Programm soll keine Technologien nutzen, die nicht aus dem Ökosystem des Linux-Kernels selbst
-    stammen, um die Zukunftssicherheit und Unterstützung der genutzten Technologie zu untermauern.
-    
 \end{itemize}
 
 \subsection{Nicht-funktionale Anforderungen}
-Die nicht-funktionalen Anforderungen stellen Qualitätsanforderungen dar und leiten sich primär aus dem Forschungsziel,
-der \eng{Performance}-Maximierung und der Verwendung von Rust ab. 
+Die nicht-funktionalen Anforderungen stellen Qualitätsanforderungen dar und leiten sich primär aus technischen Randbedingungen
+und der Verwendung von Rust ab, welche sich aus dem Forschungsziel ergeben.
 
 \begin{itemize} 
 \item \textbf{/NF-01/ \phantomsection\label{req:NF-01} Maximierung des Durchsatzes:} Das System soll in der Lage sein, die verfügbare Bandbreite einer 
-Standard-Gigabit-Schnittstelle bestmöglich auszunutzen. Zielgröße ist ein Sende-Durchsatz im mindestens fünfstelligen Paket-pro-Sekunde-Bereich, 
-um mit etablierten Tools vergleichbar zu sein.
+Standard-Gigabit-Schnittstelle vollständig auszunutzen.
 
-% ist das wirklich nicht funktional?
-\item \textbf{/NF-02/ \phantomsection\label{req:NF-02} Asynchrone Architektur:} Die Anwendung muss Gebrauch von Lastverteilenden Maßnahmen in Form
-von nebenläufiger Programmierung machen, um die Auslastung zu verteilen und \eng{Performance} somit zu steigern.
+    \item \textbf{/NF-02/ \phantomsection\label{req:NF-02} Asynchrone Architektur:} Die Implementierung muss auf einem asynchronen Programmiermodell basieren, 
+    um durch nicht-blockierende I/O-Operationen eine hohe Nebenläufigkeit zu gewährleisten.
 
-\item \textbf{/NF-03/ \phantomsection\label{req:NF-03} Nutzung moderner Kernel-Mechanismen:} 
-    Zur Steigerung der \eng{Performance} und Forschungsrelevanz sollen fortschrittliche Linux-Mechanismen zur Paketverarbeitung, 
-    spezifisch \texttt{AF\_XDP} oder \texttt{eBPF}, evaluiert und implementiert werden.
+    \item \textbf{/NF-03/ \phantomsection\label{req:NF-03} Nutzung moderner Kernel-Mechanismen:} 
+    Zur Evaluation der Forschungsfrage müssen Linux-native Schnittstellen zur hochperformanten Paketverarbeitung wie \texttt{AF\_XDP} 
+    oder \texttt{eBPF} verwendet werden.
 
 \item \textbf{/NF-04/ \phantomsection\label{req:NF-04} Speichersicherheit:} 
-Die Gesamtarchitektur soll die Sicherheitsgarantien von Rust wahren. \texttt{unsafe}-Blöcke können, falls nötig, genutzt werden 
-(z.\,B. für systemnahe Netzwerkoperationen) sollten aber möglichst vermieden oder durch die Nutzung von externen Bibliotheken  
+Die Implementierung soll die Sicherheitsgarantien von Rust wahren. \texttt{unsafe}-Blöcke können genutzt werden 
+(z.B. in der Interaktion mit Kernel-APIs) sollten aber möglichst vermieden oder durch die Nutzung von externen Bibliotheken  
 ersetzt werden, da diese intern \texttt{unsafe}-Blöcke häufig sicher kapseln \cite{RustBelt}.
 
-\item \textbf{/NF-05/ \phantomsection\label{req:NF-05} Minimale Ressourcennutzung:} Die Architektur und gewählten Technologien sollten die Ressourcennutzung
-(CPU-Zeit, RAM Verbrauch) neben der Durchsatzgeschwindigkeit nach \hyperref[req:NF-01]{/NF-01/} priorisieren und somit minimieren.
-Keine der beiden Anforderungen darf aufgrund der anderen stark vernachlässigt werden. 
-\end{itemize}
+\item \textbf{/NF-05/ \phantomsection\label{req:NF-05} Minimale Ressourcennutzung:} Der CPU- und Arbeitsspeicherverbrauch soll im Verhältnis zum 
+erzielten Durchsatz minimiert werden.
+
+ \item \textbf{/NF-06/ \phantomsection\label{req:NF-06} Technologische Einschränkung:} Das Programm darf ausschließlich
+ Technologien verwenden, die im Linux-Kernel-Ökosystem verfügbar sind, um Abhängigkeiten von Drittanbieter-Treibern zu vermeiden.
+
+ \end{itemize}
+
+\subsection{Nicht-funktionale Anforderungen}
+Die nicht-funktionalen Anforderungen definieren Qualitätsmerkmale (wie Performance) sowie technische Randbedingungen, die sich aus dem Forschungsziel ergeben.
 
 % TODO das ändern! Keine zwei Stufen mehr sondern ein Architektonisches Projekt
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Vorgehensmodell der Entwicklung}
 Für die Realisierung wird ein evaluationsgetriebener, prototypischer Ansatz gewählt. Aufgrund der Komplexität asynchroner 
 Netzwerkprogrammierung, sowie der Vielzahl möglicher Technologien, empfiehlt es sich, verschiedene Wege auszuprobieren. Dies
@@ -104,6 +103,7 @@ Technologien zu validieren. Die Entwicklung teilt sich in 2 Hauptphasen:
     oder pcap ist zu ineffizient und/oder rst werden immer automatisch gesendet". Außerdem werden weitere, kleinere
     \eng{Performance}-steigernde Maßnahmen addressiert.
 \end{enumerate}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Untersuchungsdesign}
 Es wird im Folgenden erklärt, wie \eng{Performance} im Kontext eines \texttt{SYN}-Scanners zu definieren ist. 
@@ -112,7 +112,7 @@ daraufhin die Anforderungen an die Testumgebung vorgestellt und erläutert.
 
 \subsection{Metriken}
 Der Begriff \enquote{\eng{Performance}-Effizienz} wird
-gemäß der Norm \textbf{ISO/IEC 25010} als die Fähigkeit eines Produkts, seine Funktionen innerhalb festgelegter 
+gemäß der Norm \textit{ISO/IEC 25010} als die Fähigkeit eines Produkts, seine Funktionen innerhalb festgelegter 
 Zeit- und Durchsatz-Parameter zu erfüllen und dabei die Ressourcen unter den gegebenen Bedingungen 
 effizient zu nutzen, verstanden \cite{ISO/IEC_25010:2023}. 
 
@@ -121,11 +121,13 @@ die Paketrate den Durchsatzparameter und die CPU-Auslastung, sowie RAM-Verbrauch
 darstellen:
 
 \begin{itemize}
-    \item \textbf{/M-01/\phantomsection\label{req:M-01} Paketrate:} Die Paketrate wird in Pakete pro Sekunde (pps) dargestellt und beschreibt die durchschnittliche Anzahl der erfolgreich an den 
+    \item \textbf{/M-01/\phantomsection\label{req:M-01} Paketrate:} Die Paketrate wird in Pakete pro Sekunde \eng{PPS} dargestellt und beschreibt die durchschnittliche Anzahl der erfolgreich an den 
 Netzwerkadapter übergebenen Pakete pro Sekunde. Da die Scanner nur sehr kleine Pakete verschicken ist die Paketrate in \eng{Performance}-orientierten Projekten dieser
-Art der limitierende Faktor \cite{TODO}, weshalb sie stellvertretend(<- anderes wort) als Metrik für die \eng{Performance} dient.
-    \item \textbf{/M-02/\phantomsection\label{req:M-02} CPU-Auslastung:} Die CPU-Auslastung von hochperformanten Netzwerkanwendungen findet maßgeblich im \eng{User-Space}, im \eng{Kernel-Space} und im \eng{SoftIRQ} statt \cite{TODO}.
-deshalb sollte alle drei Bereiche betrachtet werden. Gemessen wird die prozentuale Auslastung der CPU-Kerne.
+Art der limitierende Faktor \cite{TODO}, weshalb sie maßgeblich als Metrik für die \eng{Performance} dient.
+    \item \textbf{/M-02/\phantomsection\label{req:M-02} CPU-Auslastung:} Die CPU-Auslastung von hochperformanten Netzwerkanwendungen findet maßgeblich im \eng{User-Space}, im \eng{Kernel-Space} und im 
+    \eng{SoftIRQ}\footnote{TODO erklären} 
+    statt \cite{TODO}. deshalb sollte alle drei Bereiche betrachtet werden. Gemessen wird die prozentuale Auslastung der CPU-Kerne 
+    in Bezug auf diese Metriken.
     \item \textbf{/M-03/\phantomsection\label{req:M-03} RAM-Verbauch:} Der RAM-Verbrauch als zweiter primärer Teil der Ressourcenmetriken wird in Megabyte (MB) angegeben und stellt
 den Anteil des physisch durch den Scanner belegten Arbeitsspeicher dar. 
 \end{itemize}
@@ -134,14 +136,14 @@ den Anteil des physisch durch den Scanner belegten Arbeitsspeicher dar.
 Um die in Abschnitt \ref{Anforderungen} definierten Anforderungen zu validieren, werden drei Testszenarien definiert:
 
 \begin{enumerate}
-    \item \textbf{/S-01/ \phantomsection\label{req:S-01} Anforderungsvalidierung (\eng{Baseline}):} Um die allgemeine Funktionsweise und Stabilität des Scanners zu validieren, soll ein Szenario mit einer künstlich limitierten, aber signifikanten Senderate durchgeführt werden. 
+    \item \textbf{/S-01/ \phantomsection\label{req:S-01} Anforderungsvalidierung:} Um die allgemeine Funktionsweise und Stabilität des Scanners zu validieren, soll ein Szenario mit einer künstlich limitierten, aber signifikanten Senderate durchgeführt werden. 
     Ziel ist der Nachweis, dass der Scanner über einen längeren Zeitraum stabil arbeitet und die funktionalen Anforderungen erfüllt. 
     Dies dient auch als Referenzmessung, um sicherzustellen, dass funktionale Anforderungen in späteren Tests nicht explizit getestet werden müssen.
     
     \item \textbf{/S-02/ \phantomsection\label{req:S-02} Ermittlung der Performanzgrenzen:} In diesem Szenario wird jegliche künstliche Drosselung aufgehoben. Das Ziel ist es, die maximalen Durchsatzraten zu ermitteln. 
     Hierbei wird geprüft, wie effizient die Ressourcen unter Volllast genutzt werden, um die nicht funktionalen Anforderungen zu untersuchen.
     
-    \item \textbf{/S-03/ \phantomsection\label{req:S-03} Simulation unter realen Parametern und \eng{Features}:} Um die Vergleichbarkeit zu praxisrelevanten Szenarien zu erhöhen, sollen Parameter gewählt werden, die für echte Internet-Scans 
+    \item \textbf{/S-03/ \phantomsection\label{req:S-03} Simulation unter realen Parametern und \eng{Features}:} Um die Vergleichbarkeit zu praxisrelevanten Szenarien zu erhöhen, sollen Parameter gewählt werden, die für echte Internetscans 
     typisch sind. Dies soll die \eng{Performance}-Effizienz unter möglichst realen Bedingungen testen. Dabei wird auch ein Augenmerk auf die Nutzung von \eng{Features} gelegt, die im Kontext
-    eines realen Scans von Nutzen sind.
+    eines realen Scans von Nutzen sind. Beispielsweise zur Verschleierung des Scans.
 \end{enumerate}

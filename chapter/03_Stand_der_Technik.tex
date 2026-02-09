@@ -9,11 +9,11 @@
 \chapter{Stand der Technik} \label{Stand_der_Technik}
 In diesem Kapitel wird im ersten Schritt die historische Entwicklung des horizontalen Netzwerkscannings betrachtet.
 Daraufhin werden in der Forschung etablierte Scanner und alternative Ansätze vorgestellt und diskutiert, und
-die resultierende Problematik betrachtet. 
-Es folgt ein kurzer Überblick über weitere relevante Forschungsarbeiten zu ebenfalls relevanten Forschungssträngen
-sowie die Auswahl der Scanner, welche später als Vergleichsobjekte dienen vorgestellt.
+die resultierenden Nachteile betrachtet. 
+Es folgt ein kurzer Überblick über weitere relevante Forschungsarbeiten zu relevanten Forschungssträngen
+sowie die Auswahl der Scanner, welche später als Vergleichsobjekte dienen.
 
-\section{Historische Entwicklung des horizontalen Netzwerk-Scannings} \label{Ch3_Historische_Entwicklung}
+\section{Historische Entwicklung des horizontalen Netzwerkscannings} \label{Ch3_Historische_Entwicklung}
 Ursprüngliche Netzwerkscanner wie Nmap \cite{Lyon_2010} wurden primär für die vertikale Analyse einzelner \eng{Hosts} oder 
 kleiner Netzwerke konzipiert. Sie arbeiten teils Zustands-behaftet, was bedeutet, dass für jede 
 ausgesendete Anfrage ein eigener Eintrag im Arbeitsspeicher verwaltet wird, um den Verbindungsstatus abzubilden. 
@@ -46,7 +46,7 @@ Der Kern der Leistungsfähigkeit von ZMap lässt sich auf drei wesentliche Imple
     Daher setzt die aktuelle Version von ZMap primär auf universell verfügbare Linux-Schnittstellen, 
     auch wenn diese \eng{Performance}-technisch limitiert sind \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024}.
 
-    \item \textbf{Zustandslose Architektur:} ZMap nutzt das Prinzip der \texttt{SYN}-Cookies \ref{Grundlagen}, um keinen Zustand 
+    \item \textbf{Zustandslose Architektur:} ZMap nutzt das Prinzip der \texttt{SYN}-Cookies, um keinen Zustand 
     für ausgehende Verbindungen im Arbeitsspeicher halten zu müssen. 
 
     \item \textbf{Adressgenerierung mittels zyklischer Gruppen:} ZMap nutzt zyklische multiplikative Gruppen 
@@ -58,38 +58,37 @@ Der Kern der Leistungsfähigkeit von ZMap lässt sich auf drei wesentliche Imple
 Neben der reinen \eng{Socket}-Programmierung und klassischen \eng{Raw-Sockets} haben sich weitere, teils modernere 
 Technologien und Scanner-Architekturen aufgetan. Beispielsweise mithilfe von:
 
-% TODO hier teilweise Quellen ergänzen
 \begin{itemize} 
 \item \textbf{\eng{Kernel-Bypass} mit \texttt{DPDK}:} Das Data Plane Development Kit (\texttt{DPDK}) erlaubt es Anwendungen, die Netzwerkkarte 
 direkt aus dem \eng{User-Space} anzusprechen und den Kernel komplett zu umgehen. Abu Bakar und Kijsirikul zeigen, dass 
 \texttt{DPDK}-basierte Scanner extrem hohe Raten erzielen können \cite{Abu_Bakar_Kijsirikul_2023}. Der Nachteil ist jedoch 
-die hohe Komplexität, die exklusive Belegung von CPU-Kernen und die schwierige Integration in bestehende Systemumgebungen.
+die hohe Komplexität, die exklusive Belegung von CPU-Kernen und die schwierige Integration in bestehende Systemumgebungen \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}.
 
 \item \textbf{Eigener TCP-Stack im \eng{User-Space} (Masscan):} Der Scanner Masscan \cite{Graham_2026} umgeht den Flaschenhals des Betriebssystems 
 mithilfe eines eigenem, TCP-Stack im \eng{User-Space}. Dies erlaubt es dem Scanner, die Statusverwaltung und das Timing von Paketen 
-komplett unabhängig vom Kernel-\eng{Scheduler} \footnote{TODO} zu steuern. Dadurch kann Masscan deutliche \eng{Performance}-Gewinne gegenüber
-ZMap erreichen \cite{Pittman_2023}.
+komplett unabhängig vom Kernel-\eng{Scheduler} zu steuern. Der \eng{Scheduler} ist normalerweise dafür verantwortlich, die Rechenzeit der 
+CPU auf die laufenden Prozesse zu verteilen \cite[S.~737]{Kerrisk_2018}. Die dabei entstehenden Kontextwechsel können das präzise Timing von Hochleistungsanwendungen 
+stören. Dadurch kann Masscan deutliche \eng{Performance}-Gewinne gegenüber ZMap erreichen \cite{Pittman_2023}.
 
 \item \textbf{\eng{Hardware-Offloading} und \eng{SmartNICs}:} Um die CPU des \eng{Host}-Systems zu entlasten, lagert IMap 
 die Scan-Logik direkt auf die Netzwerkhardware aus. Durch den Einsatz von programmierbaren Switches oder \eng{SmartNICs} können Pakete 
-bereits auf der Netzwerkkarte generiert und Antworten gefiltert werden, bevor sie überhaupt die CPU erreichen \cite{Li_Zhang_Guo_Bao_Xu_Hu_Li_2022}. 
+bereits auf der Netzwerkkarte generiert und Antworten gefiltert werden, bevor sie überhaupt die CPU erreichen.
 Dies erfordert jedoch spezialisierte Hardware.
-In dieser Untersuchung wurde mit Raten von 40Gbps getestet, wobei jedoch Raten von einem Terabit oder mehr theoretisch
-laut Li et al. möglich wären \cite{Li_Zhang_Guo_Bao_Xu_Hu_Li_2022}.   
+In dieser Untersuchung wurde mit Raten von 40Gbps getestet, wobei jedoch Raten von einem Terabit oder mehr laut Li et al. theoretisch möglich wären. \cite{Li_Zhang_Guo_Bao_Xu_Hu_Li_2022}   
 \end{itemize}
 
 \section{Weitere relevante wissenschaftliche Arbeiten} \label{Ch3_Weitere_Arbeiten}
-% TODO aufzählen, welche weiteren relevanten Arbeiten es zu dem Thema gibt, welche Methodik und welche Erkenntnisse
 Der Forschungsstand zu horizontalen Hochleistungs-Netzwerkscannern wurde bereits in den vorherigen Sektionen \ref{Ch3_Historische_Entwicklung} und 
 \ref{Ch3_Alternative_Implementierungsansätze} aufgegriffen. Ergänzend dazu ist noch anzubringen, dass nach bestehenden Ansätzen zur Kernel-Umgehung
-wie Netmap \cite{Rizzo} welches bereits 2012 Konzepte wie \eng{Shared Memory} \footnote{Zwischen \eng{User-Space} und \eng{Kernel-Space} geteilter Speicher} 
-und \eng{Zero-Copy} einführte aber den Netzwerkstack eher ersetzte oder \texttt{DPDK} (siehe \ref{Ch3_Alternative_Implementierungsansätze}), die Arbeit 
-zu \texttt{XDP} (\eng{eXpress Data Path}) einen Paradigmenwechsel darstellt. Høiland-Jørgensen et al. zeigen, dass durch eine programmierbare 
+die Arbeit zu \texttt{XDP} (\eng{eXpress Data Path}) einen Paradigmenwechsel darstellt. Zuvor genutzte Umgehungsstrategien waren unter anderem Netmap \cite{Rizzo}, 
+welches bereits 2012 Konzepte wie \eng{Shared Memory}\footnote{Zwischen \eng{User-Space} und \eng{Kernel-Space} geteilter Speicher} 
+und \eng{Zero-Copy} einführte, aber den Netzwerkstack eher ersetzte, statt ihn zu komplementieren, oder \texttt{DPDK} (siehe \ref{Ch3_Alternative_Implementierungsansätze}). 
+Høiland-Jørgensen et al. zeigen, dass mit \texttt{XDP} durch eine programmierbare 
 Paketverarbeitung im Kernel-Treiber eine mit \texttt{DPDK} vergleichbare \eng{Performance} erreicht werden kann, ohne die Integration in das Betriebssystem 
 aufzugeben \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}. 
 
 Zwei Studien vergleichen \texttt{SYN}-Scanner \cite{Pittman_2023} \cite{Taupaani_Harwahyu_2025}, fokussieren sich aber eher auf die Trefferrate, welche in der Arbeit
-nicht priorisiert wird (\ref{Abgrenzung}). Außerdem ist die Gestaltung der Testumgebung ist bei beiden nicht auf Hochleistungs-Szenarien ausgelegt. 
+nicht priorisiert wird (siehe \ref{Abgrenzung}). Außerdem ist die Gestaltung der Testumgebung bei beiden Arbeiten nicht auf Hochleistungs-Szenarien ausgelegt. 
 
 Die Eignung von Rust für hochperformante Netzwerkprogrammierung wird in mehreren wissenschaftlichen Arbeiten evaluiert. Sagramoni et al.
 schrieben eine Netzwerkbibliothek in Rust und verglichen sie mit der ursprünglichen C-Bibliothek \cite{Sagramoni_Lettieri_Procissi_2024}.
@@ -103,38 +102,32 @@ als erste Wahl für zukünftige Treiber-Projekte heraus \cite{Emmerich_Ellmann_B
 
 Weitere Arbeiten beschäftigen sich mit dem Thema Sicherheit von Rust verglichen mit anderen Programmiersprachen und kamen zum
 einheitlichen Ergebnis, dass Rust umfangreiche Sicherheitsgarantien mitbringt, die man so von keiner anderen gängigen Sprache
-erhält \cite{Bugden_Alahmar_2022,bugden2022safety,Balasubramanian2017System}.
+erhält \cite{Bugden_Alahmar_2022} \cite{bugden2022safety} \cite{Balasubramanian2017System}.
 
 \section{Vergleichsobjekte für die Evaluation}
 Um die Eignung der Implementierung in seiner Funktion als Performanz-orientierter \texttt{SYN}-Scanner aussagekräftig evaluieren zu können,
 wird er im Evaluationsteil der Arbeit mit folgenden Scannern verglichen
 
-% TODO ändern zu ZMap und Masscan
 \begin{itemize}
-    \item  \textbf{Vergleichsobjekt aus der Forschung:} Als Vergleichsobjekt aus der Forschung dient ZMap. Wie bereits in \ref{Ch3_S1_ZMap}
-    gezeigt, repräsentiert er das Standard-Vergleichsobjekt aus der Forschung und ist gleichzeitig einer der zahlreichen Varianten, 
-    welche in C geschrieben ist.
-    \item  \textbf{Rust Alternative:} Um auch ein Vergleich mit bereits bestehende Alternativen in Rust aufzuzeigen ... TODO
-    \item  \textbf{Alternative aus der Wirtschaft:} Da die Forschungsfrage unter anderem darauf abzielt die Eignung des implementierten
-    Rust Scanners für den produktiven Einsatz zu untersuchen, soll dieser auch mit einem Scanner, welcher aktuell in der Wirtschaft
-    genutzt wird, aber eigens in Go entwickelt wurde. Dies stärkt außerdem die Vergleichsbreite, da somit auch eine Sprache mit 
-    automatischer Speicherverwaltung in den Vergleich integriert ist.
+    \item \textbf{Wissenschaftlicher Standard:} Als primäres Vergleichsobjekt dient ZMap \cite{Durumeric_Wustrow_Halderman}, 
+    da dieser die historische Basis des Internetscannings darstellt (siehe \ref{Ch3_S1_ZMap}). Da ZMap in C geschrieben ist und auf 
+    klassischen Linux-Schnittstellen basiert, dient er als \eng{Baseline}, um zu untersuchen, ob die im Lösungsansatz gewählte Kombination 
+    aus Rust und \texttt{XDP} trotz der Sicherheitsgarantien mit der etablierten Referenz konkurrieren kann.
+    \item \textbf{Performance-Referenz:} Ergänzend wird Masscan \cite{Graham_2026} herangezogen. Dieser gilt durch seinen 
+    eigenen \eng{User-Space}-Stack (siehe \ref{Ch3_Alternative_Implementierungsansätze}) als einer der schnellsten verfügbaren Scanner. 
+    Dieser Vergleich ist sinnvoll, um die Effizienz der \texttt{XDP}-basierten Lösung gegenüber einem hochoptimierten C-Ansatz einzuordnen.
 \end{itemize}
 
-\section{Problematik bisheriger Ansätze}
-\subsection{Problematik C-basierter Ansätze}
+\section{Nachteile bisheriger Ansätze}
+\subsection{Nachteile C-basierter Ansätze}
 Obwohl ZMap und ähnliche Hochleistungsscanner (wie Masscan oder \texttt{DPDK}-Scanner) extrem effizient sind, 
 basieren sie fast ausschließlich auf der Programmiersprache C. Diese technologische Monokultur bringt jedoch signifikante Nachteile mit sich.
 
-Ein zentrales Problem ist die fehlende intrinsische Speichersicherheit von C [TODO]. Da die Sprache dem Entwickler die volle 
+Ein zentraler Nachteil ist die fehlende intrinsische Speichersicherheit von C \cite{van_Oorschot_2023}. Da die Sprache dem Entwickler die volle 
 Verantwortung für die Speicherverwaltung überträgt, führen menschliche Fehler häufig zu schwerwiegenden Sicherheitslücken. 
 Schwachstellen wie \eng{Buffer Overflows} in C/C++-basierten Systemen zählen nach wie 
 vor zu den häufigsten Ursachen für Sicherheitslücken \cite{Al_Boghdady_Wassif_El_Ramly_2021}. 
-% TODO recherchieren \cite{Al_Boghdady_Wassif_El_Ramly_2021}
-% Besonders im Kontext von 
-% Internet-Scannern, die massenhaft \eng{Untrusted Input} aus potenziell maliziösen Quellen des offenen Internets verarbeiten, 
-% stellt die Verwendung einer nicht speichersicheren Sprache ein erhebliches Risiko dar.
-%
+
 Darüber hinaus geht die Leistungsfähigkeit von C oft zu Lasten der Wartbarkeit und Entwicklungseffizienz \cite{Costanzo_Rucci_Naiouf_Giusti_2021}. 
 Um maximale Durchsatzraten zu erzielen, sind in C häufig komplexe, manuelle Optimierungen notwendig. Costanzo et al. heben
 hervor, dass die Entwicklung von korrektem und effizientem C-Code im Vergleich zu Rust-Code
@@ -143,21 +136,23 @@ umgesetzt werden soll \cite{Costanzo_Rucci_Naiouf_Giusti_2021}. Selbst die Autor
 ZMap sagen in ihrer Retrospektive explizit, dass sie für eine heutige Implementierung ihres Scanners Rust 
 wählen würden, um die Wartbarkeit und Sicherheit der Codebasis langfristig zu gewährleisten \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024}.
 
-\subsection{Problematik alternativer Ansätze}
-Ein weiteres wesentliches Problem bisheriger Hochleistungsansätze (wie \texttt{DPDK} oder \texttt{PF\_RING}) ist ihre fehlende Integration 
+Ein weiteres wesentlicher Nachteil bisheriger Hochleistungsansätze (wie \texttt{DPDK} oder \texttt{PF\_RING}) ist ihre fehlende Integration 
 in den Linux-\eng{Mainline-Kernel}. Sie erfordern oft proprietäre Treiber oder Kernel-Module, die das Sicherheitssystem des Kernels 
-umgehen und bei Updates zu Inkompatibilitäten führen können [TODO]. Durumeric et al. merken an, dass die Wartung solcher 
-spezialisierten Treiber für ZMap über die Jahre eine erhebliche Hürde darstellte \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024}. \texttt{XDP} 
-füllt diese Lücke, indem es \eng{High-Performance}-Paketverarbeitung direkt im Kernel ermöglicht, ohne dessen Sicherheit und Kompatibilität zu kompromittieren.
+umgehen und bei Updates zu Inkompatibilitäten führen können \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024}. Durumeric et al. merken an, 
+dass bei der Einführung und Wartung von \texttt{PF\_RING} für ZMap über die Jahre eine erhebliche Hürde darstellte \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024}. 
+\texttt{XDP} füllt diese Lücke, indem es \eng{High-Performance}-Paketverarbeitung direkt im Kernel ermöglicht, ohne dessen Sicherheit und Kompatibilität zu kompromittieren.
 
-% TODO Probleme von Go bzw anderen Sprachen hier nochmal aufbringen
 \subsection{Lösungsansatz}
-Die Nutzung von Rust stellt eine vielversprechende Lösung dar, 
+Die Nutzung von Rust stellt einen vielversprechenden Lösungsansatz dar, 
 da sie Speichersicherheit bereits zur Kompilierzeit garantiert, in der Lage ist, eine mit C vergleichbare Geschwindigkeit zu erreichen, 
 und durch sein striktes Typ- und Besitzmodell ganze Klassen von Fehlern (wie \eng{Data Races}) eliminiert (siehe \ref{rust}). 
-Zusätzlich löst die Nutzung von \texttt{XDP} und \texttt{eBPF} das Problem der fehlenden Kernelintegration für die 
-Hochleistungspaketerarbeitung.
+Zusätzlich löst die Nutzung moderner Kernel-Technologien wie \texttt{XDP} und \texttt{eBPF} der Nachteil der fehlenden Kernelintegration 
+für die Hochleistungspaketverarbeitung.
 
-Die Kombination dieser Technologien und Werkzeuge stellt in dem Kontext des horizontalen \eng{High-Speed} Netzwerk-Scannings
+Die Kombination dieser Technologien und Werkzeuge stellt in dem Kontext des horizontalen High-Speed-Netzwerkscannings
 eine Forschungslücke dar, die in dieser Arbeit untersucht wird.
 
+% TODO im ganzen Projekt: Eigentlich ist
+% Technologie falsch, logie = Lehre von etwas
+% Also Technologie = Lehre der Technik
+% Das ist damit aber gar nicht gemeint. Im Sprachgebrauch meint man meistens Technik
