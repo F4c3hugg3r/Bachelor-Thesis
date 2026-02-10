@@ -6,13 +6,14 @@
 %%
 %%
 
+% TODO DARAUF EINGEHEN WELCHE ANFORDERUNGEN DURCH WAS GETESTET WERDEN
 \chapter{Testumgebung und Durchführung} \label{Tests}
 % TODO hier Text einfügen
 
 \section{Versuchsaufbau} 
 \subsection{Hardware-Spezifikation}
 Für die Umsetzung des Testes wurden die in \ref{tab:specs_combined} spezifizierten Systeme verwendet. Es wurden keine Veränderungen 
-vorgenommen, die das Betriebssystem von seinem nativen Zustand abbringen, um Anforderung \hyperref[req:F-10]{/F-10/} zu genügen. 
+vorgenommen, die das Betriebssystem von seinem nativen Zustand abbringen, um Anforderung \hyperref[req:NF-06]{/NF-06/} zu genügen. 
 Die einzige Konfigurationsmaßnahme außerhalb des Programmes ist eine softwareseitige Anpassung der Sende-, sowie Empfangsringe der Netzwerkkarte auf 
 das Maximum der bereitgestellten Hardware. Dies ist in diesem Szenario zu empfehlen, da es sich explizit um ein Hochleistungsszenario
 handelt. Das Anpassen der genutzten Puffer dient dem Abfangen von Lastspitzen, indem mehr Pakete vom Netzwerkkartentreiber gepuffert werden können. 
@@ -44,12 +45,28 @@ Laboraufbau gewählt. Dafür werden zwei Geräte per Ethernet-Kabel direkt mitei
     \item \textbf{Der Ziel-Knoten:} Ein System, welches ein Zielnetzwerk simuliert. 
 \end{enumerate}
 
-Für die Schaffung einer einheitlichen und reproduzierbare Messgrundlage, welche menschliche Fehler möglichst vermeidet, wurden für die Szenarien 
-\ref{req:S-01} und \ref{req:S-02} (siehe \ref{Methodik}) Python-Programme erstellt, mit
-welchen der Ablauf, die Datenerfassung und Datenaufbereitung automatisiert wird. Dieser Ansatz gewährleistet konsistente
+Für die Schaffung einer einheitlichen und reproduzierbare Messgrundlage, welche menschliche Fehler möglichst vermeidet, 
+wurden für die Szenarien (siehe \ref{Methodik}) Python-Programme erstellt, mit
+welchen der Ablauf, die Datenerfassung und Datenaufbereitung weitesgehend automatisiert wird. Dieser Ansatz gewährleistet konsistente
 Rahmenbedingungen in Form von einheitlichen Pausenzeiten und der einheitlichen Erfassung der Systemressourcen.
 
-Die Messung erfolgt mit einer Abtastrate von $10\,\text{Hz}$ (Intervall $t=0,1\,\text{s}$). 
+Für das Szenario 1 (siehe \ref{Methodik}) werden die Scanausgaben, sowie die in \ref{tab:tools_validation} beschriebenen Tools genutzt, 
+um zusätzlich zu den Ausgaben des \eng{Dummy-Receiver}-Programmes exakte Validierung anstellen zu können. 
+
+\begin{table}[htbp]
+\centering
+\begin{tabularx}{\textwidth}{|c|X|} \hline
+\textbf{Tool} & \textbf{Nutzung} \\ \hline
+Netcat & TODO \\ \hline
+tcpdump & TODO \\ \hline
+xdpdump & TODO \\ \hline
+Wireshark & TODO \\ \hline
+\end{tabularx}
+\caption{Genutzte Tools zur Validierung der funktionalen Anforderungen (siehe \ref{Methodik})}
+\label{tab:tools_validation}
+\end{table}
+
+In den Szenarien 2 und 3 erfolgt die Messung der Metriken (siehe \ref{Methodik}) mit einer Abtastrate von $10\,\text{Hz}$ (Intervall $t=0,1\,\text{s}$). 
 Da die Scanner Subprozesse und mehrere \eng{Threads} starten, wird die gesamte Systemlast gemessen.
 Das \eng{Benchmarking}-Programm verzichtet auf \eng{High-Level}-Tools, um den \eng{Overhead} der Messung selbst 
 zu minimieren und liest die erforderlichen Kernel-Statistiken direkt aus \texttt{procfs}.
@@ -60,7 +77,7 @@ Um mögliche Fluktuationen in der Grundlast zu vermeiden, wird jeglicher Zugang
 zum Internet geschlossen und kein weiterer Prozess abseits des Benchmarking-Programmes manuell gestartet.
 Jedes Szenario wird in fünf unabhängigen Iterationen durchgeführt, sodass statistische Ausreißer weniger ins Gewicht fallen. 
 
-\subsection{Aufbau des Ziel-Knotens}
+\subsection{Aufbau des Ziel-Knotens} \label{versuchsaufbau:ablauf}
 Der Zielknoten besteht ähnlich wie die Empfangslogik des Scanners aus einem mithilfe des \texttt{aya} \eng{Crates} erstellten \texttt{eBPF}-Programmes, welches die eingehenden Pakete mittels
 Zeiger-Operationen parst, anschließend validiert und bei Erfolg ein Antwortpaket via \texttt{XDP\_TX} versendet. Allerdings wird hier geprüft, ob es sich um ein \texttt{IPv4-SYN}-Paket
 handelt und anschließend eine darauf zugeschnittene \texttt{SYN-ACK}-Antwort statt eines \texttt{RST}-Paketes versendet. Die Modifikation passiert auch hier am selben Paket ohne dieses
@@ -81,7 +98,7 @@ Es werden folgende Statistiken ermittelt, um die Funktionsweise des Scanners und
 \end{enumerate}
 
 \section{Versuchsablauf}
-Die \eng{Benchmark Suite} \ref{TODO anhang} startet die Scanner-Prozesse nacheinander und misst mit einem parallelen \eng{Monitoring}-\eng{Thread} die
+Die \texttt{benchmark\_suite.py} \ref{TODO anhang} startet die Scanner-Prozesse nacheinander und misst mit einem parallelen \eng{Monitoring}-\eng{Thread} die
 Systemressourcen in folgenden Phasen:
 
 \begin{enumerate}
@@ -94,6 +111,10 @@ Systemressourcen in folgenden Phasen:
     \item \textbf{Externes Beenden:} Sollte die Rate nach dem Start für mehr als sieben Sekunden unter einen Schwellenwert von 100 \eng{PPS} fallen, 
     wird der Prozess terminiert. Dies ist notwendig, da Masscan sich häufig nicht von alleine beendet.
 \end{enumerate}
+
+In Szenario 1 \cite{TODO} wird zur Aswertung statt der Metriken der \texttt{benchmark\_suite.py} ein eigenes Programm (\texttt{validate\_scanner.py \cite{TODO}})
+genutzt. Für die Messungen zur Validierung der Pakete wird gar kein automatisierter Ablauf genutzt, da aufgrund der Nutzung von Wireshark \ref{tab:tools_validation}
+eine manuelle Auswertung erfolgt.
 
 \subsection{Datenaufbereitung und Bereinigung} \label{Versuchsablauf.Datenaufbereitung}
 Um die Scanergebnisse zu plausibilisieren wird zusätzlich via Python-Programm \ref{TODO} die Anzahl der ausgegebenen Ergebnisse gezählt. 
@@ -117,7 +138,7 @@ Aus den bereinigten Daten werden anschließend Diagramme und Tabellen via Python
 % TODO hier text schreiben
 
 \subsection{\eng{Zero-Copy}-Modus}
-Da finanziell bedingt nur die Möglichkeit besteht die in \ref{tab:specs_combined} angegebene Hardware zu nutzen, muss für die Evaluation eine 
+Da finanziell bedingt nur die Möglichkeit besteht, die in \ref{tab:specs_combined} angegebene Hardware zu nutzen, muss für die Evaluation eine 
 Einschränkung gemacht werden. Der äußerst effiziente \eng{Zero-Copy}-Modus ist bei der Nutzung von Netzwerkkarten mit dem \texttt{igb}-Treiber eingeschränkt. Aufgrund
 der niedrigen Anzahl an Sende- und Empfangsringen auf der Netzwerkkarte können dem \texttt{XDP}-Programm keine dedizierten \eng{Queues} \footnote{Warteschlangen} zugeteilt werden. Dies hat zur Folge,
 dass sich die Sende-Ringe mit dem Betriebssystem geteilt werden müssen und es somit zu sogenannter \eng{Lock Contention} \footnote{Der Zugriff auf den Ring muss bei jeder Operation 
@@ -151,9 +172,13 @@ auf 20\% der Pakete mit validen SYN-ACK Antworten. Dies ist im Vergleich zur rea
 sehr hoch angesetzter Wert \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024}, soll aber die Funktionsfähigkeit für Spezialfälle sicherstellen. 
 
 \subsubsection{Szenario \ref{req:S-01} - Anforderungsvalidierung}
-Der erste Test dient als \eng{Proof of Concept}. Hierbei wird ein moderater IP-Adressraum (\texttt{/20}) gescannt, wobei die Senderate künstlich auf $100.000$ \eng{PPS} limitiert wird. 
+Der erste Test dient als \eng{Proof of Concept} des Scanners. Hierbei wird ein kleiner IP-Adressraum (\texttt{/20}) gescannt.
 Der Ziel-Knoten antwortet auf alle IP-Adressen welche mit einer geraden Zahl enden, um die anschließende Auswertung zu vereinfachen.
-Um die funktionalen Anforderungen zu validieren, das Senden von \texttt{RST}-Paketen und die IP-Deduplizierung aktiviert.
+Dabei wird das Senden von \texttt{RST}-Paketen aktiviert. 
+
+Im zweiten manuellen Test, werden nur jeweils 4 Pakete verschickt. Dies genügt, um zu erkennen, ob die Pakete korrekt sind und fördert
+die Übersichtlichkeit. Die Ergebnisse werden mithilfe der in \ref{tab:tools_validation} beschriebenen 
+Netzwerktools ausgewertet.
 
 \subsubsection{Szenario \ref{req:S-02} - Performanzgrenze}
 Um die Performance und Effizienz der Scanner zu validieren, werden alle bremsenden Faktoren, die nicht essenziell für das reine Versenden und Empfangen 

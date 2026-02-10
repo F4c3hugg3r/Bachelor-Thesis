@@ -12,6 +12,7 @@ In diesem Kapitel werden die in der Testumgebung ermittelten Messergebnisse vorg
 die Leistungsfähigkeit des implementierten Rust-Scanners im Vergleich zu etablierten Tools zu bewerten und die Erfüllung der 
 definierten Anforderungen zu überprüfen. Abschließend wird ein Ausblick auf mögliche Weiterentwicklungen gegeben.
 
+% TODO ENTSCHEIDEN OB ICH HIER ODER IN CHAPTER 6 MIT DEN FUNKTIONALEN ANFORDERUGEN BEGRÜNDEN SOLL
 \section{Darstellung und Reproduzierbarkeit der Messergebnisse}
 Die Messergebnisse wurden mittels der in \ref{Versuchsablauf.Datenaufbereitung} beschriebenen Skripte aufbereitet und stehen im Anhang zur
 Verfügung. Im Folgenden wird nur auf die ausschlaggebenden Ergebnisse eingegangen. Für jede Messung liegen allerdings umfangreiche
@@ -22,11 +23,14 @@ Mittels dessen und der README.md Datei können die Benchmarks exakt reproduziert
 \subsection{Ergebnisse S-01: Anforderungsvalidierung}
 % War der Scanner stabil? Wurden alle Pakete korrekt gebaut?
 % Gab es Abstürze oder Memory Leaks bei moderater Last?
+
+
+\subsection{Ergebnisse S-02: Performanzgrenzen} \label{Ergebnisse.S-02}
+% Um Datei aus dem Repo zu referenzieren: "erschließen sich, unter Anwendung der Auswertungsskripte \texttt{calc_efficiency.py} und \texttt{validate.py} \cite{BachelorRepo}"
+% Möglicherweise Permalink nutzen https://github.com/F4c3hugg3r/SYN-Rust/tree/9b948d456828c4e8160d2835728fde6f43a3b75c/scanner
 Gemäß \ref{Versuchsablauf.Datenaufbereitung}
 wird in \textit{Aktiv} (Zeitraum während Paketfluss besteht) und \textit{Gesamt} (Gesamte Laufzeit des Programmes)
 unterschieden. \textit{Netto} beschreibt dabei, dass die Werte von der Grundlast bereinigt wurden.
-
-\subsection{Ergebnisse S-02: Performanzgrenzen} \label{Ergebnisse.S-02}
 Aus den Ergebnissen des Tests zum Szenario \hyperref[req:S-02]{/S-02/} erschließen sich nach [TODO Ergebnisse] und [TODO Validierung] die
 in \ref{tab:performance_comparison_rounded} dargestellten Werte. Aufgrund von Einschränkungen durch die eigene \eng{Blacklist} hat ZMap 
 weniger IP-Adressen gescannt, weshalb es weniger Ergebnisse hervorbrachte. Außerdem ist zu beachten, dass sowohl Masscan als auch ZMap 
@@ -62,7 +66,6 @@ ZMap  &
 \end{tabularx}
 \caption{Vergleich der Performance-Metriken}
 \end{table}
-
 
 Zur Berechnung der in \ref{fig:performance_efficiency_diag} gezeigten Werte zur Effizienz der Scanner während der aktiven Phase, wurde der Durchsatz 
 pro CPU-Prozent in jedem Durchlauf berechnet und daraus anschließend der Durchschnittswert gebildet. 
