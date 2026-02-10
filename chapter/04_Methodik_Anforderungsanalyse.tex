@@ -40,7 +40,7 @@ um einen korrekten \texttt{SYN}-Scan durchzuführen.
     \item \textbf{/F-08/ \phantomsection\label{req:F-08} Durchsatzlimitierung:} Das Programm muss in der Lage sein, eine angegebene Durchsatzrate (in Byte pro Sekunde)
     nicht zu überschreiten, sodass eine konsistente \eng{Performance}-Messung möglich ist.
 
-    \item \textbf{/F-9/ \phantomsection\label{req:F-09} Eingabeschnittstelle:} Das Programm muss die zu scannenden Ziel-IP-Adressen aus dem \eng{Standard Input}
+    \item \textbf{/F-09/ \phantomsection\label{req:F-09} Eingabeschnittstelle:} Das Programm muss die zu scannenden Ziel-IP-Adressen aus dem \eng{Standard Input}
     des Programmes entnehmen, um in die Infrastruktur des Unternehmens, welches diese Arbeit begleitet, zu passen.
 \end{itemize}
 
@@ -72,39 +72,6 @@ erzielten Durchsatz minimiert werden.
 
  \end{itemize}
 
-\subsection{Nicht-funktionale Anforderungen}
-Die nicht-funktionalen Anforderungen definieren Qualitätsmerkmale (wie Performance) sowie technische Randbedingungen, die sich aus dem Forschungsziel ergeben.
-
-% TODO das ändern! Keine zwei Stufen mehr sondern ein Architektonisches Projekt
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Vorgehensmodell der Entwicklung}
-Für die Realisierung wird ein evaluationsgetriebener, prototypischer Ansatz gewählt. Aufgrund der Komplexität asynchroner 
-Netzwerkprogrammierung, sowie der Vielzahl möglicher Technologien, empfiehlt es sich, verschiedene Wege auszuprobieren. Dies
-hilft bei der Schaffung einer realistischen Vergleichsbasis zwischen den verschiedenen Technologien und bietet die Möglichkeit,
-Ausweichlösungen bei Problemen wie z.\,B. \eng{Performance}-Engpässe zu finden oder die tatsächliche Notwendigkeit komplexer 
-Technologien zu validieren. Die Entwicklung teilt sich in 2 Hauptphasen:
-
-\begin{enumerate}
-    \item \textbf{Basisimplementierung:} In der Basisimplementierung wird ein vollumfänglicher \texttt{SYN}-Scanner implementiert.
-    Dies soll zum einen als \eng{Proof of Concept}, und zum anderen als erste Vergleichsgrundlage dienen. Für 
-    das Senden, werden bereits die Möglichkeit des Sendens mit \texttt{AF\_PACKET} oder \texttt{AF\_XDP} und jeweils auch in \eng{Batches}\footnote{Gruppen von Paketen}
-    oder Einzelpaketen implementiert. Für das Empfangen wird der \eng{Crate}\footnote{Bezeichnung für Bibliothek im Rust-Ökosystem} \texttt{pcap} genutzt,
-    welcher das Empfangen von Paketen abstrahiert, allerdings nicht den Netzwerkstack des Linux-Kernels umgeht. 
-
-    Außerdem wird die für die nötige Struktur um die Komponenten zu vernetzen, sowie die Pakete korrekt zu erstellen
-    und verarbeiten implementiert, sodass das Programm am Ende einen funktionierenden \texttt{SYN}-Scan vollführen kann.
-    Zusätzlich wird auch hier schon auf die möglichst performante Umsetzung der gesamten Struktur, spezifischer
-    Umsetzungen und der Wahl von \eng{Crates} Wert gelegt. 
-
-    \item \textbf{Optimierung des Empfangspfades durch Nutzung von \texttt{eBPF}:} Basierend auf den Messergebnissen der ersten Phase 
-    wird die Empfangskomponente hier grundsätzlich verändert, um eine hochperformante, sowie effizienten Paketempfang und
-    Paketauswertung zu gewährleisten. Dafür wird ein \texttt{eBPF} in Verbindung mit einem \texttt{RingBuf} zur Protokollierung in Verbindung
-    mit einem \texttt{XDP}-Programm statt des \texttt{pcap}-\eng{Crates} genutzt. maybe TODO "bla bla pcap kann ab gewisser Geschwindigkeit nicht mithalten
-    oder pcap ist zu ineffizient und/oder rst werden immer automatisch gesendet". Außerdem werden weitere, kleinere
-    \eng{Performance}-steigernde Maßnahmen addressiert.
-\end{enumerate}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \section{Untersuchungsdesign}
 Es wird im Folgenden erklärt, wie \eng{Performance} im Kontext eines \texttt{SYN}-Scanners zu definieren ist. 
 Anschließend werden die in dieser Arbeit zur Evaluation genutzten Metriken erklärt und 
@@ -121,14 +88,17 @@ die Paketrate den Durchsatzparameter und die CPU-Auslastung, sowie RAM-Verbrauch
 darstellen:
 
 \begin{itemize}
-    \item \textbf{/M-01/\phantomsection\label{req:M-01} Paketrate:} Die Paketrate wird in Pakete pro Sekunde \eng{PPS} dargestellt und beschreibt die durchschnittliche Anzahl der erfolgreich an den 
-Netzwerkadapter übergebenen Pakete pro Sekunde. Da die Scanner nur sehr kleine Pakete verschicken ist die Paketrate in \eng{Performance}-orientierten Projekten dieser
-Art der limitierende Faktor \cite{TODO}, weshalb sie maßgeblich als Metrik für die \eng{Performance} dient.
-    \item \textbf{/M-02/\phantomsection\label{req:M-02} CPU-Auslastung:} Die CPU-Auslastung von hochperformanten Netzwerkanwendungen findet maßgeblich im \eng{User-Space}, im \eng{Kernel-Space} und im 
+    \item \textbf{/M-01/\phantomsection\label{req:M-01} Paketrate:} 
+    Die Paketrate wird in Pakete pro Sekunde \eng{PPS} dargestellt und beschreibt die durchschnittliche Anzahl der erfolgreich an den 
+    Netzwerkadapter übergebenen Pakete pro Sekunde. Da die Scanner nur sehr kleine Pakete verschicken ist die Paketrate in \eng{Performance}-orientierten Projekten dieser
+    Art der limitierende Faktor \cite{TODO}, weshalb sie maßgeblich als Metrik für die \eng{Performance} dient.
+    \item \textbf{/M-02/\phantomsection\label{req:M-02} CPU-Auslastung:} 
+    Die CPU-Auslastung von hochperformanten Netzwerkanwendungen findet maßgeblich im \eng{User-Space}, im \eng{Kernel-Space} und im 
     \eng{SoftIRQ}\footnote{TODO erklären} 
     statt \cite{TODO}. deshalb sollte alle drei Bereiche betrachtet werden. Gemessen wird die prozentuale Auslastung der CPU-Kerne 
     in Bezug auf diese Metriken.
-    \item \textbf{/M-03/\phantomsection\label{req:M-03} RAM-Verbauch:} Der RAM-Verbrauch als zweiter primärer Teil der Ressourcenmetriken wird in Megabyte (MB) angegeben und stellt
+    \item \textbf{/M-03/\phantomsection\label{req:M-03} RAM-Verbauch:} 
+    Der RAM-Verbrauch als zweiter primärer Teil der Ressourcenmetriken wird in Megabyte (MB) angegeben und stellt
 den Anteil des physisch durch den Scanner belegten Arbeitsspeicher dar. 
 \end{itemize}
 

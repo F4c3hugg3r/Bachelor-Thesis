@@ -12,7 +12,6 @@ In diesem Kapitel werden die in der Testumgebung ermittelten Messergebnisse vorg
 die Leistungsfähigkeit des implementierten Rust-Scanners im Vergleich zu etablierten Tools zu bewerten und die Erfüllung der 
 definierten Anforderungen zu überprüfen. Abschließend wird ein Ausblick auf mögliche Weiterentwicklungen gegeben.
 
-% TODO ENTSCHEIDEN OB ICH HIER ODER IN CHAPTER 6 MIT DEN FUNKTIONALEN ANFORDERUGEN BEGRÜNDEN SOLL
 \section{Darstellung und Reproduzierbarkeit der Messergebnisse}
 Die Messergebnisse wurden mittels der in \ref{Versuchsablauf.Datenaufbereitung} beschriebenen Skripte aufbereitet und stehen im Anhang zur
 Verfügung. Im Folgenden wird nur auf die ausschlaggebenden Ergebnisse eingegangen. Für jede Messung liegen allerdings umfangreiche
@@ -20,10 +19,21 @@ Daten, sowie Diagramme und Tabellen im bereitgestellten GitHub Repository \ref{T
 Parameter, sowie die Ausgaben der Tests lässt sich dort unter logs\_benchmark\_suite.txt anhand der Ein- und Ausgaben im Terminal nachvollziehen. 
 Mittels dessen und der README.md Datei können die Benchmarks exakt reproduziert und nachvollzogen werden. 
 
+% TODO add citations 
 \subsection{Ergebnisse S-01: Anforderungsvalidierung}
-% War der Scanner stabil? Wurden alle Pakete korrekt gebaut?
-% Gab es Abstürze oder Memory Leaks bei moderater Last?
+Gemäß \ref{Versuchsablauf.Datenaufbereitung} wurden zwei Tests zur Validierung der Implementationen durchgeführt.
+Die Auswertung der Ausgabedateien der Scanner zeigt, dass von den 2048 Antworten auf die 4096 gesendeten Paketen, wie geplant 
+alle korrekt empfangen und validiert wurden\cite{TODO}. Die \eng{Logs} des Ziel-Knotens bestätigen dies. Dort ist zu sehen, dass
+jeweils genau 4096 valide SYN-Pakete angekommen, 2048 Antworten verschickt und 2048 RST-Antworten erhalten wurden\cite{TODO}.  
 
+Beim zweiten Test legten ebenfalls alle Variationen das gleiche Verhalten an den Tag. Die folgenden Informationen verbildlichen also 
+stellvertretend die Ergebnisse aller Konfigurationen. In der Ausgabe capture\_no\_rst.pcap des xdpdump Tools des Ziel-Knotens ist 
+zu sehen\footnote{Um nur die relevanten Pakete in der Wireshark Ausgabe zu sehen, kann in die Filter-Eingabe \enquote{tcp} eingegebenen werden.}, 
+dass vier valide SYN-Pakete beim Ziel-Knoten angekommen sind und daraufhin vier SYN-ACK-Antworten zurückgeschickt wurden. 
+Im Kontrast dazu ist in capture\_with\_rst.pcap zu sehen, dass bei der aktivierten
+Reset-Funktion auch vier SYN-Pakete eingegangen aber lediglich zwei SYN-Ack-Antworten verschickt und zwei RST-Pakete erhalten wurden. 
+Die Ausgaben von xdpdump im Scanner-Knotens zeigen, dass in xdpdump\_no\_rst.pcap vier valide SYN-ACK-Antworten eingingen und in 
+xdpdump\_with\_rst.pcap lediglich zwei davon. 
 
 \subsection{Ergebnisse S-02: Performanzgrenzen} \label{Ergebnisse.S-02}
 % Um Datei aus dem Repo zu referenzieren: "erschließen sich, unter Anwendung der Auswertungsskripte \texttt{calc_efficiency.py} und \texttt{validate.py} \cite{BachelorRepo}"
@@ -78,15 +88,29 @@ pro CPU-Prozent in jedem Durchlauf berechnet und daraus anschließend der Durchs
 \end{figure}
 % TODO Namen größer und steiler nach unten
 
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{pictures/vergleich_balken_2b_cpu_total_gesamt.png}
+	\caption{CPU-Auslastung der SYN-Scanner im Benchmark (gesamt)}
+	\label{fig:cpu_efficiency_diag}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{pictures/vergleich_zeitreihe_3_ram.png}
+	\caption{Effizienz der SYN-Scanner im Benchmark (gesamt)}
+	\label{fig:ram_efficiency_diag}
+\end{figure}
+
 \subsection{Ergebnisse S-03: Reales Szenario}
 Die Ergebnisse mancher Variationen des SYN-Rust in der Tabelle \ref{tab:performance_comparison_low_rate_efficiency} weichen bezüglich der PPS Metrik 
 von der Durchsatzlimitierung  (500.000 PPS) ab. Dies ist in diesem Szenario \hyperref[req:S-03]{/S-03/} explizit erwünscht. Die Daten der Tabelleneinträge
 sind in [TODO Ergebnisse] und [TODO Validierung] zu finden. Für ZMap gilt bezüglich der RST-Antworten das gleiche wie auch in \ref{Ergebnisse.S-02}.  
 
 \begin{table}[htbp]
+\label{tab:performance_comparison_low_rate_efficiency}
 \centering
-\footnotesize % Schriftgröße angepasst für 8 Spalten
-% Definition: X für Name, dann 7 Spalten für Zahlen (r)
+\small
 \begin{tabularx}{\textwidth}{|X|r|r|r|r|r|r|r|}\hline 
 \textbf{Scanner} & \textbf{Effizienz} & \textbf{PPS} & \multicolumn{2}{c|}{\textbf{Netto (Aktiv)}} & \multicolumn{2}{c|}{\textbf{Netto (Gesamt)}} & \textbf{Erg.} \\ 
  & \scriptsize{[PPS/\%]} & \scriptsize{(aktiv) [Mio]} & \scriptsize{CPU [\%]} & \scriptsize{RAM [MB]} & \scriptsize{CPU [\%]} & \scriptsize{RAM [MB]} & \scriptsize{[Mio]} \\ \hline
@@ -111,24 +135,19 @@ ZMap  \newline \scriptsize{(RST automatisch)} &
 
 \end{tabularx}
 \caption{Vergleich der Performance-Metriken (Unter Berücksichtigung der RST-Pakete)}
-\label{tab:performance_comparison_low_rate_efficiency}
 \end{table}
 
 \section{Diskussion der Ergebnisse}
 % Hier interpretieren Sie die Zahlen aus 7.1.
 
-\subsection{Analyse des Durchsatzes und der Latenz}
+\subsection{Performance}
 % Warum ist XDP schneller als AF_PACKET?
 % Wo liegen die Flaschenhälse (CPU, PCIe-Bus, Kernel)?
 
-\subsection{Ressourceneffizienz (CPU und RAM)}
+\subsection{Ressourceneffizienz}
 % Bezug auf Anforderung /M-02/ und /M-03/.
 % Vergleich Rust vs. C (ZMap/Masscan).
 % Diskussion des Overheads durch Tokio/Async vs. Threading.
-
-\subsection{Vergleich mit dem Stand der Technik}
-% Expliziter Vergleich mit ZMap und Masscan.
-% Wo steht Ihre Lösung? (Schneller? Sicherer? Ressourcenhungriger?)
 
 \section{Abgleich mit den Anforderungen}
 % Gehen Sie die Liste aus Kap. 4 durch (/F-01/ bis /F-09/ und /NF-xx/).

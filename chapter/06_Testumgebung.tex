@@ -57,10 +57,13 @@ um zusätzlich zu den Ausgaben des \eng{Dummy-Receiver}-Programmes exakte Validi
 \centering
 \begin{tabularx}{\textwidth}{|c|X|} \hline
 \textbf{Tool} & \textbf{Nutzung} \\ \hline
-Netcat & TODO \\ \hline
-tcpdump & TODO \\ \hline
-xdpdump & TODO \\ \hline
-Wireshark & TODO \\ \hline
+Netcat & Fungiert als Referenz-Responder zur Validierung der Paketstruktur. Da Netcat nur auf standardkonforme Anfragen reagiert, 
+bestätigt eine erfolgreiche Kommunikation die korrekte Konstruktion der vom Scanner gesendeten Pakete. \\ \hline
+xdpdump & Dient der Erfassung des Netzwerkverkehrs direkt an der XDP-Ebene. 
+Dies ist essenziell, da der Scanner die Pakete bereits auf Treiberebene verarbeitet und diese somit für herkömmliche 
+\eng{Sniffer} (die auf dem Socket-Layer arbeiten) teilweise nicht sichtbar wären. \\ \hline
+Wireshark & Wird zur detaillierten Analyse und Validierung der mit xdpdump aufgezeichneten \texttt{.pcap}-Dateien verwendet. 
+Es ermöglicht die manuelle Überprüfung der Header-Felder, Sequenznummern und Flags auf Konformität mit den Protokollspezifikationen. \\ \hline
 \end{tabularx}
 \caption{Genutzte Tools zur Validierung der funktionalen Anforderungen (siehe \ref{Methodik})}
 \label{tab:tools_validation}

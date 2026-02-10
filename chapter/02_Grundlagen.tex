@@ -291,8 +291,15 @@ durch einen \eng{JIT-Compiler} (\eng{Just-In-Time}) in native Maschinensprache �
 vor der Ausführung sicher, dass der Code sicher ist \cite{Vieira_Castanho_Pacífico_Santos_Júnior_Vieira_2021}. 
 So werden Fehler wie beispielsweise Endlosschleifen oder falsche Speicherzugriffe vermieden.
 
-% TODO \texttt{bpf} Maps und \texttt{RingBuf} erklären!!!
-% \cite{Zhang_Shu_Chen_Xie_2024}
+Da eBPF-Programme ereignisbasiert ausgeführt werden und keinen eigenen persistenten Speicher besitzen, 
+werden sogenannte \texttt{bpf} Maps verwendet, um Zustände zu bewahren und Daten auszutauschen \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}. 
+Dies sind generische \eng{Key-Value}-Speicher, die sowohl von verschiedenen eBPF-Programmen 
+als auch vom \eng{User Space} gelesen und beschrieben werden können \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}.
+Dabei gibt es verschiedene Datenstrukturen. Eine davon ist der \texttt{RingBuf} 
+(\texttt{BPF\_MAP\_TYPE\_RINGBUF}). Hierbei handelt es sich um einen für den Datenaustausch 
+vom Kernel zum \eng{User Space} optimierten Ringpuffer, der 
+im Vergleich zu älteren Methoden wie \eng{Perf Buffer} durch geteilte Speicherregionen effizienter arbeitet 
+und die Reihenfolge der Ereignisse garantiert \cite{Map_Type_“BPF_MAP_TYPE_RINGBUF”_-_eBPF_Docs}.
 
 Für einen \texttt{SYN}-Scanner ist \texttt{eBPF} nützlich, da es ermöglicht, eingehende Antwortpakete (\texttt{SYN-ACK}) extrem früh 
 zu filtern und an den \eng{User Space} weiterzuleiten, bevor teure Speicherstrukturen des Kernels angelegt werden. 

@@ -6,18 +6,105 @@
 %%
 %%
 
-% TODO Auch nicht funktionale Anforderungen mit einbringen
+% TODO Funktionale und nicht funktionale Anforderungen referenzieren
 \chapter{Konzeption und Implementierung} \label{Implementierung}
-% TODO nach schreiben des Chapters überarbeiten
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 In diesem Kapitel wird zuerst das Konzept zur Erfüllung der Anforderungen vorgestellt.
-Anschließend wird die konkrete Umsetzung in den beiden Schritten der Basisimplementierung, sowie
-im Optimierungsschritt, sowie die Veränderungen, die im Laufe der Entwicklung stattgefunden haben, 
-dargelegt und erklärt. Daraufhin werden die Schritte zur Qualitätssicherung, welche im Laufe der Entwicklung genutzt 
-wurden aufgezeigt und schlussendlich der konkrete Aufbau für die finale Testumgebung beschrieben.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Projektstruktur Basisimplementierung}
-Das Rust-Projekt hat folgende Ordnerstruktur:
+Anschließend wird die konkrete Umsetzung der Komponenten detailliert 
+dargelegt und erklärt. 
+
+% TODO Formatierung und Anforderungen referenzieren
+\section{Konzeptioneller Lösungsansatz}
+Um die funktionalen und nicht-funktionalen Anforderungen zu erfüllen, wird im Folgenden darauf eingegangen,
+wie dies konzeptionell erreicht werden soll. 
+
+\subsection{Logische Komponenten des Scanners}
+Da der Scanner asynchron arbeiten soll und Sende- und Empfangsprozess entkoppelt sind (siehe /NF-02/), wird 
+die Softwarearchitektur nach dem Producer-Consumer-Pattern entworfen. Der Datenfluss wird dabei als Pipeline betrachtet: 
+Die Kommunikation zwischen den Modulen erfolgt über sogenannte Channels. Die jeweilige Komponente erhält Daten über einen Channel, 
+verarbeitet diese und schreibt die Ergebnisse in einen anderen Channel, welcher gleichzeitig als Puffer dient, um Lastspitzen auszugleichen. 
+Diese Modularisierung ermöglicht es, dass I/O-lastige Operationen (wie das Lesen vom Stdin) die CPU-lastigen 
+Operationen (Paketkonstruktion, Checksummenberechnung) nicht blockieren.
+
+Auch bei Kontrollflüssen (z.B. Starten einer Komponente) können einmalig Daten übertragen werden. Datenflüsse hingegen 
+stehen für einen mehrfach geschehenden Datenaustausch. 
+
+Die Abbildung \ref{fig:component_diag} zeigt die logischen Komponenten des Scanners und deren Interaktionen:
+
+% TODO Paketerfassung -> Ergebnisverarbeitung oder so ändern
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{pictures/Komponentendiagramm-SYN-Rust_777.drawio.png}
+	\caption{Diagramm logischer Komponenten des Scanners (vereinfacht)}
+	\label{fig:component_diag}
+\end{figure}
+
+In dem Diagramm ist zu erkennen, das zwischen der Paketemissionierungs-Komponente und der Ergebnisverarbeitungs-Komponente kein 
+Datenfluss besteht, sondern lediglich das Signal zum Beenden des Scans ausgetauscht wird. Daran ist das zustandslose Design zu erkennen, 
+welches die Anforderung \hyperref[req:F-04]{/F-04/} erfüllt. 
+
+Das Startprogramm erstellt Paketrohlinge und dient der Eingabe, sowie Übergabe der Konfigurationsdaten.
+Außerdem startet es das Scannerprogramm. Die Jobverwaltung ist für die Funktionsfähigkeit des Programmes hat hauptsächlich
+die Aufgabe, die anderen Komponenten korrekt zu vernetzen und zu starten. Die Paketemissionierung übernimmt die Paketbearbeitung, 
+die Durchsatzlimitierung und das Versenden der Pakete. Für die Aufgabe des Empfangens und Auswerten der Antwortpakete sind zum einen ein 
+\texttt{eBPF Programm} zuständig, welches im Komponentendiagramm an der \eng{Netzwerkinterface}-Komponente
+angesiedelt ist und zum anderen die Ergebnisverarbeitung. Letzteres beinhaltet die Logik zum Empfangen der Daten im \eng{User-Space}, welche 
+vom \texttt{XDP}-Programm übermittelt wurden und der darauffolgenden Duplikatsentfernung. 
+
+In der Abbildung \ref{fig:component_diag} wird der Weg der Pakete durch den Netzwerkkartentreiber und die Trennung der Zuständigkeiten
+von \eng{User Space} und Linux-Kernel nicht explizit behandelt. Um nun aber die Funktion des \texttt{eBPF}-Programmes zu verbildlichen,
+wird in Abbildung \ref{fig:kernel_diag} der Datenfluss zwischen Scanner-Programm und Netzwerkkarte verdeutlicht.
+
+% TODO Qdisc als Verb beschreiben wie sende/baue/... erklären
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{pictures/TX_RX_Kernel.drawio.png}
+	\caption{Weg der Pakete durch den Linux Kernel (vereinfacht)}
+	\label{fig:kernel_diag}
+\end{figure}
+
+Das Diagramm zeigt mögliche Pfade, die ein Paket durchläuft, wenn es entweder gesendet oder empfangen wird. Dabei werden auch die unterschiedlichen
+XDP-Modi (siehe \ref{Grundlagen.XDP}) beachtet. Im Sendeprozess (von der Anwendung zur Netzwerk-Hardware) wird mithilfe von \texttt{AF\_XDP} der Netzwerk-Stack 
+des Kernels je nach \eng{Socket}-Konfiguration (\eng{Copy} oder \eng{Zero-Copy}) vollständig oder zum Großteil übersprungen. Die \texttt{AF\_PACKET}-Variante
+hingegen durchläuft immer einige wenige Schritte des regulären Netzwerkstacks. Im Empfangsprozess ist zu sehen, dass das \texttt{eBPF}-Programm 
+je nach Modus (\eng{SKB Mode} oder \eng{Driver Mode}) im Treiber der Netzwerkkarte oder direkt zu Beginn des Kernel-Netzwerkstacks ausgeführt wird.
+In beiden Fällen werden dort die eingehenden Pakete zuerst untersucht und je nachdem was das Ergebnis der Untersuchung ist, 
+direkt verworfen, an den Netzwerkstack weitergeleitet, oder verändert und an den Treiber oder per XDP\_TX direkt an die Netzwerkkarte zum Versenden
+zurückgegeben. So werden alle, oder im Falle des \eng{SKB Mode} fast alle, Schritte des regulären Netzwerkstacks eingespart.
+Die Ergebnisse der Untersuchung im \texttt{eBPF}-Programm werden bei validen Paketen in eine \texttt{eBPF Map}, 
+in diesem Fall einem \texttt{RingBuf} (siehe \ref{ebpf:xdp_program}) geloggt.
+Dies hat den Vorteil, dass nur die relevanten Inhalte des Pakets (IP-Adresse, Port) statt des ganzen Paketes übermittelt werden müssen.
+Außerdem hat das \eng{User Space}-Programm direkten Zugriff auf den \texttt{RingBuf} und kann die Daten somit ohne Umwege abgreifen.
+
+Auf diese Art und Weise kann der SYN-Scanner die Verarbeitungsschritte sowohl beim Senden als auch beim Empfangen von Paketen auf 
+ein Minimum reduzieren, sodass CPU-Zyklen fast ausschließlich für die Anwendungslogik und nicht für das Betriebssystem aufgewendet werden. 
+Dies bringt große Performanzchancen mit sich bringt.
+
+\subsection{Performancesteigerne Maßnahmen}
+Neben der in \ref{ebpf:xdp_program} gezeigten Kernelumgehung werden zur Maximierung des Durchsatzes (/NF-01/) und Minimierung der Ressourcennutzung (/NF-05/) 
+zwei weitere Maßnahmen verfolgt:
+
+\begin{enumerate}
+    \item \textbf{Batching:} Sowohl im Datenaustausch zwischen den Komponenten mithilfe von Channels, als auch beim 
+    Versenden von Paketen werden die Daten immer in Batches übertragen. 
+    Im Kontext der Channels bedeutet dies, dass statt einzelner Nachrichten Vektoren mit einer Vielzahl von Objekten übermittelt werden. 
+    Dies senkt den Synchronisationsaufwand pro Element erheblich, da die Anzahl der Interaktionen mit dem Channel minimiert wird.
+    Für das Senden von Paketen reduziert das Batching die Anzahl der Systemaufrufe. 
+    Durch die gebündelte Verarbeitung mehrerer Pakete in einem Durchlauf wird der Overhead durch Kontextwechsel zwischen User-Space und Kernel verringert.     
+    \item \textbf{Vermeidung von Kopieroperationen und Kontextwechseln:} 
+    Zur Reduktion dynamischer Speicherzuweisungen (Allokationen) werden Vektoren, falls möglich, mit einer festen Kapazität initialisiert, 
+    um Reallokationen zur Laufzeit zu vermeiden. Bereits verwendete Vektoren werden nicht verworfen, sondern lediglich geleert und wiederverwendet.
+    Zudem wurde beim Design auf die Vermeidung von Kopieroperationen geachtet. Das eBPF-Programm (siehe \ref{eBPF}) arbeitet beispielsweise direkt auf Referenzen 
+    des Speicherbereichs (\eng{Zero-Copy}), und auch die für das Parsing der IP-Adressen vom Startprogramm zuständige-Komponente nutzt Mechanismen, 
+    um Kopieroperationen zu vermeiden (siehe \ref{jobverwaltung:parser}).
+\end{enumerate}
+
+\section{Implementierung und Funktionsweise der Komponenten}
+Um die Funktionsweise des Programmes im Detail zu erklären, wird zuerst der Projektaufbau erklärt und anschließend 
+die einzelnen Quelldateien vorgestellt und Besonderheiten bezüglich Performanz-steigernden oder Ressourcen-sparenden Umsetzungen erläutert.
+
+\subsection{Projektstruktur Basisimplementierung}
+Die Verzeichnisse sind nach Aufgabenbereich gegliedert, um eine übersichtliche Gesamtstruktur zu haben und klar zeigen
+zu können, welches Verzeichnis für welche Aufgabe zuständig ist. Das Rust-Projekt hat folgende Ordnerstruktur:
 
 \begin{lstlisting}[caption=Ordnerstruktur des SYN-Scanners (gekürzt)]{Projektstruktur Basisimplementierung}
 /scanner                                     
@@ -53,66 +140,12 @@ Das Rust-Projekt hat folgende Ordnerstruktur:
 In jedem Ordner ist eine \texttt{mod.rs} Datei zu finden, welche hier zugunsten der Lesbarkeit entfernt wurde.
 Diese Dateien dienen dazu, ein Verzeichnis als Rust Modul zu definieren und die darin genutzten Dateien für den 
 Compiler sichtbar zu machen. Die \texttt{Cargo.toml} ist für die Verwaltung der externen Bibliotheken zuständig.
-
-Die Verzeichnisse sind nach Aufgabenbereich gegliedert, um eine übersichtliche Gesamtstruktur zu haben und klar zeigen
-zu können, welches Verzeichnis für welche Aufgabe zuständig ist. Inhaltlich relevant sind vor allem \texttt{emitting\_packets},
-welches die Paketbearbeitung, das \eng{Rate Limiting} und das Versenden übernimmt. Außerdem
-\texttt{mock\_programm.rs}, in welchem die Paketrohlinge erstellt und alle Daten zur Konfiguration eingegeben werden.
-Für die Aufgabe des Empfangens und Auswerten der Antwortpakete sind zum einen \texttt{xdp-ebpf}, \texttt{xdp-common} und 
-\texttt{capturing\_packets} zuständig. Letzteres beinhaltet die Logik zum Empfangen der Daten im \eng{User Space}, welche 
-vom \texttt{XDP}-Programm übermittelt wurden und der darauffolgenden Duplikatsentfernung. Die Verzeichnisse \texttt{xdp-ebpf}, \texttt{xdp-common}
+ 
+Die Zuordnung der Verzeichnisse zu den logischen Komponenten ist im Diagramm \ref{fig:component_diag} zu finden.
+Die Verzeichnisse \texttt{xdp-ebpf} und \texttt{xdp-common}, welche dort nicht vorkommen,
 beschreiben das \texttt{eBPF}-Programm, welches Antwortpakete abfängt, auswertet und nur die relevanten Informationen an den
-\eng{User Space} weiterleitet.
-Die Komponente \texttt{job\_controlling} ist für die Funktionsfähigkeit des Programmes auch essenziell, hat aber hauptsächlich
-die Aufgabe, die anderen Komponenten korrekt zu vernetzen.
-
-\subsection{Logische Komponenten des Scanners}
-Basierend auf dieser Struktur zeigt die Abbildung \ref{fig:component_diag} die logischen Komponenten des \texttt{scanner}-Verzeichnisses und deren Interaktionen:
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=\textwidth]{pictures/Komponentendiagramm-SYN-Rust_777.drawio.png}
-	\caption{Diagramm logischer Komponenten des \texttt{scanner}-Verzeichnisses (vereinfacht)}
-	\label{fig:component_diag}
-\end{figure}
-% TODO Paketerfassung -> Ergebnisverarbeitung oder so ändern
-
-Das Verzeichnis \texttt{shared} ist dort nicht aufgeführt, da es lediglich der Steigerung der Übersichtlichkeit dient und
-helfende Funktionen, sowie Typenbeschreibungen enthält, die mehrfach im Projekt genutzt werden. Somit ist es für die logische Darstellung
-irrelevant. Es ist zudem wichtig zu erwähnen, 
-dass auch bei Kontrollflüssen (z.B. Starten einer Komponente) einmalig Daten übertragen werden können. Datenflüsse hingegen 
-stehen für einen mehrfach geschehenden Datenaustausch. 
-
-In dem Diagramm ist zu erkennen, das zwischen der \texttt{emitting\_packets}-Komponente und der \texttt{capturing\_packets}-Komponente kein 
-Datenfluss besteht, sondern lediglich das Signal zum Beenden des Scans ausgetauscht wird. Daran ist das zustandslose Design zu erkennen, 
-welches die Anforderung \hyperref[req:F-04]{/F-04/} erfüllt. 
-
-In der Abbildung \ref{fig:component_diag} wird der Weg der Pakete durch den Netzwerkkartentreiber und die Trennung der Zuständigkeiten
-von \eng{User Space} und Linux-Kernel nicht explizit behandelt. Um nun aber die Funktion des \texttt{eBPF}-Programmes,
-welches in der Projektstruktur unter den Verzeichnissen \texttt{xdp-ebpf} und \texttt{xdp-common} zu finden ist, zu verbildlichen,
-wird in Abbildung \ref{fig:kernel_diag} der Datenfluss zwischen Scanner-Programm und Netzwerkkarte verdeutlicht.
-
-Das Diagramm zeigt mögliche Pfade, die ein Paket durchläuft, wenn es entweder gesendet oder empfangen wird. Dabei werden auch die unterschiedlichen
-XDP-Modi (siehe \ref{Grundlagen.XDP}) beachtet. Im Sendeprozess (von der Anwendung zur Netzwerk-Hardware) wird mithilfe von \texttt{AF\_XDP} der Netzwerk-Stack 
-des Kernels je nach \eng{Socket}-Konfiguration (\eng{Copy} oder \eng{Zero-Copy}) vollständig oder zum Großteil übersprungen. Die \texttt{AF\_PACKET}-Variante
-hingegen durchläuft immer einige wenige Schritte des regulären Netzwerkstacks. Im Empfangsprozess ist zu sehen, dass das \texttt{eBPF}-Programm 
-je nach Modus (\eng{SKB Mode} oder \eng{Driver Mode}) im Treiber der Netzwerkkarte oder direkt zu Beginn des Kernel-Netzwerkstacks ausgeführt wird.
-In beiden Fällen werden dort die eingehenden Pakete zuerst untersucht und je nachdem was das Ergebnis der Untersuchung ist, 
-direkt verworfen, an den Netzwerkstack weitergeleitet, oder verändert und an den Treiber oder direkt an die Netzwerkkarte zum Versenden
-zurückgegeben. So werden alle, oder im Falle des \eng{SKB Mode} fast alle, Schritte des regulären Netzwerkstacks eingespart.
-Die Ergebnisse der Untersuchung im \texttt{eBPF}-Programm werden bei validen Paketen in eine \texttt{eBPF Map}, in diesem Fall einem \texttt{RingBuf} geloggt.
-Dies hat den Vorteil, dass nur die relevanten Inhalte des Pakets (IP-Adresse, Port) statt des ganzen Paketes übermittelt werden müssen.
-Außerdem hat das \eng{User Space}-Programm direkten Zugriff auf den \texttt{RingBuf} und kann die Daten somit ohne Umwege abgreifen.
-
-Auf diese Art und Weise kann der SYN-Scanner die Verarbeitungsschritte sowohl beim Senden als auch beim Empfangen von Paketen auf 
-ein Minimum reduzieren, was große Performanzchancen mit sich bringt.
-
-% TODO Qdisc als Verb beschreiben wie sende/baue/... erklären
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=\textwidth]{pictures/TX_RX_Kernel.drawio.png}
-	\caption{Weg der Pakete durch den Linux Kernel (vereinfacht)}
-	\label{fig:kernel_diag}
-\end{figure}
+\eng{User Space} weiterleitet. Das Verzeichnis \texttt{shared} dient lediglich der Steigerung der Übersichtlichkeit. Es enthält
+helfende Funktionen, sowie Typenbeschreibungen, die mehrfach im Projekt genutzt werden. Somit ist es für die Funktionalität irrelevant.
 
 \subsection{Übersicht genutzter \eng{Crates}}
 Für die Umsetzung der Komponenten sind folgende genutzte \eng{Crates} aufgrund ihres Einflussreichtums hervorzuheben:
@@ -134,21 +167,9 @@ Für die Umsetzung der Komponenten sind folgende genutzte \eng{Crates} aufgrund 
 \label{tab:crates_all}
 \end{table}
 
-\section{Implementierung und Funktionsweise der Komponenten}
-Um die Funktionsweise des Programmes im Detail zu erklären, werden im Folgenden die einzelnen Quelldateien vorgestellt und 
-Besonderheiten bezüglich performanzsteigernden oder ressourcensparendenden Maßnahmen erläutert. Der Relevanz für das Projekt
-des SYN-Scanners entsprechend, werden manche Themen mehr und manche weniger ausführlich behandelt.
-
 \subsection{Paketemissionierung (\texttt{emitting\_packets})}
 Die Paketemissionierung umfasst den Prozess der Durchsatzlimitierung, der Paketbearbeitung und des Paketversandes inklusive
 den dafür benötigten Vorbereitungsschritten.
-
-\subsubsection{Effizienzsteigernde Maßnahmen}
-% TODO für Sender, RateLimiter und Assembler in einem Absatz sagen, dass immer batches über tokio channel übertragen wurden 
-% TODO sagen, dass im Allgemeinen zum Sparen von mallocs vecs geleert wurden und vecs immer mit fester Größe
-Um möglichst ressourcensparend zu arbeiten, werden die Ziel-IP-Adressen in \eng{Batches}, also Ansammlungen von Paketen übertragen.
-Dies reduziert die Anzahl der benötigen \eng{Context Switches} drastisch indem nicht für jede IP-Adresse ein eigener \eng{System Call} \footnote{TODO} getätigt werden muss.
-% (maybe den Absatz vom Ratelimiter mit tokio auch hier hin umziehen)
 
 \subsubsection{\eng{Rate Limiter} (\texttt{rate\_limiter.rs})}
 Wie in der Abbildung \ref{fig:emitting_sequence_diag} zu sehen, führt der \eng{Rate Limiter} (\texttt{rate\_limiter.rs}) dem Namen entsprechend
@@ -213,7 +234,12 @@ soll, um möglichst performant zu sein. Um diesen Effekt zu verstärken wird au�
 der Pakete geschlossen werden. Je nach Konfiguration sendet er \eng{Batches} oder einzelne Pakete über die jeweilige 
 Schnittstelle. Die \eng{Socket}-Schnittstelle welche zum Versenden und somit zur
 Erfüllung der Anforderung \hyperref[req:F-02]{/F-02/} verwendet wird, wird beim Start des Senders initialisiert.
-% TODO Batch Sending erwähnen und oder wahlweise flowchart für Senden mit xdp / afp einfügen 
+
+Der \eng{Sender} kann entweder per \texttt{AF\_PACKET} oder per \texttt{AF\_XDP} senden. 
+Dies wurde so implementiert, da es bei der Schaffung einer realistischen Vergleichsbasis 
+zwischen den verschiedenen Technologien hilft. Des Weiteren bietet es die Möglichkeit, 
+die tatsächliche Notwendigkeit komplexer Technologien zu validieren. 
+% TODO wahlweise flowchart für Senden mit xdp / afp einfügen 
 
 \subsection{Ergebnisverarbeitung (\texttt{capturing\_packets})}
 In der Ergebnisverarbeitung werden die durch den \texttt{eBPF} vorgeprüften Daten der validen Antworten entgegengenommen und einer
@@ -234,10 +260,10 @@ dar. Mit \texttt{pcap} muss sich der Programmierer nicht manuell um \eng{Sockets
 eines \textit{Berkley Packet Filters} (BPF), mit welchem man Pakete an einem frühen Zeitpunkt im Netzwerk-Stack filtern kann. Wenn nun ein Paket empfangen wurde, wurden dessen 
 \eng{Header}-Felder mit \texttt{etherparse}, einer Ethernet-\eng{Parsing}-Bibliothek extrahiert und analog zum aktuellen Vorgehen auf Duplikate geprüft. 
 
-Obwohl die Handhabung mit \texttt{pcap} entwicklerfreundlich ist, wurde es letztendlich durch den \texttt{eBPF}-Ansatz verdrängt, da die \eng{Performance} 
+Obwohl die Handhabung mit \texttt{pcap} entwicklerfreundlich ist, wurde es letztendlich durch den \texttt{eBPF}-Ansatz ersetzt, da die \eng{Performance} 
 in ersten Tests nicht den Ansprüchen dieses Projektes genügte. Dies ist darauf zurückzuführen, dass \texttt{pcap} intern \eng{Raw-Sockets} mit 
-\texttt{AF\_INET} nutzt, welches im Vergleich zu \texttt{AF\_PACKET} oder \texttt{AF\_XDP} deutlich mehr Schritte im Netzwerk-Stack durchlaufen muss (siehe \ref{fig:kernel_diag}),
-selbst, wenn durch den BPF irrelevante Pakete hardwarenah herausgefiltert werden.
+\texttt{PF\_PACKET}\footnote{Ist funktional gleich zu AF\_PACKET \cite{socket2_linux_manpage}} nutzt \cite{the-tcpdump-group/libpcap_2026}. 
+Die erfordert im Vergleich zu \texttt{AF\_XDP} oder \texttt{eBPF} mehr Schritte im Netzwerk-Stack (siehe \ref{fig:kernel_diag}).
 
 Im aktuellen Ansatz wird der \eng{Receiver} stattdessen in einem \texttt{tokio} \eng{Task} erstellt, um Asynchronität zu gewährleisten. Außerdem dient 
 er nun ausschließlich dem Empfang, der durch das \texttt{eBPF}-Programm über den \texttt{RingBuf} geloggten Daten,
@@ -304,7 +330,7 @@ geschieht, effizienter, als die Vorgehensweise des \eng{System Allocators}, welc
 %sendet am Ende des Programmes ein abschließendes Signal um sicher zu gehen, dass alles geschlossen wird. Dies ist lediglich eine Sicherheitsmaßnahme,
 %da das Programm mit Adminrechten direkt mit dem Kernel kommuniziert.
 
-\subsubsection{\eng{Standard Input Parser} (\texttt{parser\_std\_in})}
+\subsubsection{\eng{Standard Input Parser} (\texttt{parser\_std\_in})} \label{jobverwaltung:parser}
 Der \eng{Parser} parst zum einen die Konfigurationsparameter aus dem \eng{Standard Input} und zum anderen die Ziel-IP-Adressen. 
 Um möglichst performant und ressourcensparend vorzugehen, wird im Allgemein ein Fokus auf die Vermeidung neuer 
 Allokationen und die Daten, falls möglich, mit \eng{Zero-Copy}-Operationen zu verarbeiten.
@@ -387,7 +413,7 @@ Wie bereits in den meisten anderen Komponenten wird auch hier \texttt{tokio} zur
 ermöglicht das unabhängige Handeln der einzelnen Bestandteile, was einerseits der Notwendigkeit des gleichzeitigen Sendens und Empfangens entspringt
 und andererseits der \eng{Performance}-Steigerung durch Einsparung von Wartezeiten dient.
 
-\section{\texttt{eBPF}}
+\section{\texttt{eBPF}} \label{eBPF}
 Der \texttt{eBPF} dient dem Scanner als Empfangspunkt für eingehende Pakete. Je nachdem in welchem \texttt{XDP}-Modus das Programm ausgeführt wird, agiert dieses direkt 
 im Treiber der Netzwerkkarte oder an der ersten Stelle nach Erstellung eines Puffers im Netzwerkstack. Dadurch können die
 Pakete bereits am frühstmöglichen Punkt evaluiert werden, dessen relevante Daten extrahiert und direkt ohne Umweg über den geteilten Speicher der \texttt{eBPF Maps} 
@@ -397,7 +423,7 @@ Zwischenschritte, welche normalerweise durchlaufen werden müssten, um das Paket
 ohne Kopieraufwand oder \eng{Context Switches} passiert. Durch die \texttt{XDP\_TX}-Funktion können \texttt{RST}-Pakete direkt im \texttt{eBPF}-Programm erstellt und wieder verschickt werden,
 sodass der Netzwerkstack sowie \eng{User Space} komplett vermieden werden.  
 
-\subsection{\texttt{XDP}-Programm}
+\subsection{\texttt{XDP}-Programm} \label{ebpf:xdp_program}
 Um ein \texttt{eBPF}-Programm nutzen zu können wird es in die \texttt{XDP}-\eng{Hook} des Kernels geladen und zuvor korrekt in \texttt{ELF}-Dateien übersetzt, damit die \texttt{XDP}-\eng{Hook}
 das Programm akzeptiert. Das Übersetzen des Rust-Codes übernimmt der \texttt{aya} \eng{Crate} und das Anhängen des Programmes passiert in \texttt{main.rs}, indem die 
 durch \texttt{aya} übersetzten Dateien an das genutzte Netzwerkinterface gebunden wird. Auch das Laden der \texttt{eBPF Maps} wird durch \texttt{aya} übernommen und in der \texttt{main.rs}
@@ -622,9 +648,6 @@ Das fertige Paket wird anschließend per \texttt{XDP\_TX} direkt in den Puffer d
 als valides \texttt{RST}-Paket an den \eng{Sender} der ursprünglichen \texttt{SYN-ACK}-Antwort zurückgeschickt. Dies dient der Erfüllung der Anforderung 
 \hyperref[req:F-06]{/F-06/}.
 
-% Notwendig, wenn ich eine ausführliche Evaluation mit Funktionstests mache?
-\section{Qualitätssicherung}
-% Als Maßnahmen zur Qualitätssicherung wurden im Entwicklungsprozess Integrationstests mithilfe der in \ref{}
-% genannten Tools durchgeführt. 
+\section{Dokumentation}
 
 % -> Tabelle
