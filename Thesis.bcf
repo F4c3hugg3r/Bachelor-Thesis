@@ -2517,21 +2517,16 @@
     <bcf:citekey order="141" intorder="1">Postel_1981</bcf:citekey>
     <bcf:citekey order="142" intorder="1">socket2_linux_manpage</bcf:citekey>
     <bcf:citekey order="143" intorder="1">the-tcpdump-group/libpcap_2026</bcf:citekey>
-    <bcf:citekey order="144" intorder="1">jemalloc</bcf:citekey>
-    <bcf:citekey order="145" intorder="1">TODO</bcf:citekey>
-    <bcf:citekey order="150" intorder="1">Map_Type_“BPF_MAP_TYPE_PERCPU_ARRAY”_-_eBPF_Docs</bcf:citekey>
-    <bcf:citekey order="151" intorder="1">Map_Type_“BPF_MAP_TYPE_RINGBUF”_-_eBPF_Docs</bcf:citekey>
-    <bcf:citekey order="152" intorder="1">kernel.org/doc/Documentation/filesystems/proc.txt</bcf:citekey>
-    <bcf:citekey order="153" intorder="1">TODO</bcf:citekey>
-    <bcf:citekey order="154" intorder="1">TODO</bcf:citekey>
-    <bcf:citekey order="155" intorder="1">igb</bcf:citekey>
+    <bcf:citekey order="148" intorder="1">Map_Type_“BPF_MAP_TYPE_PERCPU_ARRAY”_-_eBPF_Docs</bcf:citekey>
+    <bcf:citekey order="149" intorder="1">Map_Type_“BPF_MAP_TYPE_RINGBUF”_-_eBPF_Docs</bcf:citekey>
+    <bcf:citekey order="150" intorder="1">kernel.org/doc/Documentation/filesystems/proc.txt</bcf:citekey>
+    <bcf:citekey order="151" intorder="1">TODO</bcf:citekey>
+    <bcf:citekey order="152" intorder="1">Durumeric_Adrian_Stephens_Wustrow_Halderman_2024</bcf:citekey>
+    <bcf:citekey order="153" intorder="1">Durumeric_Adrian_Stephens_Wustrow_Halderman_2024</bcf:citekey>
+    <bcf:citekey order="154" intorder="1">igb</bcf:citekey>
+    <bcf:citekey order="155" intorder="1">TODO</bcf:citekey>
     <bcf:citekey order="156" intorder="1">TODO</bcf:citekey>
-    <bcf:citekey order="157" intorder="1">TODO</bcf:citekey>
-    <bcf:citekey order="158" intorder="1">IEEE_Standard_for_Ethernet</bcf:citekey>
-    <bcf:citekey order="159" intorder="1">Durumeric_Adrian_Stephens_Wustrow_Halderman_2024</bcf:citekey>
-    <bcf:citekey order="160" intorder="1">Durumeric_Adrian_Stephens_Wustrow_Halderman_2024</bcf:citekey>
-    <bcf:citekey order="161" intorder="1">TODO</bcf:citekey>
-    <bcf:citekey order="162" intorder="1">TODO</bcf:citekey>
+    <bcf:citekey order="157" intorder="1">IEEE_Standard_for_Ethernet</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="none">

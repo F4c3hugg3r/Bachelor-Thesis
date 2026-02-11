@@ -5,15 +5,17 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {5.1}{\ignorespaces Genutzte \textit {Crates}}}{28}{table.115}%
-\contentsline {table}{\numberline {5.2}{\ignorespaces Performanz-steigernde Maßnahmen im \textit {Standard-Input} \textit {Parser}}}{36}{table.169}%
-\contentsline {table}{\numberline {5.3}{\ignorespaces Genutzte \texttt {eBPF Maps}}}{39}{table.174}%
+\contentsline {table}{\numberline {5.1}{\ignorespaces Genutzte \textit {Crates}}}{30}{table.120}%
+\contentsline {table}{\numberline {5.2}{\ignorespaces Performanz-steigernde Maßnahmen im \textit {Standard-Input} \textit {Parser}}}{37}{table.173}%
+\contentsline {table}{\numberline {5.3}{\ignorespaces Genutzte \texttt {eBPF Maps}}}{41}{table.178}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {6.1}{\ignorespaces Hardware- und Software-Spezifikationen der Testumgebung im Vergleich}}{42}{table.201}%
-\contentsline {table}{\numberline {6.2}{\ignorespaces Genutzte Tools zur Validierung der funktionalen Anforderungen (siehe \ref {Methodik})}}{43}{table.204}%
+\contentsline {table}{\numberline {6.1}{\ignorespaces Genutzte Tools zur Validierung der funktionalen Anforderungen (siehe \cref {Methodik})}}{45}{table.206}%
+\contentsline {table}{\numberline {6.2}{\ignorespaces Hardware- und Software-Spezifikationen der Testumgebung im Vergleich}}{46}{table.212}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {7.1}{\ignorespaces Vergleich der Performance-Metriken}}{50}{table.233}%
-\contentsline {table}{\numberline {7.2}{\ignorespaces Vergleich der Performance-Metriken (Unter Berücksichtigung der RST-Pakete)}}{53}{table.238}%
+\contentsline {table}{\numberline {7.1}{\ignorespaces Validierung der Paketmengen in \cref {req:T-01} (Daten teilweise basierend auf \cref {tab:results_s01_quant})}}{52}{table.238}%
+\contentsline {table}{\numberline {7.2}{\ignorespaces Vergleich der Performance-Metriken}}{52}{table.241}%
+\contentsline {table}{\numberline {7.3}{\ignorespaces Vergleich der Performance-Metriken (Unter Berücksichtigung der RST-Pakete)}}{53}{table.243}%
+\contentsline {table}{\numberline {7.4}{\ignorespaces Zusammenfassender Abgleich der Anforderungen}}{56}{table.250}%
 \def \@chapapp {\appendixname }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

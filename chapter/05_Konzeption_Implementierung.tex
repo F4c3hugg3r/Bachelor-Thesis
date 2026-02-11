@@ -6,19 +6,19 @@
 %%
 %%
 
-% TODO Funktionale und nicht funktionale Anforderungen referenzieren
 \chapter{Konzeption und Implementierung} \label{Implementierung}
 In diesem Kapitel wird zuerst das Konzept zur Erfüllung der Anforderungen vorgestellt.
 Anschließend wird die konkrete Umsetzung der Komponenten detailliert 
-dargelegt und erklärt. 
+dargelegt und erklärt. Die folgende Beschreibung der Architektur und Implementierung dient gemäß \cref{Methodik} zugleich als Nachweis 
+für die Erfüllung der Anforderungen, die durch statische Inspektion verifiziert werden.
 
-% TODO Formatierung und Anforderungen referenzieren
+% TODO Formatierung 
 \section{Konzeptioneller Lösungsansatz}
 Um die funktionalen und nicht-funktionalen Anforderungen zu erfüllen, wird im Folgenden darauf eingegangen,
 wie dies konzeptionell erreicht werden soll. 
 
 \subsection{Logische Komponenten des Scanners}
-Da der Scanner asynchron arbeiten soll und Sende- und Empfangsprozess entkoppelt sind (siehe /NF-02/), wird 
+Da der Scanner asynchron arbeiten soll und Sende- und Empfangsprozess entkoppelt sind (siehe \cref{req:NF-02}), wird 
 die Softwarearchitektur nach dem Producer-Consumer-Pattern entworfen. Der Datenfluss wird dabei als Pipeline betrachtet: 
 Die Kommunikation zwischen den Modulen erfolgt über sogenannte Channels. Die jeweilige Komponente erhält Daten über einen Channel, 
 verarbeitet diese und schreibt die Ergebnisse in einen anderen Channel, welcher gleichzeitig als Puffer dient, um Lastspitzen auszugleichen. 
@@ -28,7 +28,7 @@ Operationen (Paketkonstruktion, Checksummenberechnung) nicht blockieren.
 Auch bei Kontrollflüssen (z.B. Starten einer Komponente) können einmalig Daten übertragen werden. Datenflüsse hingegen 
 stehen für einen mehrfach geschehenden Datenaustausch. 
 
-Die Abbildung \ref{fig:component_diag} zeigt die logischen Komponenten des Scanners und deren Interaktionen:
+Die \cref{fig:component_diag} zeigt die logischen Komponenten des Scanners und deren Interaktionen:
 
 % TODO Paketerfassung -> Ergebnisverarbeitung oder so ändern
 \begin{figure}[htbp]
@@ -40,7 +40,7 @@ Die Abbildung \ref{fig:component_diag} zeigt die logischen Komponenten des Scann
 
 In dem Diagramm ist zu erkennen, das zwischen der Paketemissionierungs-Komponente und der Ergebnisverarbeitungs-Komponente kein 
 Datenfluss besteht, sondern lediglich das Signal zum Beenden des Scans ausgetauscht wird. Daran ist das zustandslose Design zu erkennen, 
-welches die Anforderung \hyperref[req:F-04]{/F-04/} erfüllt. 
+welches die Anforderung \cref{req:F-04} erfüllt. 
 
 Das Startprogramm erstellt Paketrohlinge und dient der Eingabe, sowie Übergabe der Konfigurationsdaten.
 Außerdem startet es das Scannerprogramm. Die Jobverwaltung ist für die Funktionsfähigkeit des Programmes hat hauptsächlich
@@ -50,9 +50,9 @@ die Durchsatzlimitierung und das Versenden der Pakete. Für die Aufgabe des Empf
 angesiedelt ist und zum anderen die Ergebnisverarbeitung. Letzteres beinhaltet die Logik zum Empfangen der Daten im \eng{User-Space}, welche 
 vom \texttt{XDP}-Programm übermittelt wurden und der darauffolgenden Duplikatsentfernung. 
 
-In der Abbildung \ref{fig:component_diag} wird der Weg der Pakete durch den Netzwerkkartentreiber und die Trennung der Zuständigkeiten
+In der \cref{fig:component_diag} wird der Weg der Pakete durch den Netzwerkkartentreiber und die Trennung der Zuständigkeiten
 von \eng{User Space} und Linux-Kernel nicht explizit behandelt. Um nun aber die Funktion des \texttt{eBPF}-Programmes zu verbildlichen,
-wird in Abbildung \ref{fig:kernel_diag} der Datenfluss zwischen Scanner-Programm und Netzwerkkarte verdeutlicht.
+wird in \cref{fig:kernel_diag} der Datenfluss zwischen Scanner-Programm und Netzwerkkarte verdeutlicht.
 
 % TODO Qdisc als Verb beschreiben wie sende/baue/... erklären
 \begin{figure}[htbp]
@@ -63,7 +63,7 @@ wird in Abbildung \ref{fig:kernel_diag} der Datenfluss zwischen Scanner-Programm
 \end{figure}
 
 Das Diagramm zeigt mögliche Pfade, die ein Paket durchläuft, wenn es entweder gesendet oder empfangen wird. Dabei werden auch die unterschiedlichen
-XDP-Modi (siehe \ref{Grundlagen.XDP}) beachtet. Im Sendeprozess (von der Anwendung zur Netzwerk-Hardware) wird mithilfe von \texttt{AF\_XDP} der Netzwerk-Stack 
+XDP-Modi (siehe \cref{Grundlagen.XDP}) beachtet. Im Sendeprozess (von der Anwendung zur Netzwerk-Hardware) wird mithilfe von \texttt{AF\_XDP} der Netzwerk-Stack 
 des Kernels je nach \eng{Socket}-Konfiguration (\eng{Copy} oder \eng{Zero-Copy}) vollständig oder zum Großteil übersprungen. Die \texttt{AF\_PACKET}-Variante
 hingegen durchläuft immer einige wenige Schritte des regulären Netzwerkstacks. Im Empfangsprozess ist zu sehen, dass das \texttt{eBPF}-Programm 
 je nach Modus (\eng{SKB Mode} oder \eng{Driver Mode}) im Treiber der Netzwerkkarte oder direkt zu Beginn des Kernel-Netzwerkstacks ausgeführt wird.
@@ -71,16 +71,16 @@ In beiden Fällen werden dort die eingehenden Pakete zuerst untersucht und je na
 direkt verworfen, an den Netzwerkstack weitergeleitet, oder verändert und an den Treiber oder per XDP\_TX direkt an die Netzwerkkarte zum Versenden
 zurückgegeben. So werden alle, oder im Falle des \eng{SKB Mode} fast alle, Schritte des regulären Netzwerkstacks eingespart.
 Die Ergebnisse der Untersuchung im \texttt{eBPF}-Programm werden bei validen Paketen in eine \texttt{eBPF Map}, 
-in diesem Fall einem \texttt{RingBuf} (siehe \ref{ebpf:xdp_program}) geloggt.
+in diesem Fall einem \texttt{RingBuf} (siehe \cref{ebpf:xdp_program}) geloggt.
 Dies hat den Vorteil, dass nur die relevanten Inhalte des Pakets (IP-Adresse, Port) statt des ganzen Paketes übermittelt werden müssen.
 Außerdem hat das \eng{User Space}-Programm direkten Zugriff auf den \texttt{RingBuf} und kann die Daten somit ohne Umwege abgreifen.
 
 Auf diese Art und Weise kann der SYN-Scanner die Verarbeitungsschritte sowohl beim Senden als auch beim Empfangen von Paketen auf 
 ein Minimum reduzieren, sodass CPU-Zyklen fast ausschließlich für die Anwendungslogik und nicht für das Betriebssystem aufgewendet werden. 
-Dies bringt große Performanzchancen mit sich bringt.
+Dies validiert die konsequente Nutzung moderner Kernel-Mechanismen (\cref{req:NF-03}) unter Berücksichtigung der technologischen Einschränkung auf das Linux-Ökosystem (\cref{req:NF-06}) und bringt große Performanzpotenziale mit sich.
 
 \subsection{Performancesteigerne Maßnahmen}
-Neben der in \ref{ebpf:xdp_program} gezeigten Kernelumgehung werden zur Maximierung des Durchsatzes (/NF-01/) und Minimierung der Ressourcennutzung (/NF-05/) 
+Neben der in \cref{ebpf:xdp_program} gezeigten Kernelumgehung werden zur Maximierung des Durchsatzes (\cref{req:NF-01}) und Minimierung der Ressourcennutzung (\cref{req:NF-05}) 
 zwei weitere Maßnahmen verfolgt:
 
 \begin{enumerate}
@@ -93,9 +93,9 @@ zwei weitere Maßnahmen verfolgt:
     \item \textbf{Vermeidung von Kopieroperationen und Kontextwechseln:} 
     Zur Reduktion dynamischer Speicherzuweisungen (Allokationen) werden Vektoren, falls möglich, mit einer festen Kapazität initialisiert, 
     um Reallokationen zur Laufzeit zu vermeiden. Bereits verwendete Vektoren werden nicht verworfen, sondern lediglich geleert und wiederverwendet.
-    Zudem wurde beim Design auf die Vermeidung von Kopieroperationen geachtet. Das eBPF-Programm (siehe \ref{eBPF}) arbeitet beispielsweise direkt auf Referenzen 
+    Zudem wurde beim Design auf die Vermeidung von Kopieroperationen geachtet. Das eBPF-Programm (siehe \cref{eBPF}) arbeitet beispielsweise direkt auf Referenzen 
     des Speicherbereichs (\eng{Zero-Copy}), und auch die für das Parsing der IP-Adressen vom Startprogramm zuständige-Komponente nutzt Mechanismen, 
-    um Kopieroperationen zu vermeiden (siehe \ref{jobverwaltung:parser}).
+    um Kopieroperationen zu vermeiden (siehe \cref{jobverwaltung:parser}).
 \end{enumerate}
 
 \section{Implementierung und Funktionsweise der Komponenten}
@@ -141,7 +141,7 @@ In jedem Ordner ist eine \texttt{mod.rs} Datei zu finden, welche hier zugunsten 
 Diese Dateien dienen dazu, ein Verzeichnis als Rust Modul zu definieren und die darin genutzten Dateien für den 
 Compiler sichtbar zu machen. Die \texttt{Cargo.toml} ist für die Verwaltung der externen Bibliotheken zuständig.
  
-Die Zuordnung der Verzeichnisse zu den logischen Komponenten ist im Diagramm \ref{fig:component_diag} zu finden.
+Die Zuordnung der Verzeichnisse zu den logischen Komponenten ist in \cref{fig:component_diag} zu finden.
 Die Verzeichnisse \texttt{xdp-ebpf} und \texttt{xdp-common}, welche dort nicht vorkommen,
 beschreiben das \texttt{eBPF}-Programm, welches Antwortpakete abfängt, auswertet und nur die relevanten Informationen an den
 \eng{User Space} weiterleitet. Das Verzeichnis \texttt{shared} dient lediglich der Steigerung der Übersichtlichkeit. Es enthält
@@ -172,8 +172,8 @@ Die Paketemissionierung umfasst den Prozess der Durchsatzlimitierung, der Paketb
 den dafür benötigten Vorbereitungsschritten.
 
 \subsubsection{\eng{Rate Limiter} (\texttt{rate\_limiter.rs})}
-Wie in der Abbildung \ref{fig:emitting_sequence_diag} zu sehen, führt der \eng{Rate Limiter} (\texttt{rate\_limiter.rs}) dem Namen entsprechend
-die Funktion der Durchsatzlimitierung (Anforderung \hyperref[req:F-08]{/F-08/}) aus. Zuerst nimmt er die zu scannenden IP-Adressen vom \eng{Parser} (\texttt{parser\_std\_in})
+Wie in \cref{fig:emitting_sequence_diag} zu sehen, führt der \eng{Rate Limiter} (\texttt{rate\_limiter.rs}) dem Namen entsprechend
+die Funktion der Durchsatzlimitierung (\cref{req:F-08}) aus. Zuerst nimmt er die zu scannenden IP-Adressen vom \eng{Parser} (\texttt{parser\_std\_in})
 entgegen, bestimmt die Puffergröße anhand der in dieser Sekunde bereits gesendeten Datenmenge (TODO wahlweise kleinen Flowchart), füllt einen Puffer und erstellt 
 für jeden Puffer einen \texttt{tokio} \eng{Task} mit einem \eng{Assembler} (\texttt{assembler.rs}).
 Wenn der \eng{Parser} alle IP-Adressen geparst hat, und der \eng{Rate Limiter} alle verarbeitet hat, wird der gleiche Prozess für die restlichen
@@ -188,8 +188,7 @@ Senderate \eng{Assembler} zu erzeugen, die nicht den gesamten Betriebssystem-\en
 vom \eng{Sender} entgegengenommen werden. Stattdessen wartet jeder \eng{Assembler}, ohne andere Teile der Software zu beeinträchtigen. So wird sicher gestellt,
 dass immer genügend Pakete für den \eng{Sender} bereitstehen. Die Puffergröße eines \eng{Assemblers} wird bei Beginn des Programmes abhängig von der Durchsatzlimitierung
 und der \eng{Batch}-Größe rechnerisch ermittelt 
-% TODO maybe mathematische Formel ergänzen. 
-% oder auf checkcurrent_sent_bytes genauer eingehen
+% TODO maybe mathematische Formel ergänzen oder auf checkcurrent_sent_bytes genauer eingehen
 
 \begin{figure}[htbp]
 	\centering
@@ -202,7 +201,7 @@ und der \eng{Batch}-Größe rechnerisch ermittelt
 \subsubsection{\eng{Assembler} (\texttt{assembler.rs})}
 Die Rolle des \eng{Assemblers} ist recht simpel: Jeder \eng{Assembler} iteriert über die ihm verfügbaren IP-Adressen, füllt \eng{Templates} mit 
 der Ziel-IP-Adresse, dem Ziel-Port, sowie der \eng{Sequence Number} und berechnet die Checksummen des \eng{IP-} und \eng{TCP-Header} neu. 
-Dies dient zur Erfüllung der Anforderung \hyperref[req:F-01]{/F-01/}. Die \eng{Sequence Number} wird wie folgt berechnet:
+Dies dient zur Erfüllung der Anforderung \cref{req:F-01}. Die \eng{Sequence Number} wird wie folgt berechnet:
 \begin{equation}
     \text{ISN} = \text{SipHash}_{K}(\texttt{src\_ip}, \texttt{dst\_ip}, \texttt{src\_port}, \texttt{dst\_port})
 \end{equation} \label{equ:syn_cookie_umsetzung}
@@ -230,10 +229,10 @@ Der \eng{Sender} agiert im Kontrast zu den anderen Subkomponenten in einem eigen
 Betriebssystem-\eng{Thread}. Das hat den Grund, dass er somit die komplette Kapazität des \eng{Threads} 
 alleine ausnutzen kann und bezüglich CPU-Auslastung möglichst wenig mit anderen Prozessen konkurrieren 
 soll, um möglichst performant zu sein. Um diesen Effekt zu verstärken wird außerdem der \texttt{core\_affinity}
-\eng{Crate} genutzt (siehe \ref{tab:crates_all}). Der Sender läuft in einer ständigen Schleife bis die \eng{Channels} zum Erhalt
+\eng{Crate} genutzt (siehe \cref{tab:crates_all}). Der Sender läuft in einer ständigen Schleife bis die \eng{Channels} zum Erhalt
 der Pakete geschlossen werden. Je nach Konfiguration sendet er \eng{Batches} oder einzelne Pakete über die jeweilige 
 Schnittstelle. Die \eng{Socket}-Schnittstelle welche zum Versenden und somit zur
-Erfüllung der Anforderung \hyperref[req:F-02]{/F-02/} verwendet wird, wird beim Start des Senders initialisiert.
+Erfüllung der Anforderung \cref{req:F-02} verwendet wird, wird beim Start des Senders initialisiert.
 
 Der \eng{Sender} kann entweder per \texttt{AF\_PACKET} oder per \texttt{AF\_XDP} senden. 
 Dies wurde so implementiert, da es bei der Schaffung einer realistischen Vergleichsbasis 
@@ -255,7 +254,7 @@ Duplikatsprüfung unterzogen. Anschließend werden die endgültig korrekten Erge
 
 \subsubsection{\eng{Receiver} (\texttt{receiver.rs})}
 In früheren Iterationen des Programmes lief der \eng{Receiver} ebenso wie der \eng{Sender} in einem eigenen Betriebssystem-\eng{Thread}, um möglichst viel Leistung nutzen
-zu können und \eng{Context Switches} zu vermeiden. Die Nutzung von \texttt{pcap} stellte die abstrahierte Netzwerkschnittstelle zur Erfüllung der Anforderung \hyperref[req:F-03]{/F-03/} 
+zu können und \eng{Context Switches} zu vermeiden. Die Nutzung von \texttt{pcap} stellte die abstrahierte Netzwerkschnittstelle zur Erfüllung der Anforderung \cref{req:F-03} 
 dar. Mit \texttt{pcap} muss sich der Programmierer nicht manuell um \eng{Sockets} oder der Kommunikation mit dem Netzwerk-Stack kümmern. Ein weiterer Vorteil ist die einfache Nutzung
 eines \textit{Berkley Packet Filters} (BPF), mit welchem man Pakete an einem frühen Zeitpunkt im Netzwerk-Stack filtern kann. Wenn nun ein Paket empfangen wurde, wurden dessen 
 \eng{Header}-Felder mit \texttt{etherparse}, einer Ethernet-\eng{Parsing}-Bibliothek extrahiert und analog zum aktuellen Vorgehen auf Duplikate geprüft. 
@@ -263,7 +262,7 @@ eines \textit{Berkley Packet Filters} (BPF), mit welchem man Pakete an einem fr�
 Obwohl die Handhabung mit \texttt{pcap} entwicklerfreundlich ist, wurde es letztendlich durch den \texttt{eBPF}-Ansatz ersetzt, da die \eng{Performance} 
 in ersten Tests nicht den Ansprüchen dieses Projektes genügte. Dies ist darauf zurückzuführen, dass \texttt{pcap} intern \eng{Raw-Sockets} mit 
 \texttt{PF\_PACKET}\footnote{Ist funktional gleich zu AF\_PACKET \cite{socket2_linux_manpage}} nutzt \cite{the-tcpdump-group/libpcap_2026}. 
-Die erfordert im Vergleich zu \texttt{AF\_XDP} oder \texttt{eBPF} mehr Schritte im Netzwerk-Stack (siehe \ref{fig:kernel_diag}).
+Die erfordert im Vergleich zu \texttt{AF\_XDP} oder \texttt{eBPF} mehr Schritte im Netzwerk-Stack (siehe \cref{fig:kernel_diag}).
 
 Im aktuellen Ansatz wird der \eng{Receiver} stattdessen in einem \texttt{tokio} \eng{Task} erstellt, um Asynchronität zu gewährleisten. Außerdem dient 
 er nun ausschließlich dem Empfang, der durch das \texttt{eBPF}-Programm über den \texttt{RingBuf} geloggten Daten,
@@ -272,7 +271,7 @@ Da der Zugriff auf den \texttt{RingBuf} über einen Unix-Dateideskriptor erfolgt
 muss dieser in das asynchrone Modell der Anwendung integriert werden.  Dafür bietet \texttt{tokio} eine Lösung, welche es ermöglicht, 
 durchgehend auf neue Pakete zu warten, ohne den ausführenden \eng{Thread} zu blockieren. Anschließend wird die Ziel-IP-Port-Kombination der
 Duplikatprüfung, welche im nächsten Absatz genauer beschrieben wird, unterzogen. Sollte es sich um ein Duplikat handeln, werden die Daten verworfen, ansonsten werden sie in den 
-\eng{Standard Output} geschrieben. Somit wird Anforderung \hyperref[req:F-07]{/F-07/} erfüllt.
+\eng{Standard Output} geschrieben. Somit wird Anforderung \cref{req:F-07} erfüllt.
 
 \subsubsection{\eng{Bucket} (\texttt{bucket.rs})}
 % Absatz neu strukturieren (dashmaps)
@@ -283,10 +282,10 @@ das Leeren einer sehr aufgeblähten \eng{HashMap} verhindert werden. Außerdem w
 Die Suche nach Duplikaten gestaltet sich dabei recht schnell, da \eng{HashMaps} eine Suche der Zeitkomplexität $O(1)$ ermöglichen. Um das \eng{Locking} zu verwalten wurde auf 
 \eng{DashMaps} aus dem \texttt{dashmap} \eng{Crate} zurückgegriffen, welche für den asynchronen Einsatz optimiert wurden.
 
-Die IP-Adresse und Ziel-Port des Zielsystems der validen Antwort wird entsprechend Anforderung \hyperref[req:F-07]{/F-07/} nach der Duplikatsbereinigung in den 
+Die IP-Adresse und Ziel-Port des Zielsystems der validen Antwort wird entsprechend Anforderung \cref{req:F-07} nach der Duplikatsbereinigung in den 
 \eng{Standard Output} geschrieben. Dieser wird vom Mock-Programm (\texttt{mock\_program.rs}) in eine Datei weitergeleitet.
 
-Um die Umsetzung der Anforderung \hyperref[req:F-06]{/F-06/} muss sich nicht explizit gekümmert werden, da der Linux-Netzwerk-Stack bei Erhalt einer Antwort
+Um die Umsetzung der Anforderung \cref{req:F-06} muss sich nicht explizit gekümmert werden, da der Linux-Netzwerk-Stack bei Erhalt einer Antwort
 nach einer gespeicherten Verbindung zu dieser Anfrage sucht, anschließend merkt, dass keine vorhanden ist, da das SYN-Paket über einen \eng{Raw-Socket} verschickt
 wurde und automatisch eine \texttt{RST}-Antwort zurückschickt 
 %[TODO Quelle? Siehe Linux kernel option net.ipv4.tcp_rst_filter].
@@ -297,12 +296,12 @@ von den in dieser Sektion beschriebenen Komponenten aus. Des Weiteren übernehme
 die Weiterleitung der Ziel-IP-Adressen zur \texttt{emitting\_packets}-Komponente.  
 
 \subsubsection{Startprogramm (\texttt{mock\_program.rs})}
-Um die Anforderung \hyperref[req:F-09]{/F-09/} zu erfüllen, nimmt der Scanner die IP-Adressen der Ziele über den \eng{Standard Input} entgegen.
+Um die Anforderung \cref{req:F-09} zu erfüllen, nimmt der Scanner die IP-Adressen der Ziele über den \eng{Standard Input} entgegen.
 Für die Evaluation in dieser Arbeit wurde, um die Vergleichbarkeit herzustellen ein Programm erstellt, welches die Aufgabe des Startens des Scanners, 
 die Erstellung der \eng{Ethernet-Templates}, das Schreiben der Daten in den \eng{Standard Input} und das Lesen aus dem \eng{Standard
 Output} des Scanners übernimmt. Dort werden auch die Konfigurationsparameter eingetragen. 
 
-Die \eng{Ethernet-Templates}, welche das Fundament zur Erfüllung der Anforderung \hyperref[req:F-01]{/F-01/} darstellen,
+Die \eng{Ethernet-Templates}, welche das Fundament zur Erfüllung der Anforderung \cref{req:F-01} darstellen,
 werden mithilfe des \texttt{pnet} \eng{Crates} erstellt, da dieser eine entwicklerfreundliche Schnittstelle dafür bereitstellt. 
 Dort werden alle Parameter für eine reguläres \texttt{TCP-SYN}-Paket bis auf die Ziel-IP, den Ziel-Port und die \eng{Sequence Number} gesetzt. 
 Es wird für jede Quell-IP ein \eng{Template} angelegt, um die Streuung der Paketquellen zur Verschleierung des Scans
@@ -315,20 +314,14 @@ benötigten Informationen gestartet.
 
 % testen ob das wirklich Vorteile bringt, denn es wird oft auf Zero-Copy geachtet und es gibt nicht super viele Threads (maybe eher durch besseres
 % cache handling begründen) <- GANZEN ABSATZ BEI PLATZMANGEL ENTFERNEN
-Eine ressourcensparende Maßnahme ist außerdem die Nutzung eines alternativen \eng{Allocators} \footnote{TODO}, 
-welcher in der \texttt{main.rs}-Datei definiert wird.
-Anstelle des \eng{System Allocators}, welcher ein breites Anwendungsfeld bedient, bietet der \texttt{jemallocator} einen Fokus auf Nebenläufigkeit
-und Skalierbarkeit auf Multiprozessorsystemen \cite{jemalloc}. Das wird dadurch erreicht, dass viermal mehr der sogenannten Arenen als 
-verfügbare Prozessoren erstellt und die \eng{Threads} darunter aufgeteilt werden. \eng{Threads} blockieren sich gegenseitig nur, wenn sie in der gleichen
-Arena sind, was durch die Vielzahl deutlich seltener vorkommt. Außerdem ist die Allokierung von Speicher durch die Nutzung fester \eng{Size Classes}
-für sehr viele kleine Allokationen, wie sie in dem Scanner zum Beispiel bei der Vielzahl an \eng{Batches} von IP-Adressen oder Pakete
-geschieht, effizienter, als die Vorgehensweise des \eng{System Allocators}, welcher die genaue Speichergröße sucht \cite{TODO}.
-
-% TODO am besten aus Projektaufbau entfernen 
-%\subsubsection{Finish-Broadcaster (\texttt{finish\_broadcaster})}
-%Der Finish-Broadcaster dient lediglich dem sauberen Beenden des Programmes. Er ist über Channel mit jeder Userspace Komponente verbunden und
-%sendet am Ende des Programmes ein abschließendes Signal um sicher zu gehen, dass alles geschlossen wird. Dies ist lediglich eine Sicherheitsmaßnahme,
-%da das Programm mit Adminrechten direkt mit dem Kernel kommuniziert.
+%Eine ressourcensparende Maßnahme ist außerdem die Nutzung eines alternativen \eng{Allocators} \footnote{TODO}, 
+%welcher in der \texttt{main.rs}-Datei definiert wird.
+%Anstelle des \eng{System Allocators}, welcher ein breites Anwendungsfeld bedient, bietet der \texttt{jemallocator} einen Fokus auf Nebenläufigkeit
+%und Skalierbarkeit auf Multiprozessorsystemen \cite{jemalloc}. Das wird dadurch erreicht, dass viermal mehr der sogenannten Arenen als 
+%verfügbare Prozessoren erstellt und die \eng{Threads} darunter aufgeteilt werden. \eng{Threads} blockieren sich gegenseitig nur, wenn sie in der gleichen
+%Arena sind, was durch die Vielzahl deutlich seltener vorkommt. Außerdem ist die Allokierung von Speicher durch die Nutzung fester \eng{Size Classes}
+%für sehr viele kleine Allokationen, wie sie in dem Scanner zum Beispiel bei der Vielzahl an \eng{Batches} von IP-Adressen oder Pakete
+%geschieht, effizienter, als die Vorgehensweise des \eng{System Allocators}, welcher die genaue Speichergröße sucht \cite{TODO}.
 
 \subsubsection{\eng{Standard Input Parser} (\texttt{parser\_std\_in})} \label{jobverwaltung:parser}
 Der \eng{Parser} parst zum einen die Konfigurationsparameter aus dem \eng{Standard Input} und zum anderen die Ziel-IP-Adressen. 
@@ -337,7 +330,7 @@ Allokationen und die Daten, falls möglich, mit \eng{Zero-Copy}-Operationen zu v
 Deshalb geschieht das Entgegennehmen, Deserialisieren und Weiterleiten der Adressen in \eng{Batches}.
 Dies minimiert unter anderem die Anzahl der \eng{Context Switches} durch die Reduzierung von \eng{System Calls}. 
 
-Der folgende Codeauszug \ref{lst:parser_binary} zeigt das \eng{Parsing} der Daten welche im Binärformat übertragen wurden. 
+Der folgende \cref{lst:parser_binary} zeigt das \eng{Parsing} der Daten welche im Binärformat übertragen wurden. 
 Um das Verarbeiten unvollständiger IP-Adressen zu vermeiden, wird sich nach jeder Iteration ein \eng{Offset} gemerkt,
 sodass keine Daten verloren gehen, falls ein \eng{Batch} nicht vollständig gefüllt oder sauber am Ende einer Adresse endet. 
 
@@ -381,7 +374,7 @@ loop {
 }
 \end{lstlisting}
 
-Im bereitgestellten Codeauszug wurden explizit die in \ref{tab:parser-optimizations} beschriebenen Performanz-steigernden Maßnahmen umgesetzt.
+Im bereitgestellten Codeauszug wurden explizit die in \cref{tab:parser-optimizations} beschriebenen Performanz-steigernden Maßnahmen umgesetzt.
 
 \begin{table}[htbp]
 \begin{tabularx}{\textwidth}{|c|X|}\hline 
@@ -414,10 +407,10 @@ ermöglicht das unabhängige Handeln der einzelnen Bestandteile, was einerseits 
 und andererseits der \eng{Performance}-Steigerung durch Einsparung von Wartezeiten dient.
 
 \section{\texttt{eBPF}} \label{eBPF}
-Der \texttt{eBPF} dient dem Scanner als Empfangspunkt für eingehende Pakete. Je nachdem in welchem \texttt{XDP}-Modus das Programm ausgeführt wird, agiert dieses direkt 
+Der \texttt{eBPF} dient dem Scanner als Empfangspunkt für eingehende Pakete und realisiert die Anforderung an moderne Kernel-Mechanismen (siehe \cref{req:NF-03}). Je nachdem in welchem \texttt{XDP}-Modus das Programm ausgeführt wird, agiert dieses direkt 
 im Treiber der Netzwerkkarte oder an der ersten Stelle nach Erstellung eines Puffers im Netzwerkstack. Dadurch können die
 Pakete bereits am frühstmöglichen Punkt evaluiert werden, dessen relevante Daten extrahiert und direkt ohne Umweg über den geteilten Speicher der \texttt{eBPF Maps} 
-in das \eng{User Space}-Programm übertragen werden (siehe \ref{fig:kernel_diag}). 
+in das \eng{User Space}-Programm übertragen werden (siehe \cref{fig:kernel_diag}). 
 Dies führt zu einer massiven Ressourceneinsparung und das wiederum zu einer Zeiteinsparung, da etliche
 Zwischenschritte, welche normalerweise durchlaufen werden müssten, um das Paket durch den Netzwerkstack zum \eng{User Space} zu leiten und das Wiederversenden
 ohne Kopieraufwand oder \eng{Context Switches} passiert. Durch die \texttt{XDP\_TX}-Funktion können \texttt{RST}-Pakete direkt im \texttt{eBPF}-Programm erstellt und wieder verschickt werden,
@@ -428,7 +421,7 @@ Um ein \texttt{eBPF}-Programm nutzen zu können wird es in die \texttt{XDP}-\eng
 das Programm akzeptiert. Das Übersetzen des Rust-Codes übernimmt der \texttt{aya} \eng{Crate} und das Anhängen des Programmes passiert in \texttt{main.rs}, indem die 
 durch \texttt{aya} übersetzten Dateien an das genutzte Netzwerkinterface gebunden wird. Auch das Laden der \texttt{eBPF Maps} wird durch \texttt{aya} übernommen und in der \texttt{main.rs}
 über die Rust-Schnittstelle dargestellt. Auch wenn immer noch ein gewisses Maß an Komplexität besteht, erleichtert der \eng{Crate} den Implementierungsaufwand
-dadurch enorm. Die zum Informationsaustausch zwischen \texttt{eBPF}-Programm und \eng{User Space}-Programm genutzten \texttt{eBPF Maps} werden in \ref{tab:ebpf_maps} aufgeführt.
+dadurch enorm. Die zum Informationsaustausch zwischen \texttt{eBPF}-Programm und \eng{User Space}-Programm genutzten \texttt{eBPF Maps} werden in \cref{tab:ebpf_maps} aufgeführt.
 
 \begin{table}[htbp]
 \begin{tabularx}{\textwidth}{|c|c|X|}\hline 
@@ -452,13 +445,13 @@ dadurch enorm. Die zum Informationsaustausch zwischen \texttt{eBPF}-Programm und
 	\label{fig:ebpf_component_diag}
 \end{figure}
 
-Wie in Abbildung \ref{fig:ebpf_component_diag} zu sehen, wird aus allen empfangenen Paketen zuerst der \eng{Ethernet-}, \eng{IP-} und \eng{TCP-Header} extrahiert und 
+Wie in \cref{fig:ebpf_component_diag} zu sehen, wird aus allen empfangenen Paketen zuerst der \eng{Ethernet-}, \eng{IP-} und \eng{TCP-Header} extrahiert und 
 überprüft. Sollte dabei festgestellt werden, dass ein Paket kein valides \texttt{IPv4-SYN-ACK}-Paket darstellt, wird es per \texttt{XDP\_PASS} an den normalen 
 Netzwerkstack des Kernels weitergeleitet. Auch in der anschließenden Prüfung, ob die, da es sich in dem Fall um eine Antwort handelt, Ziel-IP-Adresse
 in der \texttt{WHITELIST\_IPV4} vertreten ist oder die Prüfung des \eng{SYN-Cookies} führt bei Fehlschlag zu einem \texttt{XDP\_PASS}. Das bietet den Vorteil, 
 dass der reguläre Netzwerkverkehr trotz Nutzung des SYN-Scanners unbeeinträchtigt ist. Um den \eng{SYN-Cookie} zu vergleichen wird die Hash-Berechnung 
-mithilfe des \eng{Sip-Hashing}-Algorithmus und des per \texttt{SIPHASH\_KEY} übergegeben Schlüssels durchgeführt. Die vier in \ref{equ:syn_cookie_umsetzung} genannten 
-Werte werden wie in \ref{equ:syn_cookie_auswertung} beschrieben verrechnet und ausgewertet, um die Anforderung \hyperref[req:F-05]{/F-05/} 
+mithilfe des \eng{Sip-Hashing}-Algorithmus und des per \texttt{SIPHASH\_KEY} übergegeben Schlüssels durchgeführt. Die vier in \cref{equ:syn_cookie_umsetzung} genannten 
+Werte werden wie in \cref{equ:syn_cookie_auswertung} beschrieben verrechnet und ausgewertet, um die Anforderung \cref{req:F-05} 
 zu erfüllen.
 
 % TODO möglicherweise mit Quellen belegen müssen und schauen ob teilweise begriffe deutsch sein sollten (wie Memory Allocator)
@@ -502,9 +495,9 @@ So wird beispielsweise im folgenden Beispiel der Speicherbereich des \eng{IP-Hea
     };
 \end{lstlisting}
 
-Dabei ist zu beachten, dass diese Aufrufe von einem \texttt{unsafe}-Block umschlossen sind. Da dieser Speicher vom Linux-Kernel und nicht von der Rust-Runtime 
+Dabei ist zu beachten, dass diese Aufrufe von einem \texttt{unsafe}-Block umschlossen sind. Gemäß \cref{req:NF-04} ist dies zulässig, da der direkte Zugriff auf Kernel-Speicher zwingend notwendig ist und die \texttt{unsafe}-Nutzung auf diese spezifischen Interaktionen beschränkt bleibt. Da dieser Speicher vom Linux-Kernel und nicht von der Rust-Runtime 
 verwaltet wird, kann Rust nicht sicherstellen, dass die Rust-typischen Sicherheitsgarantien gewährleistet sind. Diese Entscheidung wurde bewusst 
-getroffen, da diese Arbeit performance-orientierte Implementierungen behandelt, auch wenn dadurch Sicherheitsgarantien von Rust umgangen werden. 
+getroffen, da diese Arbeit performance-orientierte Implementierungen behandelt. 
 Durch die besonderen Umstände im Kontext eines \texttt{eBPF}-Programmes mit strengem \eng{Verifier} sind die Sicherheitskonzepte kaum umsetzbar, wenn \eng{Zero-Copy}
 angestrebt wird. Dies hängt damit zusammen, dass Rust normalerweise mit einem \texttt{panic!} reagiert, sollte beispielsweise auf einen falschen Index eines
 \eng{Slices} (z.B. \texttt{\&[u8]}) zugegriffen werden. Dies ist im Kernel-Kontext nicht erlaubt. Stattdessen bleibt die Möglichkeit eine Kopie des Speicherbereichs
@@ -518,7 +511,7 @@ Verzeichnis dient lediglich der Definition dieser Struktur und dazugehörigen Ge
 Das anschließende Erstellen und Versenden des \texttt{RST}-Paketes dient einerseits dazu, die Verbindung beim Zielsystem korrekt zu schließen und somit einen 
 normalen TCP-Aushandlungsprozess zu simulieren, andererseits hindert es das Zielsystem am Senden weiterer \texttt{SYN-ACK}-Antworten sowie dem Aufrechterhalten
 eines Verbindungsstatuses. Um die \eng{Performance} zu erhöhen wird auch hier ein \eng{Zero-Copy}-Ansatz gewählt, indem das ursprüngliche Paket durch das Tauschen
-entsprechender Werte und das Neuberechnen einiger Werte umgewandelt wird. Die Veränderungen der Felder sind in Abbildung \ref{fig:rst_packet_creation} beschrieben.
+entsprechender Werte und das Neuberechnen einiger Werte umgewandelt wird. Die Veränderungen der Felder sind in \cref{fig:rst_packet_creation} beschrieben.
 
 % urg_ptr und weitere Elemente vergessen
 \begin{figure}[h]\label{fig:rst_packet_creation}
@@ -646,7 +639,7 @@ entsprechender Werte und das Neuberechnen einiger Werte umgewandelt wird. Die Ve
 
 Das fertige Paket wird anschließend per \texttt{XDP\_TX} direkt in den Puffer der Netzwerkkarte geschrieben und durch die Modifikationen
 als valides \texttt{RST}-Paket an den \eng{Sender} der ursprünglichen \texttt{SYN-ACK}-Antwort zurückgeschickt. Dies dient der Erfüllung der Anforderung 
-\hyperref[req:F-06]{/F-06/}.
+\cref{req:F-06}.
 
 \section{Dokumentation}
 

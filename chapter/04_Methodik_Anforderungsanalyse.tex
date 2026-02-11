@@ -72,10 +72,67 @@ erzielten Durchsatz minimiert werden.
 
  \end{itemize}
 
+% TODO eventuell auf einheitliche Formulierung achten -> bishe manchmal "sollen ..." manchmal "wird ..."
+% TODO formatting 
 \section{Untersuchungsdesign}
-Es wird im Folgenden erklärt, wie \eng{Performance} im Kontext eines \texttt{SYN}-Scanners zu definieren ist. 
-Anschließend werden die in dieser Arbeit zur Evaluation genutzten Metriken erklärt und 
-daraufhin die Anforderungen an die Testumgebung vorgestellt und erläutert.  
+In dieser Sektion wird das methodische Vorgehen zur Validierung der Anforderungen beschrieben. 
+Hierbei wird zwischen der dynamischen Überprüfung durch Tests und der statischen Verifikation durch 
+Inspektion des Designs unterschieden.
+
+\subsection{Nachweismethoden}
+Die Verifikation der in \cref{Anforderungen} definierten Anforderungen erfolgt anhand von zwei Methoden:
+
+\begin{itemize}
+    \item \textbf{Dynamische Tests:} Diese validieren das Laufzeitverhalten und die Performanz des Systems. 
+    Anforderungen wie das korrekte Senden und Empfangen von Paketen 
+    (\cref{req:F-01,req:F-02,req:F-03,req:F-05,req:F-06,req:F-07}) oder die Einhaltung eines 
+    Durchsatzlimits (\cref{req:F-08}) werden durch explizite Testfälle (\eng{Proof of Concept}) und 
+    Evaluationsszenarien nachgewiesen.
+    
+    \item \textbf{Statische Inspektion:} Anforderungen, die sich auf die Architektur, die Wahl der 
+    Programmiersprache oder die Verwendung spezifischer Kernel-Schnittstellen beziehen, 
+    werden durch die Inspektion der Implementierung verifiziert. Der Nachweis für die asynchrone 
+    Architektur (\cref{req:NF-02}), die Nutzung von \texttt{AF\_XDP} und \texttt{eBPF} (\cref{req:NF-03}),
+    die Speichersicherheit durch Rust (\cref{req:NF-04}), die technologische Einschränkung (\cref{req:NF-06}) 
+    oder der generelle Aufbau (\cref{req:F-04,req:F-09}) gilt als erbracht, indem die entsprechenden Konzepte 
+    im Design verankert und im Quellcode umgesetzt wurden (siehe \cref{Implementierung}).
+\end{itemize}
+
+Anschließend wird erklärt, wie \eng{Performance} im Kontext eines \texttt{SYN}-Scanners zu definieren ist und zuletzt werden die, in dieser Arbeit zur Evaluation genutzten, Metriken und Evaluationsszenarien festgelegt.
+
+\subsection{Evaluationstests für den \eng{Proof of Concept}}
+Um die Funktionsweise, beziehungsweise den Scanner nach \cref{Anforderungen} prüfen zu können,
+werden zwei Tests durchgeführt:
+
+\begin{enumerate}
+    \crefalias{enumi}{test}
+    \item \textbf{/T-01/\phantomsection\label{req:T-01} Sende-und Empfangsvalidierung:} Der erste Test dient als Validierung der Anforderungen \cref{req:F-02,req:F-03,req:F-06,req:F-07}. 
+    Es werden Pakete verschickt und von einer anderen, antwortenden Instanz empfangen. Dabei wird untersucht, ob die korrekte Anzahl an SYN-Paketen verschickt, 
+    SYN-ACK-Paketen empfangen und RST-Antworten verschickt wird\footnote{Mit SYN / SYN-ACK / RST ist der gesetzte Wert der TCP-Flags (siehe \cref{tab:TCP-header-fields}) gemeint. }.
+    Zur Validierung werden die Werte der Ausgaben des Scanner-Knotens mit den empfangenen Paketen des Ziel-Knotens und den erwarteten Werten verglichen.
+    \crefalias{enumi}{test}
+    \item \textbf{/T-02/\phantomsection\label{req:T-02} Paketvalidierung:} Im zweiten Test wird die Korrektheit der erstellten Pakete validiert, um die 
+    Umsetzung der Anforderungen \cref{req:F-01,req:F-05} zu überprüfen. Dafür werden Pakete an eine andere, antwortende Instanz verschickt. Diese antwortet nur auf korrekte Pakete und 
+    stoppt das Senden von Antworten, wenn valide RST-Pakete eingehen. In dem Test wird somit untersucht, ob diese Verhaltensweisen auftreten. Zusätzlich wird 
+    mithilfe von externen Tools  
+\end{enumerate}
+
+Die konkrete Umsetzung und genaue Spezifizierung der Tools wird in \cref{Tests} beschrieben. 
+
+\subsection{Evaluationsszenarien} \label{Methodik.Szenarien}
+Um die in \cref{Anforderungen} definierten Anforderungen zu validieren, werden zwei zu untersuchende 
+Szenarien definiert:
+
+\begin{enumerate}
+    \crefalias{enumi}{scenario}
+    \item \textbf{/S-01/ \phantomsection\label{req:S-01} Ermittlung der Performanzgrenzen:} In diesem Szenario wird jegliche künstliche Drosselung aufgehoben. Das Ziel ist es, die maximalen Durchsatzraten zu ermitteln. 
+    Hierbei wird geprüft, wie effizient die Ressourcen unter Volllast genutzt werden, um die nicht-funktionalen Anforderungen \cref{req:NF-01,req:NF-05} zu untersuchen.
+    \crefalias{enumi}{scenario}
+    \item \textbf{/S-02/ \phantomsection\label{req:S-02} Simulation unter realen Parametern und \eng{Features}:} Um die Vergleichbarkeit zu praxisrelevanten Szenarien zu erhöhen, sollen Parameter gewählt werden, die für echte Internetscans 
+    typisch sind. Dies soll die \eng{Performance}-Effizienz unter möglichst realen Bedingungen testen und die funktionale Anforderung \cref{req:F-08} untersuchen. 
+    Dabei wird auch ein Augenmerk auf die Nutzung von \eng{Features} gelegt, die im Kontext
+    eines realen Scans von Nutzen sind. Beispielsweise zur Verschleierung des Scans.
+\end{enumerate}
 
 \subsection{Metriken}
 Der Begriff \enquote{\eng{Performance}-Effizienz} wird
@@ -95,25 +152,9 @@ darstellen:
     \item \textbf{/M-02/\phantomsection\label{req:M-02} CPU-Auslastung:} 
     Die CPU-Auslastung von hochperformanten Netzwerkanwendungen findet maßgeblich im \eng{User-Space}, im \eng{Kernel-Space} und im 
     \eng{SoftIRQ}\footnote{TODO erklären} 
-    statt \cite{TODO}. deshalb sollte alle drei Bereiche betrachtet werden. Gemessen wird die prozentuale Auslastung der CPU-Kerne 
+    statt \cite{TODO}. deshalb sollten alle drei Bereiche betrachtet werden. Gemessen wird die prozentuale Auslastung der CPU-Kerne 
     in Bezug auf diese Metriken.
     \item \textbf{/M-03/\phantomsection\label{req:M-03} RAM-Verbauch:} 
     Der RAM-Verbrauch als zweiter primärer Teil der Ressourcenmetriken wird in Megabyte (MB) angegeben und stellt
 den Anteil des physisch durch den Scanner belegten Arbeitsspeicher dar. 
 \end{itemize}
-
-\subsection{Geplante Testszenarien}
-Um die in Abschnitt \ref{Anforderungen} definierten Anforderungen zu validieren, werden drei Testszenarien definiert:
-
-\begin{enumerate}
-    \item \textbf{/S-01/ \phantomsection\label{req:S-01} Anforderungsvalidierung:} Um die allgemeine Funktionsweise und Stabilität des Scanners zu validieren, soll ein Szenario mit einer künstlich limitierten, aber signifikanten Senderate durchgeführt werden. 
-    Ziel ist der Nachweis, dass der Scanner über einen längeren Zeitraum stabil arbeitet und die funktionalen Anforderungen erfüllt. 
-    Dies dient auch als Referenzmessung, um sicherzustellen, dass funktionale Anforderungen in späteren Tests nicht explizit getestet werden müssen.
-    
-    \item \textbf{/S-02/ \phantomsection\label{req:S-02} Ermittlung der Performanzgrenzen:} In diesem Szenario wird jegliche künstliche Drosselung aufgehoben. Das Ziel ist es, die maximalen Durchsatzraten zu ermitteln. 
-    Hierbei wird geprüft, wie effizient die Ressourcen unter Volllast genutzt werden, um die nicht funktionalen Anforderungen zu untersuchen.
-    
-    \item \textbf{/S-03/ \phantomsection\label{req:S-03} Simulation unter realen Parametern und \eng{Features}:} Um die Vergleichbarkeit zu praxisrelevanten Szenarien zu erhöhen, sollen Parameter gewählt werden, die für echte Internetscans 
-    typisch sind. Dies soll die \eng{Performance}-Effizienz unter möglichst realen Bedingungen testen. Dabei wird auch ein Augenmerk auf die Nutzung von \eng{Features} gelegt, die im Kontext
-    eines realen Scans von Nutzen sind. Beispielsweise zur Verschleierung des Scans.
-\end{enumerate}

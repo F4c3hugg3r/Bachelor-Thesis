@@ -78,17 +78,16 @@ In dieser Untersuchung wurde mit Raten von 40Gbps getestet, wobei jedoch Raten v
 \end{itemize}
 
 \section{Weitere relevante wissenschaftliche Arbeiten} \label{Ch3_Weitere_Arbeiten}
-Der Forschungsstand zu horizontalen Hochleistungs-Netzwerkscannern wurde bereits in den vorherigen Sektionen \ref{Ch3_Historische_Entwicklung} und 
-\ref{Ch3_Alternative_Implementierungsansätze} aufgegriffen. Ergänzend dazu ist noch anzubringen, dass nach bestehenden Ansätzen zur Kernel-Umgehung
+Der Forschungsstand zu horizontalen Hochleistungs-Netzwerkscannern wurde bereits in den vorherigen Sektionen \cref{Ch3_Historische_Entwicklung,Ch3_Alternative_Implementierungsansätze} aufgegriffen. Ergänzend dazu ist noch anzubringen, dass nach bestehenden Ansätzen zur Kernel-Umgehung
 die Arbeit zu \texttt{XDP} (\eng{eXpress Data Path}) einen Paradigmenwechsel darstellt. Zuvor genutzte Umgehungsstrategien waren unter anderem Netmap \cite{Rizzo}, 
 welches bereits 2012 Konzepte wie \eng{Shared Memory}\footnote{Zwischen \eng{User-Space} und \eng{Kernel-Space} geteilter Speicher} 
-und \eng{Zero-Copy} einführte, aber den Netzwerkstack eher ersetzte, statt ihn zu komplementieren, oder \texttt{DPDK} (siehe \ref{Ch3_Alternative_Implementierungsansätze}). 
+und \eng{Zero-Copy} einführte, aber den Netzwerkstack eher ersetzte, statt ihn zu komplementieren, oder \texttt{DPDK} (siehe \cref{Ch3_Alternative_Implementierungsansätze}). 
 Høiland-Jørgensen et al. zeigen, dass mit \texttt{XDP} durch eine programmierbare 
 Paketverarbeitung im Kernel-Treiber eine mit \texttt{DPDK} vergleichbare \eng{Performance} erreicht werden kann, ohne die Integration in das Betriebssystem 
 aufzugeben \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}. 
 
 Zwei Studien vergleichen \texttt{SYN}-Scanner \cite{Pittman_2023} \cite{Taupaani_Harwahyu_2025}, fokussieren sich aber eher auf die Trefferrate, welche in der Arbeit
-nicht priorisiert wird (siehe \ref{Abgrenzung}). Außerdem ist die Gestaltung der Testumgebung bei beiden Arbeiten nicht auf Hochleistungs-Szenarien ausgelegt. 
+nicht priorisiert wird (siehe \cref{Abgrenzung}). Außerdem ist die Gestaltung der Testumgebung bei beiden Arbeiten nicht auf Hochleistungs-Szenarien ausgelegt. 
 
 Die Eignung von Rust für hochperformante Netzwerkprogrammierung wird in mehreren wissenschaftlichen Arbeiten evaluiert. Sagramoni et al.
 schrieben eine Netzwerkbibliothek in Rust und verglichen sie mit der ursprünglichen C-Bibliothek \cite{Sagramoni_Lettieri_Procissi_2024}.
@@ -110,11 +109,11 @@ wird er im Evaluationsteil der Arbeit mit folgenden Scannern verglichen
 
 \begin{itemize}
     \item \textbf{Wissenschaftlicher Standard:} Als primäres Vergleichsobjekt dient ZMap \cite{Durumeric_Wustrow_Halderman}, 
-    da dieser die historische Basis des Internetscannings darstellt (siehe \ref{Ch3_S1_ZMap}). Da ZMap in C geschrieben ist und auf 
+    da dieser die historische Basis des Internetscannings darstellt (siehe \cref{Ch3_S1_ZMap}). Da ZMap in C geschrieben ist und auf 
     klassischen Linux-Schnittstellen basiert, dient er als \eng{Baseline}, um zu untersuchen, ob die im Lösungsansatz gewählte Kombination 
     aus Rust und \texttt{XDP} trotz der Sicherheitsgarantien mit der etablierten Referenz konkurrieren kann.
     \item \textbf{Performance-Referenz:} Ergänzend wird Masscan \cite{Graham_2026} herangezogen. Dieser gilt durch seinen 
-    eigenen \eng{User-Space}-Stack (siehe \ref{Ch3_Alternative_Implementierungsansätze}) als einer der schnellsten verfügbaren Scanner. 
+    eigenen \eng{User-Space}-Stack (siehe \cref{Ch3_Alternative_Implementierungsansätze}) als einer der schnellsten verfügbaren Scanner. 
     Dieser Vergleich ist sinnvoll, um die Effizienz der \texttt{XDP}-basierten Lösung gegenüber einem hochoptimierten C-Ansatz einzuordnen.
 \end{itemize}
 
@@ -145,7 +144,7 @@ dass bei der Einführung und Wartung von \texttt{PF\_RING} für ZMap über die J
 \subsection{Lösungsansatz}
 Die Nutzung von Rust stellt einen vielversprechenden Lösungsansatz dar, 
 da sie Speichersicherheit bereits zur Kompilierzeit garantiert, in der Lage ist, eine mit C vergleichbare Geschwindigkeit zu erreichen, 
-und durch sein striktes Typ- und Besitzmodell ganze Klassen von Fehlern (wie \eng{Data Races}) eliminiert (siehe \ref{rust}). 
+und durch sein striktes Typ- und Besitzmodell ganze Klassen von Fehlern (wie \eng{Data Races}) eliminiert (siehe \cref{rust}). 
 Zusätzlich löst die Nutzung moderner Kernel-Technologien wie \texttt{XDP} und \texttt{eBPF} der Nachteil der fehlenden Kernelintegration 
 für die Hochleistungspaketverarbeitung.
 

@@ -7,20 +7,20 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {5.1}{\ignorespaces Diagramm logischer Komponenten des Scanners (vereinfacht)}}{23}{figure.78}%
-\contentsline {figure}{\numberline {5.2}{\ignorespaces Weg der Pakete durch den Linux Kernel (vereinfacht)}}{25}{figure.79}%
-\contentsline {figure}{\numberline {5.3}{\ignorespaces Ablaufes und Funktionsweise der \texttt {emitting\_packets}-Komponente (vereinfacht)}}{29}{figure.118}%
-\contentsline {figure}{\numberline {5.4}{\ignorespaces Exemplarisches Diagramm zur Funktionsweise der \texttt {capturing\_packets}-Komponente (vereinfacht)}}{32}{figure.123}%
-\contentsline {figure}{\numberline {5.5}{\ignorespaces Funktionsweise der \texttt {scan\_job.rs} Datei (vereinfacht)}}{36}{figure.171}%
-\contentsline {figure}{\numberline {5.6}{\ignorespaces Funktionsweise des \texttt {eBPF}-Programmes (vereinfacht)}}{38}{figure.176}%
-\contentsline {figure}{\numberline {5.7}{\ignorespaces \textit {In-Memory}-Modifikation des \texttt {SYN-ACK}-Paketes zum \texttt {RST}-Paket}}{41}{figure.196}%
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Diagramm logischer Komponenten des Scanners (vereinfacht)}}{25}{figure.83}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Weg der Pakete durch den Linux Kernel (vereinfacht)}}{27}{figure.84}%
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Ablaufes und Funktionsweise der \texttt {emitting\_packets}-Komponente (vereinfacht)}}{32}{figure.123}%
+\contentsline {figure}{\numberline {5.4}{\ignorespaces Exemplarisches Diagramm zur Funktionsweise der \texttt {capturing\_packets}-Komponente (vereinfacht)}}{34}{figure.128}%
+\contentsline {figure}{\numberline {5.5}{\ignorespaces Funktionsweise der \texttt {scan\_job.rs} Datei (vereinfacht)}}{38}{figure.175}%
+\contentsline {figure}{\numberline {5.6}{\ignorespaces Funktionsweise des \texttt {eBPF}-Programmes (vereinfacht)}}{40}{figure.180}%
+\contentsline {figure}{\numberline {5.7}{\ignorespaces \textit {In-Memory}-Modifikation des \texttt {SYN-ACK}-Paketes zum \texttt {RST}-Paket}}{43}{figure.200}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {7.1}{\ignorespaces Effizienz der SYN-Scanner im Benchmark (aktiv)}}{51}{figure.234}%
-\contentsline {figure}{\numberline {7.2}{\ignorespaces CPU-Auslastung der SYN-Scanner im Benchmark (gesamt)}}{51}{figure.235}%
-\contentsline {figure}{\numberline {7.3}{\ignorespaces Effizienz der SYN-Scanner im Benchmark (gesamt)}}{52}{figure.236}%
 \def \@chapapp {\appendixname }
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {A.1}{\ignorespaces Effizienz der SYN-Scanner im Benchmark (aktiv)}}{58}{figure.257}%
+\contentsline {figure}{\numberline {A.2}{\ignorespaces CPU-Auslastung der SYN-Scanner im Benchmark (gesamt)}}{58}{figure.258}%
+\contentsline {figure}{\numberline {A.3}{\ignorespaces Effizienz der SYN-Scanner im Benchmark (gesamt)}}{59}{figure.259}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

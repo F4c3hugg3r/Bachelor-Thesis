@@ -6,39 +6,13 @@
 %%
 %%
 
-% TODO DARAUF EINGEHEN WELCHE ANFORDERUNGEN DURCH WAS GETESTET WERDEN
 \chapter{Testumgebung und Durchführung} \label{Tests}
 % TODO hier Text einfügen
 
 \section{Versuchsaufbau} 
-\subsection{Hardware-Spezifikation}
-Für die Umsetzung des Testes wurden die in \ref{tab:specs_combined} spezifizierten Systeme verwendet. Es wurden keine Veränderungen 
-vorgenommen, die das Betriebssystem von seinem nativen Zustand abbringen, um Anforderung \hyperref[req:NF-06]{/NF-06/} zu genügen. 
-Die einzige Konfigurationsmaßnahme außerhalb des Programmes ist eine softwareseitige Anpassung der Sende-, sowie Empfangsringe der Netzwerkkarte auf 
-das Maximum der bereitgestellten Hardware. Dies ist in diesem Szenario zu empfehlen, da es sich explizit um ein Hochleistungsszenario
-handelt. Das Anpassen der genutzten Puffer dient dem Abfangen von Lastspitzen, indem mehr Pakete vom Netzwerkkartentreiber gepuffert werden können. 
-Für die genutzten Netzwerkkarten bedeutet dies konkret eine Erhöhung der sogenannten Deskriptoren von 256 auf 4096 (siehe \textbf{Anhang \ref{app:ethtool_output}}).
-
-\begin{table}[htbp]
-\centering
-\begin{tabularx}{\textwidth}{|l|X|X|} \hline
-\textbf{Komponente} & \textbf{Scanner-Knoten} & \textbf{Ziel-Knoten} \\ \hline
-\multicolumn{3}{|c|}{\textbf{\textit{Hardware}}} \\ \hline
-CPU & Intel Core i5-11400F \newline (6 Kerne, 2.6 GHz) & Intel Core i5-7500 \newline (4 Kerne, 3.4 GHz) \\ \hline
-RAM & 48 GB DDR4 (2667 MHz) & 8 GB DDR4 (2400 MHz)\\ \hline
-Netzwerkkarte & Intel I210-T1 (Gbit) & Intel I350-T2 (Gbit) \\ \hline
-Verbindung & \multicolumn{2}{c|}{Direktverbindung via CAT 6 S/FTP Kabel (Gbit)} \\ \hline
-\multicolumn{3}{|c|}{\textbf{\textit{Software}}} \\ \hline
-Betriebssystem & Ubuntu 24.04.3 LTS & Ubuntu 24.04.3 LTS \\ \hline
-Kernel & 6.14.0-37-generic & 6.14.0-37-generic \\ \hline
-Treiber & igb (6.14.0-37) & igb (6.14.0-37) \\ \hline
-\end{tabularx}
-\caption{Hardware- und Software-Spezifikationen der Testumgebung im Vergleich}
-\label{tab:specs_combined}
-\end{table}
-
 Um die Performanz des Scanners isoliert von externen Störfaktoren zu evaluieren, wird ein dedizierter 
 Laboraufbau gewählt. Dafür werden zwei Geräte per Ethernet-Kabel direkt miteinander verbunden:
+% TODO statische IP 
 
 \begin{enumerate}
     \item \textbf{Der Scanner-Knoten:} Das System, auf dem der Prototyp ausgeführt wird und welches die Systemmetriken erfasst.
@@ -46,12 +20,16 @@ Laboraufbau gewählt. Dafür werden zwei Geräte per Ethernet-Kabel direkt mitei
 \end{enumerate}
 
 Für die Schaffung einer einheitlichen und reproduzierbare Messgrundlage, welche menschliche Fehler möglichst vermeidet, 
-wurden für die Szenarien (siehe \ref{Methodik}) Python-Programme erstellt, mit
+wurden für die Evaluationsszenarien (siehe \cref{Methodik}) Python-Programme erstellt, mit
 welchen der Ablauf, die Datenerfassung und Datenaufbereitung weitesgehend automatisiert wird. Dieser Ansatz gewährleistet konsistente
 Rahmenbedingungen in Form von einheitlichen Pausenzeiten und der einheitlichen Erfassung der Systemressourcen.
 
-Für das Szenario 1 (siehe \ref{Methodik}) werden die Scanausgaben, sowie die in \ref{tab:tools_validation} beschriebenen Tools genutzt, 
-um zusätzlich zu den Ausgaben des \eng{Dummy-Receiver}-Programmes exakte Validierung anstellen zu können. 
+Um mögliche Fluktuationen in der Grundlast zu vermeiden, wird jeglicher Zugang
+zum Internet geschlossen und kein weiterer Prozess abseits des Benchmarking-Programmes manuell gestartet.
+Jeder Test wird in fünf unabhängigen Iterationen durchgeführt, sodass statistische Ausreißer weniger ins Gewicht fallen. 
+
+Für das \eng{Proof of Concept} (siehe \cref{Methodik}) werden die Scanausgaben, sowie die in \cref{tab:tools_validation} beschriebenen Tools genutzt, 
+um zusätzlich zu den Ausgaben des \eng{Dummy-Receiver}-Programmes eine exakte Validierung anstellen zu können. 
 
 \begin{table}[htbp]
 \centering
@@ -65,20 +43,16 @@ Dies ist essenziell, da der Scanner die Pakete bereits auf Treiberebene verarbei
 Wireshark & Wird zur detaillierten Analyse und Validierung der mit xdpdump aufgezeichneten \texttt{.pcap}-Dateien verwendet. 
 Es ermöglicht die manuelle Überprüfung der Header-Felder, Sequenznummern und Flags auf Konformität mit den Protokollspezifikationen. \\ \hline
 \end{tabularx}
-\caption{Genutzte Tools zur Validierung der funktionalen Anforderungen (siehe \ref{Methodik})}
+\caption{Genutzte Tools zur Validierung der funktionalen Anforderungen (siehe \cref{Methodik})}
 \label{tab:tools_validation}
 \end{table}
 
-In den Szenarien 2 und 3 erfolgt die Messung der Metriken (siehe \ref{Methodik}) mit einer Abtastrate von $10\,\text{Hz}$ (Intervall $t=0,1\,\text{s}$). 
+In den Evaluationsszenarien (\cref{Methodik.Szenarien}) erfolgt die Messung der Metriken (siehe \cref{Methodik}) mit einer Abtastrate von $10\,\text{Hz}$ (Intervall $t=0,1\,\text{s}$). 
 Da die Scanner Subprozesse und mehrere \eng{Threads} starten, wird die gesamte Systemlast gemessen.
 Das \eng{Benchmarking}-Programm verzichtet auf \eng{High-Level}-Tools, um den \eng{Overhead} der Messung selbst 
 zu minimieren und liest die erforderlichen Kernel-Statistiken direkt aus \texttt{procfs}.
 Dies ist ein virtuelles Dateisystem, welches der Anzeige und Änderung von Systemparametern dient \cite{kernel.org/doc/Documentation/filesystems/proc.txt}
 und eine direkte Schnittstelle zu den internen Datenstrukturen des Linux-Kernels bietet. 
-
-Um mögliche Fluktuationen in der Grundlast zu vermeiden, wird jeglicher Zugang
-zum Internet geschlossen und kein weiterer Prozess abseits des Benchmarking-Programmes manuell gestartet.
-Jedes Szenario wird in fünf unabhängigen Iterationen durchgeführt, sodass statistische Ausreißer weniger ins Gewicht fallen. 
 
 \subsection{Aufbau des Ziel-Knotens} \label{versuchsaufbau:ablauf}
 Der Zielknoten besteht ähnlich wie die Empfangslogik des Scanners aus einem mithilfe des \texttt{aya} \eng{Crates} erstellten \texttt{eBPF}-Programmes, welches die eingehenden Pakete mittels
@@ -100,9 +74,35 @@ Es werden folgende Statistiken ermittelt, um die Funktionsweise des Scanners und
     \item \textbf{Gesendete Antworten}
 \end{enumerate}
 
+\subsection{Hardware-Spezifikation}
+Für die Umsetzung des Testes wurden die in \cref{tab:specs_combined} spezifizierten Systeme verwendet. Es wurden keine Veränderungen 
+vorgenommen, die das Betriebssystem von seinem nativen Zustand abbringen, um Anforderung \hyperref[req:NF-06]{/NF-06/} zu genügen. 
+Die einzige Konfigurationsmaßnahme außerhalb des Programmes ist eine softwareseitige Anpassung der Sende-, sowie Empfangsringe der Netzwerkkarte auf 
+das Maximum der bereitgestellten Hardware. Dies ist in diesem Szenario zu empfehlen, da es sich explizit um ein Hochleistungsszenario
+handelt. Das Anpassen der genutzten Puffer dient dem Abfangen von Lastspitzen, indem mehr Pakete vom Netzwerkkartentreiber gepuffert werden können. 
+Für die genutzten Netzwerkkarten bedeutet dies konkret eine Erhöhung der sogenannten Deskriptoren von 256 auf 4096 (siehe \textbf{\cref{app:ethtool_output}}).
+
+\begin{table}[htbp]
+\centering
+\begin{tabularx}{\textwidth}{|l|X|X|} \hline
+\textbf{Komponente} & \textbf{Scanner-Knoten} & \textbf{Ziel-Knoten} \\ \hline
+\multicolumn{3}{|c|}{\textbf{\textit{Hardware}}} \\ \hline
+CPU & Intel Core i5-11400F \newline (6 Kerne, 2.6 GHz) & Intel Core i5-7500 \newline (4 Kerne, 3.4 GHz) \\ \hline
+RAM & 48 GB DDR4 (2667 MHz) & 8 GB DDR4 (2400 MHz)\\ \hline
+Netzwerkkarte & Intel I210-T1 (Gbit) & Intel I350-T2 (Gbit) \\ \hline
+Verbindung & \multicolumn{2}{c|}{Direktverbindung via CAT 6 S/FTP Kabel (Gbit)} \\ \hline
+\multicolumn{3}{|c|}{\textbf{\textit{Software}}} \\ \hline
+Betriebssystem & Ubuntu 24.04.3 LTS & Ubuntu 24.04.3 LTS \\ \hline
+Kernel & 6.14.0-37-generic & 6.14.0-37-generic \\ \hline
+Treiber & igb (6.14.0-37) & igb (6.14.0-37) \\ \hline
+\end{tabularx}
+\caption{Hardware- und Software-Spezifikationen der Testumgebung im Vergleich}
+\label{tab:specs_combined}
+\end{table}
+
 \section{Versuchsablauf}
-Die \texttt{benchmark\_suite.py} \ref{TODO anhang} startet die Scanner-Prozesse nacheinander und misst mit einem parallelen \eng{Monitoring}-\eng{Thread} die
-Systemressourcen in folgenden Phasen:
+Die \texttt{benchmark\_suite.py} \cref{TODO anhang}, welche für Test 1 (\cref{req:T-01}), Evaluationsszenario 1 (\cref{req:S-01}) und Szenario 2 (\cref{req:S-02}) genutzt wird,
+startet die Scanner-Prozesse nacheinander und misst mit einem parallelen \eng{Monitoring}-\eng{Thread} die Systemressourcen in folgenden Phasen:
 
 \begin{enumerate}
     \item \textbf{Ruhezustands-Messung:} Vor den eigentlichen Tests wird über einen Zeitraum von fünf Sekunden der Systemzustand ohne Last gemessen. 
@@ -115,75 +115,55 @@ Systemressourcen in folgenden Phasen:
     wird der Prozess terminiert. Dies ist notwendig, da Masscan sich häufig nicht von alleine beendet.
 \end{enumerate}
 
-In Szenario 1 \cite{TODO} wird zur Aswertung statt der Metriken der \texttt{benchmark\_suite.py} ein eigenes Programm (\texttt{validate\_scanner.py \cite{TODO}})
-genutzt. Für die Messungen zur Validierung der Pakete wird gar kein automatisierter Ablauf genutzt, da aufgrund der Nutzung von Wireshark \ref{tab:tools_validation}
-eine manuelle Auswertung erfolgt.
+In Test 2 (\cref{req:T-02}) werden die Programme und Tools (siehe \cref{tab:tools_validation}) manuell gestartet und ausgewertet. 
 
-\subsection{Datenaufbereitung und Bereinigung} \label{Versuchsablauf.Datenaufbereitung}
-Um die Scanergebnisse zu plausibilisieren wird zusätzlich via Python-Programm \ref{TODO} die Anzahl der ausgegebenen Ergebnisse gezählt. 
-Zur Validierung werden im ersten Szenario die Werte zusätzlich mit den empfangenen Paketen des Ziel-Knotens und den theoretischen Werten verglichen.
-Da keine automatische Synchronisierung der Knoten stattfindet, wird dieses Szenario also manuell durchgeführt.
-
-Die Rohdaten werden nach der Messung mithilfe des Programmes \ref{TODO} statistisch bereinigt und visualisiert. 
+\subsection{Datenaufbereitung und -erhebung} \label{Versuchsablauf.Datenaufbereitung}
+Um die Scanergebnisse zu plausibilisieren wird zusätzlich via validate\_responses.py \cref{TODO anhang} die Anzahl der ausgegebenen Ergebnisse gezählt. 
+Die Rohdaten werden nach der Messung mithilfe des plot\_benchmark\_suite.py \cref{TODO anhang} statistisch bereinigt und visualisiert. 
 Eine einfache Mittelwertbildung über die gesamte Laufzeit alleine ist nicht zielführend, da Start- und Stopp-Phasen die Ergebnisse verzerren würden. 
 Stattdessen werden die Ergebnisse mit folgenden Vorgehensweisen aufbereitet:
 
 \begin{itemize}
     \item \textbf{Isolation der Hochlastphase:} Für die Berechnung des durchschnittlichen Durchsatzes und der Effizienz (\eng{PPS}/CPU Auslastung) 
     werden nur jene Zeitfenster berücksichtigt, in denen der Scanner aktiv sendet.
-    \item \textbf{Netto-Ressourcenberechnung:} Von den gemessenen CPU- und RAM-Werten wird der in Phase (siehe \ref{Methodik}) ermittelte \eng{Baseline}-Wert subtrahiert.
+    \item \textbf{Netto-Ressourcenberechnung:} Von den gemessenen CPU- und RAM-Werten wird der in Phase (siehe \cref{Methodik}) ermittelte \eng{Baseline}-Wert subtrahiert.
     Dies stellt sicher, dass die dargestellten Ergebnisse ausschließlich den Ressourcenbedarf des Scanners abbilden und unabhängig von Hintergrundprozessen des Betriebssystems sind.
 \end{itemize}
 
 Aus den bereinigten Daten werden anschließend Diagramme und Tabellen via Python \texttt{matplotlib} generiert, welche die Daten in anschaulicher Weise darstellen.
 
-\section{Inkompatibilitäten und Limitierungen}
-% TODO hier text schreiben
+In Test 1 (\cref{req:T-01}) wird zur Auswertung \texttt{validate\_scanner.py \cite{TODO}} 
+genutzt, welches die Ausgaben der Scanner bezüglich der Anzahl, Duplikate und der Korrektheit (Ein Paket pro gerader IP-Adresse des genutzten Adressraumes)
+validiert. Außerdem werden die Logs des Ziel-Knotens genutzt. Die Metriken (siehe \cref{Methodik}) und das plot\_benchmark\_suite.py Programm sind hier nicht notwendig.   
 
-\subsection{\eng{Zero-Copy}-Modus}
-Da finanziell bedingt nur die Möglichkeit besteht, die in \ref{tab:specs_combined} angegebene Hardware zu nutzen, muss für die Evaluation eine 
-Einschränkung gemacht werden. Der äußerst effiziente \eng{Zero-Copy}-Modus ist bei der Nutzung von Netzwerkkarten mit dem \texttt{igb}-Treiber eingeschränkt. Aufgrund
-der niedrigen Anzahl an Sende- und Empfangsringen auf der Netzwerkkarte können dem \texttt{XDP}-Programm keine dedizierten \eng{Queues} \footnote{Warteschlangen} zugeteilt werden. Dies hat zur Folge,
-dass sich die Sende-Ringe mit dem Betriebssystem geteilt werden müssen und es somit zu sogenannter \eng{Lock Contention} \footnote{Der Zugriff auf den Ring muss bei jeder Operation 
-ausgehandelt werden, sollten mehrere Parteien ihn gleichzeitig nutzen wollen} kommen kann \cite{igb}. Dies ist sehr Ressourcenaufwändig und führte in den Tests dazu,
-dass der \texttt{AF\_XDP}-\eng{Socket} und das \texttt{eBPF}-Programm um den Zugriff auf einen Sendering konkurrierten, sobald ein \texttt{SYN-ACK}-Paket
-über die gleiche \eng{Queue} einging, über die auch versendet wurde. Dies ist unvermeidbar, da ein \texttt{RST}-Paket per \texttt{XDP\_TX} zwangsweise über die selbe \eng{Queue} verschickt wird, 
-über die es eingeht \cite{TODO} und die Pakete durch den ...TODO... gleichmäßig auf alle \eng{Queues} verteilt werden \cite{TODO}.
-Aufgrund der sehr hohen Senderate und der vergleichbar kleinen Puffer der Netzwerkkartenringe \footnote{Für die Intel I210 und I350 sind es maximal 4096 Deskriptoren (siehe \ref{app:ethtool_output})}
-laufen dieser durch die \eng{lock contention} voll und blockieren das Versenden der \texttt{RST}-Antworten in dieser \eng{Queue}.
+In Test 2 (\cref{req:T-02}) stellen die Ausgaben von xdpdump und der Betrachtung dessen in Wireshark die Testergebnisse dar.
 
-Diese Vermutungen wurden dadurch gestützt, dass bei den Tests unabhängig der gesendeten Menge immer 25\% der \texttt{RST}-Pakete beim Ziel-Knoten fehlten. 
-Da das Scanner-System 4 \eng{Queues} besitzt und eine \eng{Queue} für das Senden genutzt wurde entstehen somit ein Viertel-, beziehungsweise 25\% der Pakete, welche aufgrund der \eng{Lock Contention}
-verloren gingen. Tests mit Beschränkung der \eng{Queue}-Anzahl mithilfe des folgenden Befehls: \texttt{sudo ethtool -L enp6s0 combined x} auf die Anzahl x bestätigten dies auch. 
-Bei einer \eng{Queue} wurden rund 100\% und bei 3 \eng{Queues} rund 33\% der \texttt{RST}-Pakete nicht gesendet. 
+\section{Genutzte Parameter}
+Im Folgenden werden die relevanten zur Umsetzung der Tests genutzten Parameter erläutert. 
 
-Aufgrund dessen wird der \eng{Zero-Copy}-Modus ausschließlich ohne das Senden von \texttt{RST}-Paketen getestet.
+\subsection{\eng{Proof of Concept}}
+Um die Tests zur Validierung (siehe \cref{Methodik}) der Funktionsweise korrekt auszuführen, werden folgende Parameter genutzt:
 
-\subsection{Paketrate}
-Die Durchsatzrate ist durch die genutzten Netzwerkkarten sowie dem LAN-Kabel auf das Limit einer Gigabit-Verbindung beschränkt. Die Tests zur maximalen Durchsatzrate 
-können deshalb nur eingeschränkt durchgeführt werden. Das theoretische Limit einer Gigabit-Leitung liegt nach IEEE 802.3 \cite{IEEE_Standard_for_Ethernet}, 
-bei einer Paketgröße von 64 Byte plus 20 Byte \eng{Overhead}, bei 1,488 Millionen \eng{PPS}. Deshalb wird der Fokus dort verstärkt auf die gemessene Ressourcenauslastung gelegt.
+\begin{enumerate}
+    \item Hierbei wird ein kleiner IP-Adressraum (\texttt{/20}) gescannt.
+    Der Ziel-Knoten wird so konfiguriert, dass er auf alle IP-Adressen welche mit einer geraden Zahl enden antwortet, 
+    um die anschließende Auswertung zu vereinfachen. Dabei wird das Senden von \texttt{RST}-Paketen aktiviert. 
+    \item Im zweiten Test werden nur jeweils 4 Pakete verschickt. Dies genügt, um zu erkennen, ob die Pakete korrekt sind und fördert
+    die Übersichtlichkeit. Um auch die RST-Pakete zu testen, wird dieser Test einmal mit der RST-Funktion und einmal ohne durchgeführt. 
+\end{enumerate}
 
-\section{Umsetzung der Testszenarien} \label{Umsetzung_Testszenarien}
-Im Folgenden wird die technische Umsetzung der in Abschnitt \ref{Methodik} definierten Szenarien beschrieben. 
-Die Szenarien \ref{req:S-02} und \ref{req:S-03} (siehe \ref{Methodik}) werden mit allen drei zu evaluierenden Scanner-Varianten (Rust-XDP-Copy, Rust-XDP-ZeroCopy, Rust-\texttt{AF\_PACKET}) sowie den Vergleichstools 
-(ZMap, Masscan) durchgeführt. Szenario \ref{req:S-01} (siehe \ref{Methodik}) wird nur mit den Rust-Scannern durchgeführt.
+\subsection{Evaluationsszenarien} \label{Umsetzung_Testszenarien}
+Im Folgenden wird die technische Umsetzung der in \cref{Methodik} definierten Evaluationsszenarien beschrieben. 
+Die Szenarien werden mit allen drei zu evaluierenden Scanner-Varianten (Rust-XDP-Copy, Rust-XDP-ZeroCopy, Rust-\texttt{AF\_PACKET}) sowie den Vergleichstools 
+(ZMap, Masscan) durchgeführt. 
 
-In allen Szenarien wurden 64 verschiedene Source-IP-Adressen genutzt, da dies ein essenzieller Faktor zur Erhöhung der Antwortwahrscheinlichkeit 
+Es wurden immer 64 verschiedene Source-IP-Adressen genutzt, da dies ein essenzieller Faktor zur Erhöhung 
+der Antwortwahrscheinlichkeit 
 in realen Hochgeschwindigkeits-Scan-Szenarien darstellt \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024}. Außerdem antwortet der Ziel-Knoten
 auf 20\% der Pakete mit validen SYN-ACK Antworten. Dies ist im Vergleich zur realistischen Antwortrate wenn man den kompletten IPv4-Raum scannt ein 
 sehr hoch angesetzter Wert \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024}, soll aber die Funktionsfähigkeit für Spezialfälle sicherstellen. 
 
-\subsubsection{Szenario \ref{req:S-01} - Anforderungsvalidierung}
-Der erste Test dient als \eng{Proof of Concept} des Scanners. Hierbei wird ein kleiner IP-Adressraum (\texttt{/20}) gescannt.
-Der Ziel-Knoten antwortet auf alle IP-Adressen welche mit einer geraden Zahl enden, um die anschließende Auswertung zu vereinfachen.
-Dabei wird das Senden von \texttt{RST}-Paketen aktiviert. 
-
-Im zweiten manuellen Test, werden nur jeweils 4 Pakete verschickt. Dies genügt, um zu erkennen, ob die Pakete korrekt sind und fördert
-die Übersichtlichkeit. Die Ergebnisse werden mithilfe der in \ref{tab:tools_validation} beschriebenen 
-Netzwerktools ausgewertet.
-
-\subsubsection{Szenario \ref{req:S-02} - Performanzgrenze}
+\subsubsection{\cref{req:S-01} - Performanzgrenze}
 Um die Performance und Effizienz der Scanner zu validieren, werden alle bremsenden Faktoren, die nicht essenziell für das reine Versenden und Empfangen 
 von Paketen sind, deaktiviert.
 \begin{itemize}
@@ -196,8 +176,8 @@ von Paketen sind, deaktiviert.
 %    eingehende Pakete auf diesem Port verworfen werden. 
 \end{itemize}
 
-\subsubsection{Szenario \ref{req:S-03} - Reales Szenario}
-Das dritte Szenario simuliert einen praxisnahen Scan-Vorgang. Hierbei werden Parameter gewählt, die helfen, Sicherheitsmechanismen zu umgehen oder 
+\subsubsection{\cref{req:S-02} - Reale Umstände}
+Das zweite Szenario simuliert einen praxisnahen Scan-Vorgang. Hierbei werden Parameter gewählt, die helfen, Sicherheitsmechanismen zu umgehen oder 
 die Zuordnung von Antworten zu erleichtern.
 \begin{itemize}
     \itemsep 0pt
@@ -206,3 +186,30 @@ die Zuordnung von Antworten zu erleichtern.
     \item \textbf{Quellports:} Es wird ein Bereich von 128 \eng{Source-Ports} ($60000-60127$) verwendet. Dies dient der besseren Lastverteilung auf der Empfängerseite und Verschleierung des Scans.
     \item \textbf{IP-Raum:} Der Zielbereich wird auf ein \texttt{/10}-Netzwerk\footnote{4.194.304 Millionen IP-Adressen} beschränkt, um die Gesamtdauer des Tests in einem praktikablen Rahmen zu halten.
 \end{itemize}
+
+\section{Inkompatibilitäten und Limitierungen}
+% TODO hier text schreiben
+
+\subsection{\eng{Zero-Copy}-Modus}
+Da finanziell bedingt nur die Möglichkeit besteht, die in \cref{tab:specs_combined} angegebene Hardware zu nutzen, muss für die Evaluation eine 
+Einschränkung gemacht werden. Der äußerst effiziente \eng{Zero-Copy}-Modus ist bei der Nutzung von Netzwerkkarten mit dem \texttt{igb}-Treiber eingeschränkt. Aufgrund
+der niedrigen Anzahl an Sende- und Empfangsringen auf der Netzwerkkarte können dem \texttt{XDP}-Programm keine dedizierten \eng{Queues} \footnote{Warteschlangen} zugeteilt werden. Dies hat zur Folge,
+dass sich die Sende-Ringe mit dem Betriebssystem geteilt werden müssen und es somit zu sogenannter \eng{Lock Contention} \footnote{Der Zugriff auf den Ring muss bei jeder Operation 
+ausgehandelt werden, sollten mehrere Parteien ihn gleichzeitig nutzen wollen} kommen kann \cite{igb}. Dies ist sehr Ressourcenaufwändig und führte in den Tests dazu,
+dass der \texttt{AF\_XDP}-\eng{Socket} und das \texttt{eBPF}-Programm um den Zugriff auf einen Sendering konkurrierten, sobald ein \texttt{SYN-ACK}-Paket
+über die gleiche \eng{Queue} einging, über die auch versendet wurde. Dies ist unvermeidbar, da ein \texttt{RST}-Paket per \texttt{XDP\_TX} zwangsweise über dieselbe \eng{Queue} verschickt wird, 
+über die es eingeht \cite{TODO} und die Pakete durch den ...TODO... gleichmäßig auf alle \eng{Queues} verteilt werden \cite{TODO}.
+Aufgrund der sehr hohen Senderate und der vergleichbar kleinen Puffer der Netzwerkkartenringe \footnote{Für die Intel I210 und I350 sind es maximal 4096 Deskriptoren (siehe \cref{app:ethtool_output})}
+laufen dieser durch die \eng{lock contention} voll und blockieren das Versenden der \texttt{RST}-Antworten in dieser \eng{Queue}.
+
+Diese Vermutungen wurden dadurch gestützt, dass bei den Tests bei hoher Last immer 25\% der \texttt{RST}-Pakete beim Ziel-Knoten fehlten. 
+Da das Scanner-System 4 \eng{Queues} besitzt und eine \eng{Queue} für das Senden genutzt wurde entstehen somit ein Viertel-, beziehungsweise 25\% der Pakete, welche aufgrund der \eng{Lock Contention}
+verloren gingen. Tests mit Beschränkung der \eng{Queue}-Anzahl mithilfe des folgenden Befehls: \texttt{sudo ethtool -L enp6s0 combined x} auf die Anzahl x bestätigten dies auch. 
+Bei einer \eng{Queue} wurden rund 100\% und bei 3 \eng{Queues} rund 33\% der \texttt{RST}-Pakete nicht gesendet. 
+
+Aufgrund dessen wird der \eng{Zero-Copy}-Modus für die Evaluationsszenarien (\cref{Methodik.Szenarien}) ausschließlich ohne das Senden von \texttt{RST}-Paketen getestet.
+
+\subsection{Paketrate}
+Die Durchsatzrate ist durch die genutzten Netzwerkkarten sowie dem LAN-Kabel auf das Limit einer Gigabit-Verbindung beschränkt. Die Tests zur maximalen Durchsatzrate 
+können deshalb nur eingeschränkt durchgeführt werden. Das theoretische Limit einer Gigabit-Leitung liegt nach IEEE 802.3 \cite{IEEE_Standard_for_Ethernet}, 
+bei einer Paketgröße von 64 Byte plus 20 Byte \eng{Overhead}, bei 1,488 Millionen \eng{PPS}. Deshalb wird der Fokus dort verstärkt auf die gemessene Ressourcenauslastung gelegt.

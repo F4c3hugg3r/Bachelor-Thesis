@@ -90,6 +90,12 @@
 %Verknüpfungen im Dokument, Links werden durch "hidelink" nicht explizit hervorgehoben
 %\PassOptionsToPackage{hyphens}{url}
 \usepackage[hidelinks,german,hypertexnames=false]{hyperref}
+\usepackage[ngerman]{cleveref}
+% Eigene Bezeichner für cleveref
+\crefname{test}{Evaluationstest}{Evaluationstests}
+\Crefname{test}{Evaluationstest}{Evaluationstests}
+\crefname{scenario}{Evaluationsszenario}{Evaluationsszenarien}
+\Crefname{scenario}{Evaluationsszenario}{Evaluationsszenarien}
 %\hypersetup{breaklinks=true}
 \usepackage{breakurl}
 %\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks% save the current one

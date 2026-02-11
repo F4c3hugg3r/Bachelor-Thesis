@@ -98,7 +98,7 @@ der Aufbau des TCP-Headers und der Mechanismus des Verbindungsaufbaues entscheid
 Da das TCP-Protokoll Daten als \eng{Stream} statt einzeln (\eng{Message}) versendet, 
 wird vorher eine Verbindung in einem sogenannten \eng{Three-Way-Handshake} aufgebaut \cite{Wendzel_2021} S71/72. 
 Bei diesem werden TCP-Pakete mit jeweils unterschiedlichen Werten in den \eng{Control Bits} (\eng{Flags}) 
-des TCP-Headers nach dem in \ref{fig:tcp_handshake} beschriebenen Muster ausgetauscht.
+des TCP-Headers nach dem in \cref{fig:tcp_handshake} beschriebenen Muster ausgetauscht.
 
 \begin{figure}[htbp]
     \centering
@@ -192,7 +192,7 @@ die Verbreitung von Schwachstellen zu untersuchen \cite{Durumeric_Wustrow_Halder
 % bis hier Rechtschreibung kontrolliert
 
 \subsection{SYN-Scanning}
-Für einen \eng{Half-Open} \texttt{SYN}-Scan wie er in dieser Arbeit behandelt wird, sind lediglich die ersten beiden Schritte des in \ref{fig:tcp_handshake} 
+Für einen \eng{Half-Open} \texttt{SYN}-Scan wie er in dieser Arbeit behandelt wird, sind lediglich die ersten beiden Schritte des in \cref{fig:tcp_handshake} 
 dargestellten Verbindungsablaufes relevant. Es wird davon gebraucht gemacht, dass bereits und ausschließlich eine \texttt{SYN/ACK}-Antwort den Port als offen klassifiziert, 
 was den weiteren Verbindungsaufbau irrelevant macht \cite{Lyon_2010}. Um den Scan zu verschleiern und den Verbindungsversuch trotz dessen sauber
 abzuschießen, kann anschließend noch ein Paket, bei welchem die \texttt{RST}-Flag der \eng{Control Bits} gesetzt ist gesendet werden \cite{Lyon_2010}.
@@ -210,7 +210,7 @@ Die Validierung der Antwort erfolgt somit rein mathematisch und benötigt keine 
 Zustandstabelle. Dies erwirkt eine sowohl zeitliche als auch logische Entkopplung von Sende- und Empfangsprozessen,
 was wiederum eine asynchrone Architektur ermöglicht.
 
-Entscheidend für den Scanner sind demnach die in \ref{tab:TCP-header-fields} aufgeführten Header Felder. 
+Entscheidend für den Scanner sind demnach die in \cref{tab:TCP-header-fields} aufgeführten Header Felder. 
 
 \begin{table}[htbp]
 \begin{tabularx}{\textwidth}{|c|X|}\hline 
@@ -231,8 +231,7 @@ geeignet und zum anderen hohe Sende- und Empfangsraten zulassen, während mögli
 Rechenressourcen verbraucht werden. 
 
 \subsection{Linux}
-Linux ist ein \eng{Open-Source}-Betriebssystem-Kernel \cite[S.~1]{Kerrisk_2018}, welcher aufgrund neuartiger Subsysteme (wie beispielsweise \texttt{eBPF} (siehe \ref{Grundlagen.eBPF}) oder
- \texttt{XDP} (siehe \ref{Grundlagen.XDP})), eine programmierbare Paketverarbeitung nahe an der Hardware ermöglicht. 
+Linux ist ein \eng{Open-Source}-Betriebssystem-Kernel \cite[S.~1]{Kerrisk_2018}, welcher aufgrund neuartiger Subsysteme, wie beispielsweise dem in \cref{Grundlagen.eBPF} vorgestellten \texttt{eBPF} oder \texttt{XDP} (\cref{Grundlagen.XDP}), eine programmierbare Paketverarbeitung nahe an der Hardware ermöglicht. 
  Dies ist für die Entwicklung eines Hochleistungsscanners von großem Vorteil.
 
 Ein zentrales Konzept zum Verständnis der \eng{Performance}-Grenzen ist die Unterscheidung 
@@ -285,7 +284,7 @@ Ursprünglich als \textit{Berkeley Packet Filter} (\texttt{BPF}) für Werkzeuge 
 wurde die Technologie erweitert, sodass grundlegend neue Möglichkeiten außerhalb des reinen filtern von Paketen erschlossen wurden. 
 
 \texttt{eBPF} ist eine im Linux-Kernel integrierte virtuelle Maschine (VM), die es erlaubt, benutzerdefinierten 
-\eng{Bytecode} sicher und effizient im \eng{Kernel}-Kontext (siehe \ref{fig:rx_xdp}) auszuführen, ohne Kernel-Module schreiben oder den Kernel 
+\eng{Bytecode} sicher und effizient im \eng{Kernel}-Kontext (siehe \cref{fig:rx_xdp}) auszuführen, ohne Kernel-Module schreiben oder den Kernel 
 neu kompilieren zu müssen \cite{Nishanth_Reddy_Pinnapareddy_2025}. \texttt{eBPF}-Programme werden zur Laufzeit 
 durch einen \eng{JIT-Compiler} (\eng{Just-In-Time}) in native Maschinensprache übersetzt. Ein \eng{Verifier} stellt 
 vor der Ausführung sicher, dass der Code sicher ist \cite{Vieira_Castanho_Pacífico_Santos_Júnior_Vieira_2021}. 
@@ -321,7 +320,7 @@ Linux-Netzwerkarchitekturen durchläuft ein Paket nach dem Empfang durch die Net
 gesamten Netzwerk-Stack. Erst danach erreichen die Daten den \eng{User Space}. Dies erfordert CPU und Speicher-
 aufwendige \eng{Context Switches} (\eng{Context Switches}) zwischen \eng{Kernel-} und \eng{User-Mode}, sowie die Allokation 
 komplexer Metadatenstrukturen (eines \texttt{sk\_buff} \footnote{\eng{Socket Buffer}}) \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}\cite{Zhang_Shu_Chen_Xie_2024}.
-\texttt{XDP} greift vor dieser Allokation ein (siehe Abbildung \ref{fig:rx_xdp}). Tests zeigen, dass \texttt{XDP} auf einem einzelnen CPU-Kern bis zu 
+\texttt{XDP} greift vor dieser Allokation ein (siehe \cref{fig:rx_xdp}). Tests zeigen, dass \texttt{XDP} auf einem einzelnen CPU-Kern bis zu 
 fünfmal mehr Pakete pro Sekunde verarbeiten kann als der Standard Linux-Stack \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}.
 
 % TODO Pfeil vom ebpf Programm muss orange sein
@@ -437,7 +436,7 @@ die \textit{Monomorphisierung} um die Typen oder Größen generischer Strukturen
 bestimmen zu müssen \cite{Cui_Xu_2025}, oder die Bereitstellung eigener Iteratoren, welche 
 die Leistung manuell geschriebener Schleifen oft übertrifft \cite{Cui_Xu_2025}.
 
-Diese Konzepte und vor allem die Prüfung der in \ref{rust.concepts} vorgestellten Konzepte zur 
+Diese Konzepte und vor allem die Prüfung der in \cref{rust.concepts} vorgestellten Konzepte zur 
 Kompilierzeit, führt dazu, dass Rust in Benchmarks gängige Sprachen wie Java, Python,
 oder Go übertrifft und sogar mit der Geschwindigkeit von C konkurriert \cite{Costanzo_Rucci_Naiouf_Giusti_2021}
 \cite{Bugden_Alahmar_2022} \cite{Cui_Xu_2025}.
