@@ -13,16 +13,16 @@ die Leistungsfähigkeit des implementierten Rust-Scanners im Vergleich zu etabli
 definierten Anforderungen zu überprüfen. Abschließend wird ein Ausblick auf mögliche Weiterentwicklungen gegeben.
 
 % TODO add citations to Github repos
+% Um Datei aus dem Repo zu referenzieren: "erschließen sich, unter Anwendung der Auswertungsskripte \texttt{calc_efficiency.py} und \texttt{validate.py} \cite{BachelorRepo}"
+% Möglicherweise Permalink nutzen https://github.com/F4c3hugg3r/SYN-Rust/tree/9b948d456828c4e8160d2835728fde6f43a3b75c/scanner
 \section{Darstellung und Reproduzierbarkeit der Messergebnisse}
 Die Messergebnisse wurden mittels der in \cref{Versuchsablauf.Datenaufbereitung} beschriebenen Skripte aufbereitet und stehen im Anhang zur
 Verfügung. Im Folgenden wird nur auf die ausschlaggebenden Ergebnisse eingegangen. Für jede Messung liegen allerdings umfangreiche
 Daten, sowie Diagramme und Tabellen im bereitgestellten GitHub Repository \cref{TODO} zur Verfügung. Der Ablauf, inklusive Erhebung und
-Ausgaben der Tests lässt sich dort unter logs\_benchmark\_suite.txt und logs\_dummy\_receiver.txt nachvollziehen. 
-Mittels dessen und der README.md Datei können die Benchmarks exakt reproduziert und nachvollzogen werden. 
+Ausgaben der Tests lässt sich dort unter \texttt{logs\_benchmark\_suite.txt} und \texttt{logs\_dummy\_receiver.txt} nachvollziehen. 
+Mittels dessen und der \texttt{README.md}-Datei können die \eng{Benchmarks} exakt reproduziert und nachvollzogen werden. 
 
-\subsection{Ergebnisse Evaluationstests: \eng{Proof of Concept}}
-%Gemäß \cref{Versuchsablauf.Datenaufbereitung} wurden zwei Tests zur Validierung der Implementationen durchgeführt.
-%\subsubsection{Ergebnisse \cref{req:T-01}}
+\subsection{Ergebnisse Evaluationstests: \eng{Proof of Concept}} \label{Ergebnisse.PoC}
 Die Auswertung der Ausgabedateien der Scanner für \cref{req:T-01} zeigt bei allen Varianten für den ersten Test die in 
 \cref{tab:results_s01_quant} gezeigten Ergebnisse. Außerdem ergab die Auswertung, dass es sich exakt um jede gerade IP-Adresse des 
 genutzten IP-Raumes handelte und keine Duplikate oder \eng{False Positives} auftraten. \cref{TODO logs von scannner und von ziel-knoten referenzieren}
@@ -35,39 +35,59 @@ genutzten IP-Raumes handelte und keine Duplikate oder \eng{False Positives} auft
         \hline
 		% ERSTER BLOCK: Scanner sendet -> Ziel empfängt
         & & \textit{Scanner-Knoten} & \textit{Ziel-Knoten} \\ \hline
-        SYN-Pakete & 4096 & 4096 & 4096 \\ \hline
-        RST-Pakete & 2048 & 2048 & 2048 \\ \hline
+        \texttt{SYN}-Pakete & 4096 & 4096 & 4096 \\ \hline
+        \texttt{RST}-Pakete & 2048 & 2048 & 2048 \\ \hline
         % ZWEITER BLOCK: Ziel sendet -> Scanner empfängt
         \hline
         & & \textit{Ziel-Knoten} & \textit{Scanner-Knoten} \\ \hline
-        SYN-ACK-Pakete & 2048 & 2048 & 2048 \\ \hline
+        \texttt{SYN-ACK}-Pakete & 2048 & 2048 & 2048 \\ \hline
     \end{tabularx}
-    \caption{Validierung der Paketmengen in \cref{req:T-01} (Daten teilweise basierend auf \cref{tab:results_s01_quant})}
+    \caption{Validierung der Paketmengen in \cref{req:T-01}}
     \label{tab:results_s01_quant}
 \end{table}
 
-%\subsubsection{Ergebnisse \cref{req:T-02}}
-% TODO nicht "folgenden"
-Beim \cref{req:T-02} legten ebenfalls alle Variationen das gleiche Verhalten an den Tag. Die folgenden Informationen verbildlichen also 
-stellvertretend die Ergebnisse aller Konfigurationen. In der Ausgabe capture\_no\_rst.pcap des xdpdump Tools des Ziel-Knotens ist 
-zu sehen\footnote{Um nur die relevanten Pakete in der Wireshark Ausgabe zu sehen, kann in die Filter-Eingabe \enquote{tcp} eingegebenen werden.}, 
-dass vier valide SYN-Pakete beim Ziel-Knoten angekommen sind und daraufhin vier SYN-ACK-Antworten zurückgeschickt wurden. 
-Im Kontrast dazu ist in capture\_with\_rst.pcap zu sehen, dass bei der aktivierten
-Reset-Funktion auch vier SYN-Pakete eingegangen aber lediglich zwei SYN-Ack-Antworten verschickt und zwei RST-Pakete erhalten wurden. 
-Die Ausgaben von xdpdump im Scanner-Knotens zeigen, dass in xdpdump\_no\_rst.pcap vier valide SYN-ACK-Antworten eingingen und in 
-xdpdump\_with\_rst.pcap lediglich zwei davon. 
+Beim \cref{req:T-02} zeigten ebenfalls alle Variationen das gleiche Verhalten. Die \cref{tab:results_s02_quant} steht also stellvertretend für alle Testabläufe.
+Die Ergebnisse für den Ziel-Knoten sind in den Dateien \texttt{capture\_no\_rst.pcap} und \texttt{capture\_with\_rst.pcap} \cite{TODO} zu finden. Die des
+Scanner-Knotens in \texttt{xdpdump\_no\_rst.pcap} und \texttt{xdpdump\_with\_rst.pcap} \cite{TODO}.
+
+\begin{table}[htbp] 
+    \centering 
+    \begin{tabularx}{\textwidth}{|X|r|r|} 
+    \hline 
+    \textbf{Pakettyp} & \textbf{Gesendet} & \textbf{Empfangen} \\ \hline 
+    \hline
+    \multicolumn{3}{|l|}{\textit{\textbf{Deaktivierte RST-Funktion}}} \\ \hline
+    % Scanner -> Ziel
+    & \textit{Scanner-Knoten} & \textit{Ziel-Knoten} \\ \hline
+    \texttt{SYN}-Pakete & 4 & 4 \\ \hline
+    \texttt{RST}-Pakete & 0 & 0 \\ \hline
+    % Ziel -> Scanner
+    & \textit{Ziel-Knoten} & \textit{Scanner-Knoten} \\ \hline
+    \texttt{SYN-ACK}-Pakete & 4 & 4 \\ \hline
+    \hline
+    
+    \multicolumn{3}{|l|}{\textit{\textbf{Aktivierte RST-Funktion}}} \\ \hline
+    % Scanner -> Ziel
+    & \textit{Scanner-Knoten} & \textit{Ziel-Knoten} \\ \hline
+    \texttt{SYN}-Pakete & 4 & 4 \\ \hline
+    \texttt{RST}-Pakete & 2 & 2 \\ \hline
+    % Ziel -> Scanner
+    & \textit{Ziel-Knoten} & \textit{Scanner-Knoten} \\ \hline
+    \texttt{SYN-ACK}-Pakete & 2 & 2 \\ \hline
+    \end{tabularx}
+    \caption{Vergleich der Paketflüsse mit und ohne RST-Logik in \cref{req:T-02}}
+    \label{tab:results_s02_quant}
+\end{table}
 
 \subsection{Ergebnisse \cref{req:S-01}: Performanzgrenzen} \label{Ergebnisse.S-01}
-% Um Datei aus dem Repo zu referenzieren: "erschließen sich, unter Anwendung der Auswertungsskripte \texttt{calc_efficiency.py} und \texttt{validate.py} \cite{BachelorRepo}"
-% Möglicherweise Permalink nutzen https://github.com/F4c3hugg3r/SYN-Rust/tree/9b948d456828c4e8160d2835728fde6f43a3b75c/scanner
 Gemäß \cref{Versuchsablauf.Datenaufbereitung}
 wird in \textit{Aktiv} (Zeitraum während Paketfluss besteht) und \textit{Gesamt} (Gesamte Laufzeit des Programmes)
 unterschieden. \textit{Netto} beschreibt dabei, dass die Werte von der Grundlast bereinigt wurden.
 Aus den Ergebnissen des Tests zum \cref{req:T-02} erschließen sich nach [TODO Ergebnisse] und [TODO Validierung] die
 in \cref{tab:performance_comparison_rounded} dargestellten Werte. Aufgrund von Einschränkungen durch die eigene \eng{Blacklist} hat ZMap 
 weniger IP-Adressen gescannt, weshalb es weniger Ergebnisse hervorbrachte. Außerdem ist zu beachten, dass sowohl Masscan als auch ZMap 
-keine Option zur Vermeidung des Sendens von RST-Antworten besitzen. Da Masscan die Pakete in dessen eigens gefertigtem Userspace-TCP-Stack
-erstellt und versendet, fließen diese auch in die PPS Metrik ein. Die durch ZMap bedingten RST-Antworten werden automatisch vom Kernel 
+keine Option zur Vermeidung des Sendens von \texttt{RST}-Antworten besitzen. Da Masscan die Pakete in dessen eigens gefertigtem \eng{User-Space}-TCP-Stack
+erstellt und versendet, fließen diese auch in die \eng{PPS}-Metrik ein. Die durch ZMap bedingten \texttt{RST}-Antworten werden automatisch vom Kernel 
 gesendet und nicht in den genutzten Kernel-Logs erfasst. 
 
 \begin{table}[htbp]
@@ -76,36 +96,36 @@ gesendet und nicht in den genutzten Kernel-Logs erfasst.
 \small
 \begin{tabularx}{\textwidth}{|X|r|r|r|r|r|r|r|}\hline 
 \textbf{Scanner} & \textbf{Effizienz} & \textbf{PPS} & \multicolumn{2}{c|}{\textbf{Netto (Aktiv)}} & \multicolumn{2}{c|}{\textbf{Netto (Gesamt)}} & \textbf{Erg.} \\ 
-& \scriptsize{[PPS/\%]} & \scriptsize{(aktiv) [Mio]} & \scriptsize{CPU [\%]} & \scriptsize{RAM [MB]} & \scriptsize{CPU [\%]} & \scriptsize{RAM [MB]} & \scriptsize{[Mio]} \\ \hline
+& \scriptsize{[\eng{PPS}/\%]} & \scriptsize{(aktiv) [Mio]} & \scriptsize{CPU [\%]} & \scriptsize{RAM [MB]} & \scriptsize{CPU [\%]} & \scriptsize{RAM [MB]} & \scriptsize{[Mio]} \\ \hline
 
-SYN-Rust \newline \scriptsize{(XDP, Zero-Copy)} & 
+SYN-Rust \newline \scriptsize{(\texttt{XDP}, \eng{Zero-Copy})} & 
  258513 & 1,48 & 5,7 & 190,8 & 4,7 & 160,7 & 13,42\\ \hline
 
-SYN-Rust \newline \scriptsize{(XDP, Copy)} & 
+SYN-Rust \newline \scriptsize{(\texttt{XDP}, Copy)} & 
 133989 & 1,23 & 9,2 & 237,7 & 7,7 & 203,7 & 13,42 \\ \hline
 
-SYN-Rust \newline \scriptsize{(XDP, Generic)} & 
+SYN-Rust \newline \scriptsize{(\texttt{XDP}, \eng{Generic Mode})} & 
 118852 & 1,23 & 10,4 & 263,8 & 8,7 & 231,8 & 13,42 \\ \hline
 
 Masscan & 
 77717 & 1,05 & 13,5 & 42,6 & 12,3 & 42,1 & 13,42 \\ \hline
 
-SYN-Rust \newline \scriptsize{(AF\_PACKET)} & 
+SYN-Rust \newline \scriptsize{(\texttt{AF\_PACKET})} & 
 74689 & 1,06 & 14,2 & 265,6 & 12,1 & 240,9 & 13,42 \\ \hline
 
 ZMap  & 
 64018 & 1,35 & 21,1 & 13,0 & 17,8 & 12,4 & 10,07 \\ \hline
 \end{tabularx}
-\caption{Vergleich der Performance-Metriken}
+\caption{Vergleich der \eng{Performance}-Metriken}
 \end{table}
 
 Zur Berechnung der in \cref{fig:performance_efficiency_diag} gezeigten Werte zur Effizienz der Scanner während der aktiven Phase, wurde der Durchsatz 
 pro CPU-Prozent in jedem Durchlauf berechnet und daraus anschließend der Durchschnittswert gebildet. 
 
-\subsection{Ergebnisse \cref{req:S-02}: Reales Szenario}
-Die Ergebnisse mancher Variationen des SYN-Rust in \cref{tab:performance_comparison_low_rate_efficiency} weichen bezüglich der PPS Metrik 
-von der Durchsatzlimitierung  (500.000 PPS) ab. Dies ist in diesem Szenario explizit erwünscht. Die Daten der Tabelleneinträge
-sind in [TODO Ergebnisse] und [TODO Validierung] zu finden. Für ZMap gilt bezüglich der RST-Antworten das gleiche wie auch in \cref{Ergebnisse.S-01}.  
+\subsection{Ergebnisse \cref{req:S-02}: Reales Szenario} \label{Ergebnisse.S-02}
+Die Ergebnisse mancher Variationen des SYN-Rust in \cref{tab:performance_comparison_low_rate_efficiency} weichen bezüglich der \eng{PPS}-Metrik 
+von der Durchsatzlimitierung  (500.000 \eng{PPS}) ab. Dies ist in diesem Szenario explizit erwünscht. Die Daten der Tabelleneinträge
+sind in [TODO Ergebnisse] und [TODO Validierung] zu finden. Für ZMap gilt bezüglich der \texttt{RST}-Antworten das gleiche wie auch in \cref{Ergebnisse.S-01}.  
 
 \begin{table}[htbp]
 \label{tab:performance_comparison_low_rate_efficiency}
@@ -113,114 +133,135 @@ sind in [TODO Ergebnisse] und [TODO Validierung] zu finden. Für ZMap gilt bezü
 \small
 \begin{tabularx}{\textwidth}{|X|r|r|r|r|r|r|r|}\hline 
 \textbf{Scanner} & \textbf{Effizienz} & \textbf{PPS} & \multicolumn{2}{c|}{\textbf{Netto (Aktiv)}} & \multicolumn{2}{c|}{\textbf{Netto (Gesamt)}} & \textbf{Erg.} \\ 
- & \scriptsize{[PPS/\%]} & \scriptsize{(aktiv) [Mio]} & \scriptsize{CPU [\%]} & \scriptsize{RAM [MB]} & \scriptsize{CPU [\%]} & \scriptsize{RAM [MB]} & \scriptsize{[Mio]} \\ \hline
+ & \scriptsize{[\eng{PPS}/\%]} & \scriptsize{(aktiv) [Mio]} & \scriptsize{CPU [\%]} & \scriptsize{RAM [MB]} & \scriptsize{CPU [\%]} & \scriptsize{RAM [MB]} & \scriptsize{[Mio]} \\ \hline
 
-SYN-Rust \newline \scriptsize{(XDP, Zero-Copy,}  \newline \scriptsize{kein RST)} & 
+SYN-Rust \newline \scriptsize{(\texttt{XDP}, \eng{Zero-Copy},}  \newline \scriptsize{kein \texttt{RST})} & 
  184353 & 0,51 & 2,8 & 82,2 & 1,8 & 62,0 & 1,64 \\ \hline
 
-SYN-Rust \newline \scriptsize{(XDP, Copy)} & 
+SYN-Rust \newline \scriptsize{(\texttt{XDP}, Copy)} & 
  106118 & 0,60 & 5,7 & 77,0 & 3,6 & 57,7 & 1,64 \\ \hline
 
-SYN-Rust \newline \scriptsize{(XDP, Generic)} & 
+SYN-Rust \newline \scriptsize{(\texttt{XDP}, \eng{Generic Mode})} & 
  103087 & 0,60 & 5,9 & 96,9 & 3,7 & 74,7 & 1,64 \\ \hline
 
-SYN-Rust \newline \scriptsize{(AF\_PACKET)} & 
+SYN-Rust \newline \scriptsize{(\texttt{AF\_PACKET})} & 
  99871 & 0,61 & 6,1 & 112,2 & 3,8 & 88,3 & 1,64 \\ \hline
 
-Masscan \newline \scriptsize{(ohne Deduplizierung,}  \newline \scriptsize{RST automatisch)} & 
+Masscan \newline \scriptsize{(ohne Deduplizierung,}  \newline \scriptsize{\texttt{RST} automatisch)} & 
  75534 & 0,50 & 6,6 & 34,8 & 4,8 & 31,4 & 1,68 \\ \hline
 
-ZMap  \newline \scriptsize{(RST automatisch)} & 
+ZMap  \newline \scriptsize{(\texttt{RST} automatisch)} & 
  13272 & 0,49 & 37,2 & 62,3 & 26,5 & 58,3 & 1,68 \\ \hline
 
 \end{tabularx}
-\caption{Vergleich der Performance-Metriken (Unter Berücksichtigung der RST-Pakete)}
+\caption{Vergleich der \eng{Performance}-Metriken (Unter Berücksichtigung der \texttt{RST}-Pakete)}
 \end{table}
 
 \section{Diskussion der Ergebnisse}
-% TODO Text einfügen 
+Nachfolgend werden die Messergebnisse interpretiert und in den Kontext der Forschungsziele gesetzt. 
+Die Diskussion gliedert sich in die funktionale Validierung des \eng{Proof of Concept} sowie die detaillierte 
+Analyse der Performanzeffizienz im Vergleich zu bestehenden Lösungen.
 
 \subsection{\eng{Proof of Concept}}
 Die Ergebnisse zu den Evaluationstests zeigen, dass der Implementierte Scanner in allen Varianten die erwartete Verhaltensweise umsetzt.
 Entsprechend den Ergebnissen zu \cref{req:T-01} wurden alle Pakete gesendet und exakt die erwarteten Pakete empfangen. 
 Es gab keinen Paketverlust oder anderweitige Fehler. 
 
-Dabei ist anzumerken, dass in log\_dummy\_receiver.txt zu sehen ist, dass mehr als die
-geplante Menge an Paketen empfangen wurde, diese aber keine korrekten SYN-Pakete darstellen. Dies ist gewollt und passiert, da der Scanner in den 
-Modi, in welchen diese Ausgabe zu beobachten ist, am Ende des Scans ein paar invalide Pakete über den Socket verschickt. Bei vorherigen Tests wurden 
+Dabei ist anzumerken, dass in \texttt{log\_dummy\_receiver.txt} zu sehen ist, dass mehr als die
+geplante Menge an Paketen empfangen wurde, diese aber keine korrekten \texttt{SYN}-Pakete darstellen. Dies ist gewollt und passiert, da der Scanner in den 
+Modi, in welchen diese Ausgabe zu beobachten ist, am Ende des Scans ein paar invalide Pakete über den \eng{Socket} verschickt. Bei vorherigen Tests wurden 
 manche Pakete nicht mehr versendet, weshalb diese Maßnahme notwendig ist um sicherzustellen, dass alle regulären Pakete versendet werden.  
 
-Die Ergebnisse zu \cref{req:T-02} zeigen, dass die SYN-Pakete korrekt gebaut werden, da Netcat und Wireshark sie als valide anerkennen. Auch die 
-RST-Pakete werden korrekt gebaut, was daran zu erkennen ist, dass der Netcat Server nach dem Erhalt dieser Pakete aufhört, weitere SYN-ACK-Antworten 
-zu senden, was im Beispiel ohne RST-Antwort nicht passiert. 
+Die Ergebnisse zu \cref{req:T-02} zeigen, dass die \texttt{SYN}-Pakete korrekt gebaut werden, da Netcat und Wireshark sie als valide anerkennen. Auch die 
+\texttt{RST}-Pakete werden korrekt gebaut, was daran zu erkennen ist, dass der Netcat Server nach dem Erhalt dieser Pakete aufhört, weitere \texttt{SYN-ACK}-Antworten 
+zu senden, was im Beispiel ohne \texttt{RST}-Antwort nicht passiert. 
 
-\subsection{Performance-Effizienz}
-\subsubsection{\cref{req:S-01}}
-Gemäß der Ergebnisse des \cref{req:S-01} ist eine deutliche Steigerung der Performance-Effizienz gegenüber den bewährten Vergleichsobjekten ZMap und Masscan zu erkennen.
-Dies unterstreicht die Effizienz der genutzten Kernel-Umgehungs-Technologien AF\_XDP und eBPF. Besonders im Zero-Copy Modus sind deutliche Effizienzgewinne in Form einer
+\subsection{\eng{Performance}-Effizienz}
+In diesem Abschnitt erfolgt die Auswertung der erhobenen Systemmetriken. Der Fokus liegt auf der Gegenüberstellung von 
+Durchsatz und Ressourceneffizienz unter Volllast sowie in realitätsnahen Szenarien, um die Vorteile der genutzten Technologien 
+zu quantifizieren.
+
+\subsubsection{\cref{req:S-01}} \label{Auswertung:Ergebnisse:S-01}
+Gemäß der Ergebnisse des \cref{req:S-01} ist eine deutliche Steigerung der \eng{Performance}-Effizienz gegenüber den bewährten Vergleichsobjekten ZMap und Masscan zu erkennen.
+Dies unterstreicht die Effizienz der genutzten \eng{Kernel-Bypass}-Technologien \texttt{AF\_XDP} und \texttt{eBPF}. Besonders im \eng{Zero-Copy}-Modus sind deutliche Effizienzgewinne in Form einer
 Vervielfachung der Pakete pro CPU um den Faktor 3 und mehr im Vergleich zu Masscan, sowie dem Faktor 4 und mehr im Vergleich zu ZMap zu erkennen. Doch die Konfigurationen
-des Rust Scanners (SYN-Rust), welche den Copy Mode des AF\_XDP Sockets nutzen, zeigen eine deutliche Effizienzsteigerung zu den externen Vergleichsobjekten. Die AF\_PACKET
-Konfiguration von SYN-Rust ist bezüglich der Effizienz und Gesamtlast der CPU mit Masscan vergleichbar. Das ist ein sehr interessantes Ergebnis, da Masscan zum einen 
-einen eigenen TCP-Stack implementiert, um den Kernel zu umgehen und zum anderen die Nutzung von AF\_PACKET durch die Nutzung eines gemeinsamen Speicherbereiches von 
-User- und Kernel-Space drastisch optimiert hat. Die SYN-Rust Variante implementiert keine dieser Optimierungen.
+des Rust Scanners (SYN-Rust), welche den \eng{Copy Mode} des \texttt{AF\_XDP}-\eng{Sockets} nutzen, zeigen eine deutliche Effizienzsteigerung zu den externen Vergleichsobjekten. Die \texttt{AF\_PACKET}-Konfiguration
+von SYN-Rust ist bezüglich der Effizienz und Gesamtlast der CPU mit Masscan vergleichbar. Das ist ein sehr interessantes Ergebnis, da Masscan zum einen 
+einen eigenen TCP-Stack implementiert, um den Kernel zu umgehen und zum anderen die Nutzung von \texttt{AF\_PACKET} durch die Nutzung eines gemeinsamen Speicherbereiches von 
+\eng{User Space} und \eng{Kernel Space} drastisch optimiert hat. Die SYN-Rust Variante implementiert keine dieser Optimierungen.
 
-Der einzige Punkt, in welchem die Vergleichsobjekte klar vorne liegen, ist der RAM Verbrauch. ZMap und Masscan zeigen nahezu keinen RAM-Verbrauch während die Rust-Implementierungen
-einen moderaten Verbrauch haben, der im Zuge heutiger Kapazitäten fast zu vernachlässigen ist und selbst auf älteren Systemen keinen großen Nachteil mit sich bringt.
+Der einzige Punkt, in welchem die Vergleichsobjekte vorne liegen, ist der RAM Verbrauch (siehe \ref{fig:ram_efficiency_diag}). ZMap und Masscan zeigen nahezu 
+keinen RAM-Verbrauch während die Rust-Implementierungen einen moderaten Verbrauch haben, der im Zuge heutiger Kapazitäten gering ausfällt. %TODO warum? (siehe Copilot chat pc)
 
-Anhand von Abbildung \ref{fig:cpu_efficiency_diag}, welche die Verteilung der CPU Gesamtlast auf die verschiedenen Bereiche User-Space, Kernel-Space und SoftIRQ verbildlicht, lässt 
-sich gut erkennen, dass ZMap und SYN-Rust (AF\_PACKET), welche die gleiche Adressfamilie nutzen einen ähnlichen Verbrauch im Kernel-Space haben und Scanner die XDP nutzen einen deutlich
-niedrigeren. Dies zeigt die Effizienz der Kernel-Umgehung von AF\_XDP. Die Scanner, die XDP im Native-Mode nutzen, zeigen eine verminderte SoftIRQ Auslastung, da Schritte wie das Erstellen
-eines sk\_bufs vermieden werden. An der User-Space Auslastung ist zu erkennen, dass die Maßnahmen zur Effizienzsteigerung (vgl. \ref{Implementierung}) wirkungsvoll sind. Auch die fehlende
-Notwendigkeit, empfangene Pakete im User-Space parsen zu müssen, da es schon im eBPF Programm getan wird, spielt dem zu.
+Anhand von Abbildung \ref{fig:cpu_efficiency_diag}, welche die Verteilung der CPU Gesamtlast auf die verschiedenen Bereiche \eng{User Space}, \eng{Kernel Space} und \eng{SoftIRQ} verbildlicht, lässt 
+sich gut erkennen, dass ZMap und SYN-Rust (\texttt{AF\_PACKET}), welche die gleiche Adressfamilie nutzen einen ähnlichen Verbrauch im \eng{Kernel Space} haben und Scanner die \texttt{XDP} nutzen einen deutlich
+niedrigeren. Dies zeigt die Effizienz der \eng{Kernel-Bypass}-Technologie von \texttt{AF\_XDP}. Die Scanner, die \texttt{XDP} im \eng{Native Mode} nutzen, zeigen eine verminderte \eng{SoftIRQ}-Auslastung, da Schritte wie das Erstellen
+eines \texttt{sk\_bufs} vermieden werden. An der \eng{User-Space}-Auslastung ist zu erkennen, dass die Maßnahmen zur Effizienzsteigerung (vgl. \ref{Implementierung}) wirkungsvoll sind. Auch die fehlende
+Notwendigkeit, empfangene Pakete im \eng{User Space} parsen zu müssen, da es schon im \texttt{eBPF}-Programm getan wird, spielt dem zu.
 
 Um die Ergebnisse in das korrekte Verhältnis zu setzen ist es wichtig, die Unterschiede zwischen der Funktionsweise aufzuzeigen. Im Gegensatz zu ZMap und Masscan hat SYN-Rust
 die zu scannenden IP-Adressen nicht randomisiert. Dies erfordert für jede Ziel-IP-Adresse eine einmalige Berechnung.
 ZMap nutzt beispielsweise eine zyklische multiplikative Gruppe über einem endlichen Körper, welche eine Multiplikation und eine Modulo Operation erfordert.
 Allerdings ist der Ressourcenverbrauch dieser Operationen sehr gering und trägt vermutlich keinen größeren Beitrag zur gesamten CPU 
-Auslastung des Programmes bei. Die Ausgabe der Ergebnisse von Masscan erfolgte in eine txt-Datei statt in eine CSV-Datei wie bei den anderen Scannern.
+Auslastung des Programmes bei. Die Ausgabe der Ergebnisse von Masscan erfolgte in eine \texttt{.txt}-Datei statt in eine \texttt{CSV}-Datei wie bei den anderen Scannern.
 
-\subsubsection{\cref{req:S-02}}
-In \cref{req:S-02} schlossen die SYN-Rust Varianten die XDP nutzen schlechter ab als zuvor. Dies ist einerseits den aktivierten Features wie der Duplikationserkennung und dem Senden von 
-RST-Antworten zuzuschreiben. Andererseits könnte es auch bedeuten, dass diese bei einer niedrigeren Durchsatzlimitierung die Ressourcen ein wenig schlechter verwalten. Trotzdem
-sind die Ergebnisse sehr gut und die RAM-Auslastung skaliert den Ergebnissen nach gut bei gedrosselten Raten. Interessant ist, dass die AF\_PACKET Konfiguration bezüglich der
-Effizienz hier deutlich besser als im Performancetest abschneidet. Dies ist mit einer verminderten Lock Contention zu erklären, da in diesem Szenario nur einer statt 
-zwei Sende-Threads benötigt wurde. Auch interessant ist, dass ZMap hier deutlich schlechter abschneidet und mehr als dreizehnmal mehr CPU bei nur etwas geringerem RAM Verbrauch 
-als die Zero-Copy Lösung aufzeigt. Selbst die AF\_PACKET Lösung, welche die ineffizienteste der SYN-Rust Konfigurationen ist, verbraucht sechsmal weniger CPU. 
+\subsubsection{\cref{req:S-02}} \label{Auswertung:Ergebnisse:S-02}
+In \cref{req:S-02} schlossen die SYN-Rust Varianten die \texttt{XDP} nutzen schlechter ab als zuvor. Dies ist einerseits den aktivierten \eng{Features} wie der Duplikationserkennung und dem Senden von 
+\texttt{RST}-Antworten zuzuschreiben. Andererseits könnte es auch bedeuten, dass diese bei einer niedrigeren Durchsatzlimitierung die Ressourcen ein wenig schlechter verwalten. Trotzdem
+sind die Ergebnisse sehr gut und die RAM-Auslastung skaliert den Ergebnissen nach gut bei gedrosselten Raten. Interessant ist, dass die \texttt{AF\_PACKET}-Konfiguration bezüglich der
+Effizienz hier deutlich besser als im Performancetest abschneidet. Dies ist mit einer verminderten \eng{Lock Contention} zu erklären, da in diesem Szenario nur einer statt 
+zwei \eng{Sender}-\eng{Threads} benötigt wurde. Auch interessant ist, dass ZMap hier deutlich schlechter abschneidet und mehr als dreizehnmal mehr CPU bei nur etwas geringerem RAM Verbrauch 
+als die \eng{Zero-Copy}-Lösung aufzeigt. Selbst die \texttt{AF\_PACKET}-Lösung, welche die ineffizienteste der SYN-Rust Konfigurationen ist, verbraucht sechsmal weniger CPU. 
 
-Die Ergebnisse der Effizienz von ZMap und Masscan sind in diesem Fall nur bedingt mit den restlichen (bis auf Zero-Copy) vergleichbar, da SYN-Rust eine andere Designphilosophie  
-verfolgt und die gesendeten RST-Pakete nicht in das Durchsatzlimit mit einbezieht. Außerdem gibt es bei Masscan keine Option zur Deduplizierung der Antworten, was die Vergleichbarkeit
+Die Ergebnisse der Effizienz von ZMap und Masscan sind in diesem Fall nur bedingt mit den restlichen (bis auf \eng{Zero-Copy}) vergleichbar, da SYN-Rust eine andere Designphilosophie  
+verfolgt und die gesendeten \texttt{RST}-Pakete nicht in das Durchsatzlimit mit einbezieht. Außerdem gibt es bei Masscan keine Option zur Deduplizierung der Antworten, was die Vergleichbarkeit
 weiter schmälert.
 
-\subsection{Abgleich mit den Anforderungen}
-Abschließend erfolgt eine Bewertung der in \cref{Anforderungen} definierten Anforderungen. Die Überprüfung basiert auf den Ergebnissen der dynamischen Tests (\cref{Tests}) sowie der statischen Inspektion der Implementierung (\cref{Implementierung}).
+In \cref{tab:performance_comparison_low_rate_efficiency} ist zu sehen, dass die Rust Scanner mit 1,64 Mio Ergebnissen rund 2,4\,\% weniger Ergebnisse als die erwartete Menge erkannt haben.
 
-% Überarbeiten, manche Sachen stimmen nicht ganz und dann ab in den Anhang lol
+$2^28 (IP-Adressraum) * 0,2 (Antwortrate) * 2 (Ports) = ~1.68 Mio$ % TODO in idiomatische Formel umwandeln
+
+In der \texttt{ethtool.csv}-Datei \cite{TODO} ist zu sehen, dass die Gesamtanzahl der versendeten Pakete (inklusive \texttt{RST}-Pakete) sowohl beim Zähler der Netzwerkkarte, als auch beim Zähler 
+von \texttt{procfs}, um rund 2,3\,\% vom erwarteten Wert (10.066.330) abweicht. Aufgrund dieser Informationen und da dieses Problem in keinem anderen der Tests auftrat, ist es wahrscheinlich, 
+dass es sich um einen Bug im \eng{User-Space}-Programm handelt, welcher vermutlich bei der Durchsatzlimitierung auftritt und möglicherweise im Zusammenhang mit der Konfiguration mehrerer
+Ziel-Ports steht.
+
+\subsection{Abgleich mit den Anforderungen}
+Abschließend erfolgt in \cref{tab:requirements_compliance} eine Bewertung der in \cref{Anforderungen} definierten Anforderungen. Die Überprüfung basiert auf den Ergebnissen der dynamischen Tests (\cref{Tests}) 
+sowie der statischen Inspektion der Implementierung (\cref{Implementierung}).
+
 \begin{table}[htbp]
     \centering
     \small
-    \begin{tabularx}{\textwidth}{|l|X|l|X|}
+    \begin{threeparttable}
+    \begin{tabularx}{\textwidth}{|>{\hsize=0.9\hsize}X|l|>{\hsize=1.1\hsize}X|}
     \hline
-    \textbf{ID} & \textbf{Anforderung} & \textbf{Status} & \textbf{Nachweis / Anmerkung} \\ \hline
+    \textbf{Anforderung} & \textbf{Status} & \textbf{Nachweis / Anmerkung} \\ \hline
     \hline
-    \multicolumn{4}{|c|}{\textit{Funktionale Anforderungen}} \\ \hline
-    \cref{req:F-01} & Konstruktion valider Pakete & Erfüllt & Durch \cref{req:T-02} und Netcat-Validierung (siehe \cref{tab:tools_validation}) bestätigt. \\ \hline
-    \cref{req:F-02} & Senden von Paketen & Erfüllt & In allen Evaluationsszenarien erfolgreich (siehe \cref{tab:results_s01_quant}). \\ \hline
-    \cref{req:F-03} & Empfang von Paketen & Erfüllt & Erfolgreicher Empfang in \cref{req:T-01} nachgewiesen. \\ \hline
-    \cref{req:F-04} & Zustandsloses Scanning & Erfüllt & Konzept der \texttt{capturing\_packets}-Komponente (\cref{Implementierung}). \\ \hline
-    \cref{req:F-05} & Validierung von Antworten & Erfüllt & Korrekte Filterung von SYN-ACKs in \cref{req:T-01}. \\ \hline
-    \cref{req:F-06} & Schließen der Verbindung & Teilw. erfüllt & Funktional in \cref{req:T-01} bestätigt; Paketverluste im Zero-Copy-Modus unter Volllast durch Hardwarelimitierung. \\ \hline
-    \cref{req:F-07} & Endausgabe & Erfüllt & Validiert durch Parsing-Skripte (\cref{Versuchsablauf.Datenaufbereitung}). \\ \hline
-    \cref{req:F-08} & Durchsatzlimitierung & Erfüllt & Einhaltung der 500 kPPS Grenze in \cref{req:S-02} (\cref{tab:performance_comparison_low_rate_efficiency}). \\ \hline
-    \cref{req:F-09} & Eingabeschnittstelle & Erfüllt & Implementierung des Stdin-Parsers (\cref{jobverwaltung:parser}). \\ \hline
+    \multicolumn{3}{|c|}{\textit{Funktionale Anforderungen} (siehe \cref{Anforderungen.fa})} \\ \hline
+    Konstruktion valider Pakete & Erfüllt & Durch \cref{Ergebnisse.PoC} und Netcat-Validierung (siehe \cref{tab:tools_validation}) bestätigt \\ \hline
+    Senden von Paketen & Erfüllt & Durch \cref{Ergebnisse.PoC} nachgewiesen \\ \hline
+    Empfang von Paketen & Erfüllt & Erfolgreicher Empfang in \cref{Ergebnisse.PoC} nachgewiesen \\ \hline
+    Zustandsloses Scanning & Erfüllt & Durch den Aufbau der logischen Komponenten erfüllt (\cref{impl:logische_komponenten}) \\ \hline
+    Validierung von Antworten & Teilw. erfüllt & \texttt{SYN-ACKs} \cref{Ergebnisse.PoC} korrekt erkannt; Simulation mit falschen Paketen nicht getestet \\ \hline
+    Schließen der Verbindung & Erfüllt & Funktional in \cref{Ergebnisse.PoC} bestätigt; Paketverluste im \eng{Zero-Copy}-Modus unter Volllast durch Hardwarelimitierung \\ \hline
+    Endausgabe & Erfüllt & Validiert durch \eng{Parsing}-Skripte (\cref{Ergebnisse.PoC}) \\ \hline
+    Durchsatzlimitierung & Teilw. erfüllt & Abweichung der Limitierung um weniger als 3\,\% in \cref{Ergebnisse.S-02} nachgewiesen; Gesamtzahl der Pakete hat sich allerdings um circa 2,3--2,4\,\% verringert\\ \hline
+    Eingabeschnittstelle & Erfüllt & Implementierung des \eng{Standard Input Parser} (\cref{jobverwaltung:parser}) \\ \hline
     \hline
-    \multicolumn{4}{|c|}{\textit{Nicht-funktionale Anforderungen}} \\ \hline
-    \cref{req:NF-01} & Maximierung Durchsatz & Erfüllt & 1,48 Mpps in \cref{req:S-01} überschreitet Gigabit-Limit (\cref{Ergebnisse.S-01}). \\ \hline
-    \cref{req:NF-02} & Asynchrone Architektur & Erfüllt & Umsetzung mittels \texttt{tokio}-Runtime (\cref{Implementierung}). \\ \hline
-    \cref{req:NF-03} & Moderne Kernel-Mechanismen & Erfüllt & Nutzung von XDP und eBPF (\cref{eBPF}). \\ \hline
-    \cref{req:NF-04} & Speichersicherheit & Erfüllt & Rust-Sicherheitsgarantien gewahrt; \texttt{unsafe} nur gekapselt genutzt. \\ \hline
-    \cref{req:NF-05} & Minimale Ressourcennutzung & Erfüllt & Höchste CPU-Effizienz im Vergleich (siehe \cref{fig:performance_efficiency_diag}). \\ \hline
-    \cref{req:NF-06} & Technologische Einschränkung & Erfüllt & Keine proprietären Treiber verwendet. \\ \hline
+    \multicolumn{3}{|c|}{\textit{Nicht-funktionale Anforderungen} (siehe \cref{Anforderungen.nfa})} \\ \hline
+    Maximierung Durchsatz & Erfüllt & 1,48\,\eng{Mpps} (\cref{Ergebnisse.S-01}) bei einer Paketgröße von 60 Byte entspricht rund 95\,\% des theoretischen Limits einer Gigabit-Leitung \\ \hline
+    Asynchrone Architektur & Erfüllt & Umsetzung mittels \texttt{tokio}-Runtime (vgl. \cref{Implementierung}) \\ \hline
+    Moderne Kernel-Mechanismen & Erfüllt & Nutzung von \texttt{XDP} und \texttt{eBPF} (vgl. \cref{Implementierung}) \\ \hline
+    Speichersicherheit & Erfüllt & \eng{eBPF-Verifier} und externe Bibliotheken\tnote{1}
+    als Sicherheitsmaßnahme für \texttt{unsafe}-Operationen verwendet (vgl. \cref{Implementierung}) \\ \hline
+    Minimale Ressourcennutzung & Erfüllt & Höchste \eng{Performance}-Effizienz im Vergleich (siehe \cref{fig:performance_efficiency_diag}) bei moderater RAM Nutzung \\ \hline
+    Technologische Einschränkung & Erfüllt & Keine proprietären Treiber verwendet (vgl. \cref{Implementierung}) \\ \hline
     \end{tabularx}
+    \begin{tablenotes}
+    \item[1] Diese kapseln \texttt{unsafe}-Blöcke intern häufig sicher \cite{RustBelt}, sodass Sicherheitsniveau erhalten bleibt.
+    \end{tablenotes}
+    \end{threeparttable}
     \caption{Zusammenfassender Abgleich der Anforderungen}
     \label{tab:requirements_compliance}
 \end{table}
@@ -229,11 +270,44 @@ Abschließend erfolgt eine Bewertung der in \cref{Anforderungen} definierten Anf
 
 \subsection{Wirtschaftliche und betriebliche Implikationen}
 
-
-\section{Ausblick}
-% Was konnte in dieser Arbeit nicht umgesetzt werden?
-% Ideen: IPv6 Support, Distributed Scanning, GUI, Output-Module (JSON/Redis).
-
 \section{Fazit}
 % Zusammenfassung der gesamten Arbeit.
 % Forschungsfrage beantworten: Ist Rust/eBPF geeignet für High-Speed Scanning?
+
+\section{Ausblick}
+Die vorliegende Arbeit hat die Eignung von Rust für die Entwicklung hochperformanter \texttt{SYN}-Scanner unter Nutzung moderner Kernel-Mechanismen demonstriert. 
+Aus den gewonnenen Erkenntnissen und den methodischen Grenzen dieser Untersuchung leiten sich diverse Anknüpfungspunkte für zukünftige Forschungsarbeiten ab:
+
+\begin{itemize}
+    \item \textbf{Detaillierte Stabilitätsanalyse:} In \cref{Auswertung:Ergebnisse:S-02} wurden unter den genutzten Konfigurationen 
+    Anomalien in der Funktionsweise beobachtet. Eine tiefergehende Analyse dieser Randfälle ist notwendig, um die Ursache 
+    zu isolieren und die Robustheit des Systems für den Dauerbetrieb sicherzustellen.
+    
+    \item \textbf{Evaluation der Scangenauigkeit:} Der Fokus dieser Arbeit lag primär auf der Maximierung der \eng{Performance}-Effizienz. 
+    Für den produktiven Einsatz ist jedoch auch die Scangenauigkeit von kritischer 
+    Bedeutung, wie bereits in verwandten Arbeiten dargelegt wurde \cite{TODO}. Eine weiterführende Untersuchung sollte analysieren, 
+    wie sich die hier genutzte \eng{Kernel-Bypass}-Technik auf die Zuverlässigkeit der Paketerkennung unter variierenden Netzwerklasten auswirkt.
+    
+    \item \textbf{Hardwareanpassung und -Skalierung:} Wie in \cref{Inkompatibilitäten} diskutiert, stellte der verwendete 
+    Netzwerkkartentreiber sowie die Hardwarelimitierung auf 1 Gbit/s (\cref{tab:specs_combined}) einen Flaschenhals dar 
+    (vgl. \cref{Ergebnisse.S-01}). Zukünftige Evaluationen sollten den Scanner in 10 Gbit/s-Umgebungen oder noch schnelleren 
+    testen. Dabei wäre besonders interessant herauszufinden, bei welcher Durchsatzrate das Programm an seine Grenzen stößt und
+    welche Faktoren letztendlich den Flaschenhals bilden.
+    
+    \item \textbf{Validierung im Realen Anwendungsfall:} Da die Evaluation in einer kontrollierten Laborumgebung stattfand, 
+    steht ein Test in einem realen Szenario, wie dem Scan großer Teile des öffentlichen IPv4-Adressraums, noch aus. Dies 
+    würde Rückschlüsse auf das Verhalten des Scanners bei realer Latenz, Paketverlusten und Sicherheitsmechanismen 
+    (z.B. \eng{Firewalls}) von Zielsystemen ermöglichen.
+
+    \item \textbf{Erweiterung auf IPv6:} Diese Arbeit beschränkt sich auf den IPv4-Adressraum. Da der IPv6-Adressraum durch 
+    die zunehmende Verbreitung an Relevanz gewinnt \cite{TODO}, stellt die Anpassung des Scanners, sodass auch dieses Protokoll 
+    unterstützt wird, einen logischen nächsten Schritt dar. Hierbei wäre insbesondere zu untersuchen, wie sich die vergrößerten 
+    Adressstrukturen (128 Bit) auf die Speicherverwaltung im \texttt{eBPF}-Programm, der veränderte \eng{Parsing}-Aufwand aufgrund von \eng{Next Header}-Verkettungen und die damit verbundene Rechenlast für \eng{Hashing}-Operationen auf den Durchsatz, sowie die Effizienz im Kontext
+    eines \texttt{SYN}-Scanners auswirken.
+
+    \item \textbf{Adaption auf weitere Scan-Methoden:} Die in dieser Arbeit entwickelte Architektur zur Kernelumgehung ist 
+    prinzipiell protokollunabhängig. Zukünftige Forschungen könnten untersuchen, wie effizient sich das System auf alternative 
+    verbindungslose Szenarien (z.B. UDP-Scans) oder andere TCP-Scan-Techniken (z.B. \texttt{ACK}- oder \texttt{FIN}-Scans) übertragen lässt. 
+    Dies würde validieren, ob die \eng{High-Performance}-Vorteile von Rust und \eng{Kernel-Bypass}-Ansatz auch bei veränderter logischer Komplexität
+    Bestand haben.
+\end{itemize}

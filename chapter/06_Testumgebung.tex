@@ -7,12 +7,14 @@
 %%
 
 \chapter{Testumgebung und Durchführung} \label{Tests}
-% TODO hier Text einfügen
+Dieses Kapitel beschreibt den konzipierten Versuchsaufbau sowie die methodische Durchführung der Tests. 
+Es werden die Hardware- und Softwareumgebung spezifiziert, der Ablauf der Benchmarks dargelegt und bekannte 
+Limitierungen der Testumgebung erörtert.
 
-\section{Versuchsaufbau} 
-Um die Performanz des Scanners isoliert von externen Störfaktoren zu evaluieren, wird ein dedizierter 
-Laboraufbau gewählt. Dafür werden zwei Geräte per Ethernet-Kabel direkt miteinander verbunden:
-% TODO statische IP 
+\section{Versuchsaufbau} Um die Performanz des Scanners isoliert von externen Störfaktoren zu evaluieren, wird ein dedizierter 
+Laboraufbau gewählt. Dafür werden zwei Geräte per Ethernet-Kabel direkt miteinander verbunden. Außerdem wird auf beiden eine 
+statische IP-Adresse eingerichtet, sodass eine stabile Netzwerkschicht-Verbindung besteht und eine konstante 
+Zieladresse für die Reproduzierbarkeit der Messungen definiert ist.
 
 \begin{enumerate}
     \item \textbf{Der Scanner-Knoten:} Das System, auf dem der Prototyp ausgeführt wird und welches die Systemmetriken erfasst.
@@ -37,11 +39,11 @@ um zusätzlich zu den Ausgaben des \eng{Dummy-Receiver}-Programmes eine exakte V
 \textbf{Tool} & \textbf{Nutzung} \\ \hline
 Netcat & Fungiert als Referenz-Responder zur Validierung der Paketstruktur. Da Netcat nur auf standardkonforme Anfragen reagiert, 
 bestätigt eine erfolgreiche Kommunikation die korrekte Konstruktion der vom Scanner gesendeten Pakete. \\ \hline
-xdpdump & Dient der Erfassung des Netzwerkverkehrs direkt an der XDP-Ebene. 
+\texttt{xdpdump} & Dient der Erfassung des Netzwerkverkehrs direkt an der \texttt{XDP}-Ebene. 
 Dies ist essenziell, da der Scanner die Pakete bereits auf Treiberebene verarbeitet und diese somit für herkömmliche 
-\eng{Sniffer} (die auf dem Socket-Layer arbeiten) teilweise nicht sichtbar wären. \\ \hline
-Wireshark & Wird zur detaillierten Analyse und Validierung der mit xdpdump aufgezeichneten \texttt{.pcap}-Dateien verwendet. 
-Es ermöglicht die manuelle Überprüfung der Header-Felder, Sequenznummern und Flags auf Konformität mit den Protokollspezifikationen. \\ \hline
+\eng{Sniffer} (die auf dem \eng{Socket}-\eng{Layer} arbeiten) teilweise nicht sichtbar wären. \\ \hline
+Wireshark & Wird zur detaillierten Analyse und Validierung der mit \texttt{xdpdump} aufgezeichneten \texttt{.pcap}-Dateien verwendet. 
+Es ermöglicht die manuelle Überprüfung der \eng{Header}-Felder, \eng{Sequence Numbers} und \eng{Flags} auf Konformität mit den Protokollspezifikationen. \\ \hline
 \end{tabularx}
 \caption{Genutzte Tools zur Validierung der funktionalen Anforderungen (siehe \cref{Methodik})}
 \label{tab:tools_validation}
@@ -55,8 +57,8 @@ Dies ist ein virtuelles Dateisystem, welches der Anzeige und Änderung von Syste
 und eine direkte Schnittstelle zu den internen Datenstrukturen des Linux-Kernels bietet. 
 
 \subsection{Aufbau des Ziel-Knotens} \label{versuchsaufbau:ablauf}
-Der Zielknoten besteht ähnlich wie die Empfangslogik des Scanners aus einem mithilfe des \texttt{aya} \eng{Crates} erstellten \texttt{eBPF}-Programmes, welches die eingehenden Pakete mittels
-Zeiger-Operationen parst, anschließend validiert und bei Erfolg ein Antwortpaket via \texttt{XDP\_TX} versendet. Allerdings wird hier geprüft, ob es sich um ein \texttt{IPv4-SYN}-Paket
+Der Zielknoten besteht ähnlich wie die Empfangslogik des Scanners aus einem mithilfe des \texttt{aya}-\eng{Crates} erstellten \texttt{eBPF}-Programmes, welches die eingehenden Pakete mittels
+Zeiger-Operationen parst, anschließend validiert und bei Erfolg ein Antwortpaket via \texttt{XDP\_TX} versendet. Allerdings wird hier geprüft, ob es sich um ein \texttt{IPv4}-\texttt{SYN}-Paket
 handelt und anschließend eine darauf zugeschnittene \texttt{SYN-ACK}-Antwort statt eines \texttt{RST}-Paketes versendet. Die Modifikation passiert auch hier am selben Paket ohne dieses
 zuvor zu kopieren. 
 
@@ -78,7 +80,7 @@ Es werden folgende Statistiken ermittelt, um die Funktionsweise des Scanners und
 Für die Umsetzung des Testes wurden die in \cref{tab:specs_combined} spezifizierten Systeme verwendet. Es wurden keine Veränderungen 
 vorgenommen, die das Betriebssystem von seinem nativen Zustand abbringen, um Anforderung \hyperref[req:NF-06]{/NF-06/} zu genügen. 
 Die einzige Konfigurationsmaßnahme außerhalb des Programmes ist eine softwareseitige Anpassung der Sende-, sowie Empfangsringe der Netzwerkkarte auf 
-das Maximum der bereitgestellten Hardware. Dies ist in diesem Szenario zu empfehlen, da es sich explizit um ein Hochleistungsszenario
+das Maximum der bereitgestellten Hardware. Dies ist in diesem Szenario zu empfehlen, da es sich explizit um ein \eng{High-Performance}-Szenario
 handelt. Das Anpassen der genutzten Puffer dient dem Abfangen von Lastspitzen, indem mehr Pakete vom Netzwerkkartentreiber gepuffert werden können. 
 Für die genutzten Netzwerkkarten bedeutet dies konkret eine Erhöhung der sogenannten Deskriptoren von 256 auf 4096 (siehe \textbf{\cref{app:ethtool_output}}).
 
@@ -109,7 +111,7 @@ startet die Scanner-Prozesse nacheinander und misst mit einem parallelen \eng{Mo
     Dieser Durchschnittswert dient als Referenzpunkt, um das Grundrauschen des Betriebssystems später herausrechnen zu können.
     \item \textbf{Aufzeichnung:} Die Aufzeichnung der Metriken beginnt eine Sekunde vor dem Prozessstart, 
     um das Anlaufverhalten und Initialisierungsspitzen der Scanner vollständig zu erfassen.
-    \item \textbf{Aktive Phase:} Während der Scanner läuft, überwacht ein \eng{Watchdog}-Algorithmus\footnote{TODO} den ausgehenden Datenverkehr. 
+    \item \textbf{Aktive Phase:} Während der Scanner läuft, werden regelmäßig Daten ausgelesen und persistiert.
     Der Scanner gilt als aktiv, sobald die Senderate 100 \eng{PPS} überschreitet und als inaktiv, sobald die Grenze wieder unterschritten wird.
     \item \textbf{Externes Beenden:} Sollte die Rate nach dem Start für mehr als sieben Sekunden unter einen Schwellenwert von 100 \eng{PPS} fallen, 
     wird der Prozess terminiert. Dies ist notwendig, da Masscan sich häufig nicht von alleine beendet.
@@ -118,8 +120,8 @@ startet die Scanner-Prozesse nacheinander und misst mit einem parallelen \eng{Mo
 In Test 2 (\cref{req:T-02}) werden die Programme und Tools (siehe \cref{tab:tools_validation}) manuell gestartet und ausgewertet. 
 
 \subsection{Datenaufbereitung und -erhebung} \label{Versuchsablauf.Datenaufbereitung}
-Um die Scanergebnisse zu plausibilisieren wird zusätzlich via validate\_responses.py \cref{TODO anhang} die Anzahl der ausgegebenen Ergebnisse gezählt. 
-Die Rohdaten werden nach der Messung mithilfe des plot\_benchmark\_suite.py \cref{TODO anhang} statistisch bereinigt und visualisiert. 
+Um die Scanergebnisse zu plausibilisieren wird zusätzlich via \texttt{validate\_responses.py} \cref{TODO anhang} die Anzahl der ausgegebenen Ergebnisse gezählt. 
+Die Rohdaten werden nach der Messung mithilfe des \texttt{plot\_benchmark\_suite.py} \cref{TODO anhang} statistisch bereinigt und visualisiert. 
 Eine einfache Mittelwertbildung über die gesamte Laufzeit alleine ist nicht zielführend, da Start- und Stopp-Phasen die Ergebnisse verzerren würden. 
 Stattdessen werden die Ergebnisse mit folgenden Vorgehensweisen aufbereitet:
 
@@ -132,11 +134,11 @@ Stattdessen werden die Ergebnisse mit folgenden Vorgehensweisen aufbereitet:
 
 Aus den bereinigten Daten werden anschließend Diagramme und Tabellen via Python \texttt{matplotlib} generiert, welche die Daten in anschaulicher Weise darstellen.
 
-In Test 1 (\cref{req:T-01}) wird zur Auswertung \texttt{validate\_scanner.py \cite{TODO}} 
-genutzt, welches die Ausgaben der Scanner bezüglich der Anzahl, Duplikate und der Korrektheit (Ein Paket pro gerader IP-Adresse des genutzten Adressraumes)
-validiert. Außerdem werden die Logs des Ziel-Knotens genutzt. Die Metriken (siehe \cref{Methodik}) und das plot\_benchmark\_suite.py Programm sind hier nicht notwendig.   
+In Test 1 (\cref{req:T-01}) wird zur Auswertung \texttt{validate\_scanner.py} \cite{TODO} 
+genutzt, welches die Ausgaben der Scanner bezüglich der Anzahl, Duplikate und der Korrektheit (Ein Paket pro gerader \eng{IP}-Adresse des genutzten Adressraumes)
+validiert. Außerdem werden die \eng{Logs} des Ziel-Knotens genutzt. Die Metriken (siehe \cref{Methodik}) und das \texttt{plot\_benchmark\_suite.py}-Programm sind hier nicht notwendig.   
 
-In Test 2 (\cref{req:T-02}) stellen die Ausgaben von xdpdump und der Betrachtung dessen in Wireshark die Testergebnisse dar.
+In Test 2 (\cref{req:T-02}) stellen die Ausgaben von \texttt{xdpdump} und der Betrachtung dessen in Wireshark die Testergebnisse dar.
 
 \section{Genutzte Parameter}
 Im Folgenden werden die relevanten zur Umsetzung der Tests genutzten Parameter erläutert. 
@@ -145,71 +147,82 @@ Im Folgenden werden die relevanten zur Umsetzung der Tests genutzten Parameter e
 Um die Tests zur Validierung (siehe \cref{Methodik}) der Funktionsweise korrekt auszuführen, werden folgende Parameter genutzt:
 
 \begin{enumerate}
-    \item Hierbei wird ein kleiner IP-Adressraum (\texttt{/20}) gescannt.
-    Der Ziel-Knoten wird so konfiguriert, dass er auf alle IP-Adressen welche mit einer geraden Zahl enden antwortet, 
+    \item Hierbei wird ein kleiner \eng{IP}-Adressraum (\texttt{/20}) gescannt.
+    Der Ziel-Knoten wird so konfiguriert, dass er auf alle \eng{IP}-Adressen welche mit einer geraden Zahl enden antwortet, 
     um die anschließende Auswertung zu vereinfachen. Dabei wird das Senden von \texttt{RST}-Paketen aktiviert. 
     \item Im zweiten Test werden nur jeweils 4 Pakete verschickt. Dies genügt, um zu erkennen, ob die Pakete korrekt sind und fördert
-    die Übersichtlichkeit. Um auch die RST-Pakete zu testen, wird dieser Test einmal mit der RST-Funktion und einmal ohne durchgeführt. 
+    die Übersichtlichkeit. Um auch die \texttt{RST}-Pakete zu testen, wird dieser Test einmal mit der \texttt{RST}-Funktion und einmal ohne durchgeführt. 
 \end{enumerate}
 
 \subsection{Evaluationsszenarien} \label{Umsetzung_Testszenarien}
 Im Folgenden wird die technische Umsetzung der in \cref{Methodik} definierten Evaluationsszenarien beschrieben. 
-Die Szenarien werden mit allen drei zu evaluierenden Scanner-Varianten (Rust-XDP-Copy, Rust-XDP-ZeroCopy, Rust-\texttt{AF\_PACKET}) sowie den Vergleichstools 
+Die Szenarien werden mit allen drei zu evaluierenden Scanner-Varianten (Rust-\texttt{XDP-Copy}, Rust-\texttt{XDP-ZeroCopy}, Rust-\texttt{AF\_PACKET}) sowie den Vergleichstools 
 (ZMap, Masscan) durchgeführt. 
 
-Es wurden immer 64 verschiedene Source-IP-Adressen genutzt, da dies ein essenzieller Faktor zur Erhöhung 
+Es wurden immer 64 verschiedene \eng{Source}-\eng{IP}-Adressen genutzt, da dies ein essenzieller Faktor zur Erhöhung 
 der Antwortwahrscheinlichkeit 
-in realen Hochgeschwindigkeits-Scan-Szenarien darstellt \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024}. Außerdem antwortet der Ziel-Knoten
-auf 20\% der Pakete mit validen SYN-ACK Antworten. Dies ist im Vergleich zur realistischen Antwortrate wenn man den kompletten IPv4-Raum scannt ein 
+in realen \eng{High-Speed}-Scan-Szenarien darstellt \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024}. Außerdem antwortet der Ziel-Knoten
+auf 20\,\% der Pakete mit validen \texttt{SYN-ACK}-Antworten. Dies ist im Vergleich zur realistischen Antwortrate wenn man den kompletten \eng{IPv4}-Raum scannt ein 
 sehr hoch angesetzter Wert \cite{Durumeric_Adrian_Stephens_Wustrow_Halderman_2024}, soll aber die Funktionsfähigkeit für Spezialfälle sicherstellen. 
 
 \subsubsection{\cref{req:S-01} - Performanzgrenze}
-Um die Performance und Effizienz der Scanner zu validieren, werden alle bremsenden Faktoren, die nicht essenziell für das reine Versenden und Empfangen 
-von Paketen sind, deaktiviert.
+Um die \eng{Performance} und Effizienz der Scanner zu validieren, werden alle bremsenden Faktoren, die nicht essenziell für das reine Versenden und Empfangen 
+von Paketen sind, oder die Vergleichbarkeit stören könnten deaktiviert:
+
 \begin{itemize}
     \itemsep 0pt
     \item \textbf{Senderate:} Die Senderate wird so gewählt, dass sie das theoretische Limit der Gigabit-Leitung übersteigt.
-    \item \textbf{Features:} Es wird auf rechenintensive Funktionen wie die Deduplizierung von Antworten, sowie das Senden von \texttt{RST}-Antworten verzichtet.
-    \item \textbf{IP-Raum:} Als Ziel dient ein \texttt{/6}-Netzwerk\footnote{67.108.864 Millionen IP-Adressen}, um eine hinreichend lange Laufzeit für die Erfassung stabiler Messwerte zu gewährleisten.
-%vergessen    \item \textbf{Source-Ports:} Ein einzelner Quellport ($60000$) wird genutzt, um die Vergleichbarkeit mit ZMap und Masscan zu gewährleisten.
-%    Das Senden von \texttt{RST}-Antworten geschieht bei der Nutzung der beiden Scanner durch den \texttt{Kernel} und kann nur dadurch verhindert werden, dass via \texttt{iptables}-Regel\footnote{\texttt{sudo iptables -A INPUT -p tcp --dport 60000 -j DROP}} 
-%    eingehende Pakete auf diesem Port verworfen werden. 
+    \item \textbf{\eng{Features}:} Es wird auf rechenintensive Funktionen wie die Deduplizierung von Antworten, sowie das Senden von \texttt{RST}-Antworten verzichtet.
+    \item \textbf{\eng{IP}-Raum:} Als Ziel dient ein \texttt{/6}-Netzwerk\footnote{67.108.864 Millionen \eng{IP}-Adressen}, 
+    um eine hinreichend lange Laufzeit für die Erfassung stabiler Messwerte zu gewährleisten.
+    \item \textbf{Zielport:} Ein einzelner Zielport ($80$) wird genutzt.
+    \item \textbf{Quellport:} Ein einzelner Quellport ($60000$) wird genutzt.
 \end{itemize}
 
 \subsubsection{\cref{req:S-02} - Reale Umstände}
 Das zweite Szenario simuliert einen praxisnahen Scan-Vorgang. Hierbei werden Parameter gewählt, die helfen, Sicherheitsmechanismen zu umgehen oder 
-die Zuordnung von Antworten zu erleichtern.
+die Zuordnung von Antworten zu erleichtern:
+
 \begin{itemize}
     \itemsep 0pt
-    \item \textbf{Senderate:} Die Senderate wird auf $500.000$ \eng{PPS} fixiert, da übermäßig hohe Raten die Wahrscheinlichkeit erhöhen, dass Scan-Muster von \eng{Firewalls} oder \eng{IPS} erkannt und blockiert werden.
-    \item \textbf{Ports:} Der Scan erfolgt parallel auf den Ports $80$ und $443$, um das Scan-Verhalten zu diversifizieren und weiter zu verschleiern.
-    \item \textbf{Quellports:} Es wird ein Bereich von 128 \eng{Source-Ports} ($60000-60127$) verwendet. Dies dient der besseren Lastverteilung auf der Empfängerseite und Verschleierung des Scans.
-    \item \textbf{IP-Raum:} Der Zielbereich wird auf ein \texttt{/10}-Netzwerk\footnote{4.194.304 Millionen IP-Adressen} beschränkt, um die Gesamtdauer des Tests in einem praktikablen Rahmen zu halten.
+    \item \textbf{Senderate:} Die Senderate wird auf $500.000$ \eng{PPS} fixiert, da sehr hohe Raten die Wahrscheinlichkeit erhöhen, 
+    dass Scan-Muster von \eng{Firewalls} oder \eng{IPS} erkannt und blockiert werden.
+    \item \textbf{\eng{Features}:} Die Deduplizierung wird aktiviert, auch wenn der Ziel-Knoten nur eine Antwort pro Paket schickt. Das Senden von \texttt{RST}-Antworten wird aktiviert.
+    \item \textbf{\eng{IP}-Raum:} Der Zielbereich wird auf ein \texttt{/10}-Netzwerk\footnote{4.194.304 Millionen \eng{IP}-Adressen} beschränkt, 
+    um die Gesamtdauer des Tests in einem praktikablen Rahmen zu halten.
+    \item \textbf{Zielports:} Der Scan erfolgt auf die Ports $80$ und $443$, um das Scan-Verhalten zu diversifizieren und weiter zu verschleiern.
+    \item \textbf{Quellports:} Es wird ein Bereich von 128 \eng{Source-Ports} ($60000-60127$) verwendet. 
+    Dies dient der besseren Lastverteilung auf der Empfängerseite und Verschleierung des Scans.
 \end{itemize}
 
-\section{Inkompatibilitäten und Limitierungen}
-% TODO hier text schreiben
+\section{Inkompatibilitäten und Limitierungen} \label{Inkompatibilitäten}
+Bei der Realisierung der Testumgebung wurden spezifische hardware- und treiberbedingte Einschränkungen identifiziert. 
+Diese Sektion beleuchtet deren Auswirkungen auf die Testdurchführung, insbesondere im Hinblick auf den \eng{Zero-Copy}-Modus 
+und die maximal erzielbaren Paketraten.
 
 \subsection{\eng{Zero-Copy}-Modus}
-Da finanziell bedingt nur die Möglichkeit besteht, die in \cref{tab:specs_combined} angegebene Hardware zu nutzen, muss für die Evaluation eine 
-Einschränkung gemacht werden. Der äußerst effiziente \eng{Zero-Copy}-Modus ist bei der Nutzung von Netzwerkkarten mit dem \texttt{igb}-Treiber eingeschränkt. Aufgrund
-der niedrigen Anzahl an Sende- und Empfangsringen auf der Netzwerkkarte können dem \texttt{XDP}-Programm keine dedizierten \eng{Queues} \footnote{Warteschlangen} zugeteilt werden. Dies hat zur Folge,
-dass sich die Sende-Ringe mit dem Betriebssystem geteilt werden müssen und es somit zu sogenannter \eng{Lock Contention} \footnote{Der Zugriff auf den Ring muss bei jeder Operation 
-ausgehandelt werden, sollten mehrere Parteien ihn gleichzeitig nutzen wollen} kommen kann \cite{igb}. Dies ist sehr Ressourcenaufwändig und führte in den Tests dazu,
-dass der \texttt{AF\_XDP}-\eng{Socket} und das \texttt{eBPF}-Programm um den Zugriff auf einen Sendering konkurrierten, sobald ein \texttt{SYN-ACK}-Paket
-über die gleiche \eng{Queue} einging, über die auch versendet wurde. Dies ist unvermeidbar, da ein \texttt{RST}-Paket per \texttt{XDP\_TX} zwangsweise über dieselbe \eng{Queue} verschickt wird, 
-über die es eingeht \cite{TODO} und die Pakete durch den ...TODO... gleichmäßig auf alle \eng{Queues} verteilt werden \cite{TODO}.
-Aufgrund der sehr hohen Senderate und der vergleichbar kleinen Puffer der Netzwerkkartenringe \footnote{Für die Intel I210 und I350 sind es maximal 4096 Deskriptoren (siehe \cref{app:ethtool_output})}
-laufen dieser durch die \eng{lock contention} voll und blockieren das Versenden der \texttt{RST}-Antworten in dieser \eng{Queue}.
+Die Evaluation unterliegt Einschränkungen durch die verwendete Hardware (vgl. \cref{tab:specs_combined}). Der effiziente \eng{Zero-Copy}-Modus 
+ist bei Netzwerkkarten mit dem \texttt{igb}-Treiber nur bedingt nutzbar, da die geringe Anzahl verfügbarer Hardware-Ringe 
+keine exklusive Zuweisung von \eng{Queues} an das \texttt{XDP}-Programm erlaubt. Dies erzwingt das Teilen der Sende-Ringe zwischen dem Betriebssystem 
+und dem \texttt{AF\_XDP}-\eng{Socket}, was unweigerlich zu \eng{Lock Contention}\footnote{Der Zugriff auf den Ring ist durch einen \eng{Spinlock} 
+geschützt und muss bei jedem Zugriff ausgehandelt werden. Wollen mehrere Parteien gleichzeitig senden, müssen sie aufeinander warten.} führt \cite{igb}.
 
-Diese Vermutungen wurden dadurch gestützt, dass bei den Tests bei hoher Last immer 25\% der \texttt{RST}-Pakete beim Ziel-Knoten fehlten. 
-Da das Scanner-System 4 \eng{Queues} besitzt und eine \eng{Queue} für das Senden genutzt wurde entstehen somit ein Viertel-, beziehungsweise 25\% der Pakete, welche aufgrund der \eng{Lock Contention}
-verloren gingen. Tests mit Beschränkung der \eng{Queue}-Anzahl mithilfe des folgenden Befehls: \texttt{sudo ethtool -L enp6s0 combined x} auf die Anzahl x bestätigten dies auch. 
-Bei einer \eng{Queue} wurden rund 100\% und bei 3 \eng{Queues} rund 33\% der \texttt{RST}-Pakete nicht gesendet. 
+Dieser Ressourcenkonflikt äußerte sich in internen Tests. Bei Nutzung von vier \eng{Queues} fehlten unter Last konstant rund 25\% der \texttt{RST}-Pakete am 
+Ziel-Knoten. Da der Scanner primär über eine dedizierte \eng{Queue} sendet, kollidiert der Antwortverkehr auf genau dieser einen von vier \eng{Queues}, 
+während die anderen drei \eng{Queues} die \texttt{RST}-Pakete ungehindert verarbeiten konnten. Gegenproben mit einer Limitierung der 
+Hardware-Ringe (\texttt{ethtool -L ...}) verifizierten dies: Bei Reduktion auf eine einzige \eng{Queue} (totale Kollision) stieg der Verlust auf nahe 100\%, 
+bei drei \eng{Queues} (Kollision auf einer von drei) lag er bei ca. 33\%.
+
+Ein per \texttt{XDP\_TX} generiertes \texttt{RST}-Paket wird standardmäßig 
+über dieselbe \eng{Queue} ausgesendet, auf der das auslösende Paket empfangen wurde \cite{bpf-helpers7_-_Linux_manual_page}. Da der eingehende Antwortverkehr
+durch \eng{Receive Side Scaling} (RSS) mittels eines Hash-Verfahrens gleichmäßig auf alle verfügbaren \eng{Queues} verteilt wird \cite[S.~306]{IntelI350}, trifft 
+ein Teil des Verkehrs auch die \eng{Queue}, die der Scanner bereits unter Volllast zum Senden nutzt. Die Kombination aus hoher Senderate, 
+\eng{Lock Contention} und den vergleichsweise kleinen Puffern der Hardware-Ringe (max. 4096 Deskriptoren, vgl. \cref{app:ethtool_output}) führt in diesem 
+Fall zum Überlauf des Rings und somit zum Verwerfen der \texttt{RST}-Antworten.
 
 Aufgrund dessen wird der \eng{Zero-Copy}-Modus für die Evaluationsszenarien (\cref{Methodik.Szenarien}) ausschließlich ohne das Senden von \texttt{RST}-Paketen getestet.
 
 \subsection{Paketrate}
-Die Durchsatzrate ist durch die genutzten Netzwerkkarten sowie dem LAN-Kabel auf das Limit einer Gigabit-Verbindung beschränkt. Die Tests zur maximalen Durchsatzrate 
-können deshalb nur eingeschränkt durchgeführt werden. Das theoretische Limit einer Gigabit-Leitung liegt nach IEEE 802.3 \cite{IEEE_Standard_for_Ethernet}, 
+Die Durchsatzrate ist durch die genutzten Netzwerkkarten sowie dem \eng{LAN}-Kabel auf das Limit einer Gigabit-Verbindung beschränkt. Die Tests zur maximalen Durchsatzrate 
+können deshalb nur eingeschränkt durchgeführt werden. Das theoretische Limit einer Gigabit-Leitung liegt nach \eng{IEEE} 802.3 \cite{IEEE_Standard_for_Ethernet}, 
 bei einer Paketgröße von 64 Byte plus 20 Byte \eng{Overhead}, bei 1,488 Millionen \eng{PPS}. Deshalb wird der Fokus dort verstärkt auf die gemessene Ressourcenauslastung gelegt.

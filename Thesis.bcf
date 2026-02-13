@@ -2507,10 +2507,10 @@
     <bcf:citekey order="131" intorder="1">Durumeric_Adrian_Stephens_Wustrow_Halderman_2024</bcf:citekey>
     <bcf:citekey order="132" intorder="1">Durumeric_Adrian_Stephens_Wustrow_Halderman_2024</bcf:citekey>
     <bcf:citekey order="133" intorder="1">Durumeric_Adrian_Stephens_Wustrow_Halderman_2024</bcf:citekey>
-    <bcf:citekey order="134" intorder="1">RustBelt</bcf:citekey>
-    <bcf:citekey order="135" intorder="1">ISO/IEC_25010:2023</bcf:citekey>
-    <bcf:citekey order="136" intorder="1">TODO</bcf:citekey>
-    <bcf:citekey order="137" intorder="1">TODO</bcf:citekey>
+    <bcf:citekey order="134" intorder="1">ISO/IEC_25010:2023</bcf:citekey>
+    <bcf:citekey order="135" intorder="1">Durumeric_Wustrow_Halderman</bcf:citekey>
+    <bcf:citekey order="136" intorder="1">Love_2011</bcf:citekey>
+    <bcf:citekey order="137" intorder="1">Love_2011</bcf:citekey>
     <bcf:citekey order="138" intorder="1">tokio::task_Rust</bcf:citekey>
     <bcf:citekey order="139" intorder="1">SipHash_a_short_input_PRF_The_Linux_Kernel_documentation</bcf:citekey>
     <bcf:citekey order="140" intorder="1">Eddy_2022</bcf:citekey>
@@ -2519,14 +2519,22 @@
     <bcf:citekey order="143" intorder="1">the-tcpdump-group/libpcap_2026</bcf:citekey>
     <bcf:citekey order="148" intorder="1">Map_Type_“BPF_MAP_TYPE_PERCPU_ARRAY”_-_eBPF_Docs</bcf:citekey>
     <bcf:citekey order="149" intorder="1">Map_Type_“BPF_MAP_TYPE_RINGBUF”_-_eBPF_Docs</bcf:citekey>
-    <bcf:citekey order="150" intorder="1">kernel.org/doc/Documentation/filesystems/proc.txt</bcf:citekey>
-    <bcf:citekey order="151" intorder="1">TODO</bcf:citekey>
-    <bcf:citekey order="152" intorder="1">Durumeric_Adrian_Stephens_Wustrow_Halderman_2024</bcf:citekey>
-    <bcf:citekey order="153" intorder="1">Durumeric_Adrian_Stephens_Wustrow_Halderman_2024</bcf:citekey>
-    <bcf:citekey order="154" intorder="1">igb</bcf:citekey>
-    <bcf:citekey order="155" intorder="1">TODO</bcf:citekey>
-    <bcf:citekey order="156" intorder="1">TODO</bcf:citekey>
-    <bcf:citekey order="157" intorder="1">IEEE_Standard_for_Ethernet</bcf:citekey>
+    <bcf:citekey order="150" intorder="1">Rice_2023</bcf:citekey>
+    <bcf:citekey order="151" intorder="1">Rice_2023</bcf:citekey>
+    <bcf:citekey order="152" intorder="1">kernel.org/doc/Documentation/filesystems/proc.txt</bcf:citekey>
+    <bcf:citekey order="153" intorder="1">TODO</bcf:citekey>
+    <bcf:citekey order="154" intorder="1">Durumeric_Adrian_Stephens_Wustrow_Halderman_2024</bcf:citekey>
+    <bcf:citekey order="155" intorder="1">Durumeric_Adrian_Stephens_Wustrow_Halderman_2024</bcf:citekey>
+    <bcf:citekey order="156" intorder="1">igb</bcf:citekey>
+    <bcf:citekey order="157" intorder="1">bpf-helpers7_-_Linux_manual_page</bcf:citekey>
+    <bcf:citekey order="158" intorder="1">IntelI350</bcf:citekey>
+    <bcf:citekey order="159" intorder="1">IEEE_Standard_for_Ethernet</bcf:citekey>
+    <bcf:citekey order="160" intorder="1">TODO</bcf:citekey>
+    <bcf:citekey order="161" intorder="1">TODO</bcf:citekey>
+    <bcf:citekey order="162" intorder="1">TODO</bcf:citekey>
+    <bcf:citekey order="163" intorder="1">RustBelt</bcf:citekey>
+    <bcf:citekey order="164" intorder="1">TODO</bcf:citekey>
+    <bcf:citekey order="165" intorder="1">TODO</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="none">

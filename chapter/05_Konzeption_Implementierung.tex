@@ -12,17 +12,16 @@ Anschließend wird die konkrete Umsetzung der Komponenten detailliert
 dargelegt und erklärt. Die folgende Beschreibung der Architektur und Implementierung dient gemäß \cref{Methodik} zugleich als Nachweis 
 für die Erfüllung der Anforderungen, die durch statische Inspektion verifiziert werden.
 
-% TODO Formatierung 
 \section{Konzeptioneller Lösungsansatz}
 Um die funktionalen und nicht-funktionalen Anforderungen zu erfüllen, wird im Folgenden darauf eingegangen,
 wie dies konzeptionell erreicht werden soll. 
 
-\subsection{Logische Komponenten des Scanners}
+\subsection{Logische Komponenten des Scanners} \label{impl:logische_komponenten}
 Da der Scanner asynchron arbeiten soll und Sende- und Empfangsprozess entkoppelt sind (siehe \cref{req:NF-02}), wird 
-die Softwarearchitektur nach dem Producer-Consumer-Pattern entworfen. Der Datenfluss wird dabei als Pipeline betrachtet: 
-Die Kommunikation zwischen den Modulen erfolgt über sogenannte Channels. Die jeweilige Komponente erhält Daten über einen Channel, 
-verarbeitet diese und schreibt die Ergebnisse in einen anderen Channel, welcher gleichzeitig als Puffer dient, um Lastspitzen auszugleichen. 
-Diese Modularisierung ermöglicht es, dass I/O-lastige Operationen (wie das Lesen vom Stdin) die CPU-lastigen 
+die Softwarearchitektur nach dem \eng{Producer-Consumer-Pattern} entworfen. Der Datenfluss wird dabei als \eng{Pipeline} betrachtet: 
+Die Kommunikation zwischen den Modulen erfolgt über sogenannte \eng{Channels}. Die jeweilige Komponente erhält Daten über einen \eng{Channel}, 
+verarbeitet diese und schreibt die Ergebnisse in einen anderen \eng{Channel}, welcher gleichzeitig als Puffer dient, um Lastspitzen auszugleichen. 
+Diese Modularisierung ermöglicht es, dass \eng{I/O}-lastige Operationen (wie das Lesen vom \eng{Standard Input}) die CPU-lastigen 
 Operationen (Paketkonstruktion, Checksummenberechnung) nicht blockieren.
 
 Auch bei Kontrollflüssen (z.B. Starten einer Komponente) können einmalig Daten übertragen werden. Datenflüsse hingegen 
@@ -30,7 +29,6 @@ stehen für einen mehrfach geschehenden Datenaustausch.
 
 Die \cref{fig:component_diag} zeigt die logischen Komponenten des Scanners und deren Interaktionen:
 
-% TODO Paketerfassung -> Ergebnisverarbeitung oder so ändern
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\textwidth]{pictures/Komponentendiagramm-SYN-Rust_777.drawio.png}
@@ -47,7 +45,7 @@ Außerdem startet es das Scannerprogramm. Die Jobverwaltung ist für die Funktio
 die Aufgabe, die anderen Komponenten korrekt zu vernetzen und zu starten. Die Paketemissionierung übernimmt die Paketbearbeitung, 
 die Durchsatzlimitierung und das Versenden der Pakete. Für die Aufgabe des Empfangens und Auswerten der Antwortpakete sind zum einen ein 
 \texttt{eBPF Programm} zuständig, welches im Komponentendiagramm an der \eng{Netzwerkinterface}-Komponente
-angesiedelt ist und zum anderen die Ergebnisverarbeitung. Letzteres beinhaltet die Logik zum Empfangen der Daten im \eng{User-Space}, welche 
+angesiedelt ist und zum anderen die Ergebnisverarbeitung. Letzteres beinhaltet die Logik zum Empfangen der Daten im \eng{User Space}, welche 
 vom \texttt{XDP}-Programm übermittelt wurden und der darauffolgenden Duplikatsentfernung. 
 
 In der \cref{fig:component_diag} wird der Weg der Pakete durch den Netzwerkkartentreiber und die Trennung der Zuständigkeiten
@@ -68,7 +66,7 @@ des Kernels je nach \eng{Socket}-Konfiguration (\eng{Copy} oder \eng{Zero-Copy})
 hingegen durchläuft immer einige wenige Schritte des regulären Netzwerkstacks. Im Empfangsprozess ist zu sehen, dass das \texttt{eBPF}-Programm 
 je nach Modus (\eng{SKB Mode} oder \eng{Driver Mode}) im Treiber der Netzwerkkarte oder direkt zu Beginn des Kernel-Netzwerkstacks ausgeführt wird.
 In beiden Fällen werden dort die eingehenden Pakete zuerst untersucht und je nachdem was das Ergebnis der Untersuchung ist, 
-direkt verworfen, an den Netzwerkstack weitergeleitet, oder verändert und an den Treiber oder per XDP\_TX direkt an die Netzwerkkarte zum Versenden
+direkt verworfen, an den Netzwerkstack weitergeleitet, oder verändert und an den Treiber oder per \texttt{XDP\_TX} direkt an die Netzwerkkarte zum Versenden
 zurückgegeben. So werden alle, oder im Falle des \eng{SKB Mode} fast alle, Schritte des regulären Netzwerkstacks eingespart.
 Die Ergebnisse der Untersuchung im \texttt{eBPF}-Programm werden bei validen Paketen in eine \texttt{eBPF Map}, 
 in diesem Fall einem \texttt{RingBuf} (siehe \cref{ebpf:xdp_program}) geloggt.
@@ -79,22 +77,22 @@ Auf diese Art und Weise kann der SYN-Scanner die Verarbeitungsschritte sowohl be
 ein Minimum reduzieren, sodass CPU-Zyklen fast ausschließlich für die Anwendungslogik und nicht für das Betriebssystem aufgewendet werden. 
 Dies validiert die konsequente Nutzung moderner Kernel-Mechanismen (\cref{req:NF-03}) unter Berücksichtigung der technologischen Einschränkung auf das Linux-Ökosystem (\cref{req:NF-06}) und bringt große Performanzpotenziale mit sich.
 
-\subsection{Performancesteigerne Maßnahmen}
+\subsection{Performancesteigerne Maßnahmen} \label{impl:performance_steigernde_maßnahmen}
 Neben der in \cref{ebpf:xdp_program} gezeigten Kernelumgehung werden zur Maximierung des Durchsatzes (\cref{req:NF-01}) und Minimierung der Ressourcennutzung (\cref{req:NF-05}) 
 zwei weitere Maßnahmen verfolgt:
 
 \begin{enumerate}
-    \item \textbf{Batching:} Sowohl im Datenaustausch zwischen den Komponenten mithilfe von Channels, als auch beim 
-    Versenden von Paketen werden die Daten immer in Batches übertragen. 
-    Im Kontext der Channels bedeutet dies, dass statt einzelner Nachrichten Vektoren mit einer Vielzahl von Objekten übermittelt werden. 
-    Dies senkt den Synchronisationsaufwand pro Element erheblich, da die Anzahl der Interaktionen mit dem Channel minimiert wird.
-    Für das Senden von Paketen reduziert das Batching die Anzahl der Systemaufrufe. 
-    Durch die gebündelte Verarbeitung mehrerer Pakete in einem Durchlauf wird der Overhead durch Kontextwechsel zwischen User-Space und Kernel verringert.     
-    \item \textbf{Vermeidung von Kopieroperationen und Kontextwechseln:} 
+    \item \textbf{\eng{Batching}:} Sowohl im Datenaustausch zwischen den Komponenten mithilfe von \eng{Channels}, als auch beim 
+    Versenden von Paketen werden die Daten immer in \eng{Batches} übertragen. 
+    Im Kontext der \eng{Channels} bedeutet dies, dass statt einzelner Nachrichten Vektoren mit einer Vielzahl von Objekten übermittelt werden. 
+    Dies senkt den Synchronisationsaufwand pro Element erheblich, da die Anzahl der Interaktionen mit dem \eng{Channel} minimiert wird.
+    Für das Senden von Paketen reduziert das \eng{Batching} die Anzahl der \eng{System Calls}. 
+    Durch die gebündelte Verarbeitung mehrerer Pakete in einem Durchlauf wird der \eng{Overhead} durch \eng{Context Switches} zwischen \eng{User Space} und \eng{Kernel Space} verringert.     
+    \item \textbf{Vermeidung von Kopieroperationen und \eng{Context Switches}:} 
     Zur Reduktion dynamischer Speicherzuweisungen (Allokationen) werden Vektoren, falls möglich, mit einer festen Kapazität initialisiert, 
     um Reallokationen zur Laufzeit zu vermeiden. Bereits verwendete Vektoren werden nicht verworfen, sondern lediglich geleert und wiederverwendet.
-    Zudem wurde beim Design auf die Vermeidung von Kopieroperationen geachtet. Das eBPF-Programm (siehe \cref{eBPF}) arbeitet beispielsweise direkt auf Referenzen 
-    des Speicherbereichs (\eng{Zero-Copy}), und auch die für das Parsing der IP-Adressen vom Startprogramm zuständige-Komponente nutzt Mechanismen, 
+    Zudem wurde beim Design auf die Vermeidung von Kopieroperationen geachtet. Das \texttt{eBPF}-Programm (siehe \cref{eBPF}) arbeitet beispielsweise direkt auf Referenzen 
+    des Speicherbereichs (\eng{Zero-Copy}), und auch die für das \eng{Parsing} der IP-Adressen vom Startprogramm zuständige-Komponente nutzt Mechanismen, 
     um Kopieroperationen zu vermeiden (siehe \cref{jobverwaltung:parser}).
 \end{enumerate}
 
@@ -148,20 +146,18 @@ beschreiben das \texttt{eBPF}-Programm, welches Antwortpakete abfängt, auswerte
 helfende Funktionen, sowie Typenbeschreibungen, die mehrfach im Projekt genutzt werden. Somit ist es für die Funktionalität irrelevant.
 
 \subsection{Übersicht genutzter \eng{Crates}}
-Für die Umsetzung der Komponenten sind folgende genutzte \eng{Crates} aufgrund ihres Einflussreichtums hervorzuheben:
+Für die Umsetzung der Komponenten sind die in \cref{tab:crates_all} beschriebenen \eng{Crates} aufgrund ihres Einflussreichtums hervorzuheben.
 
-% TODO Position mit [H] erzwingen; einheitliche "Nutzung" (entweder allgemein oder spezifisch); \eng{Task} im Allgemeinen zu
-% \texttt{} ändern, da in der Programmierung verwendet?
-\begin{table}[htbp][H]
+\begin{table}[htbp]
 \begin{tabularx}{\textwidth}{|c|c|X|}\hline 
-\textbf{Crate} & \textbf{Version} & \textbf{Nutzung} \\ \hline
-\texttt{tokio} & 1.47.1 & Nutzung für asynchrone Komponenten, Kommunikation über \eng{Channels}, Parsen des \eng{Standard Input} und Starten mehrerer asynchron laufender \eng{Tasks} \\ \hline
+\textbf{\eng{Crate}} & \textbf{Version} & \textbf{Nutzung} \\ \hline
+\texttt{tokio} & 1.47.1 & Nutzung für asynchrone Komponenten, Kommunikation über \eng{Channels}, \eng{Parsing} des \eng{Standard Input} und Starten mehrerer asynchron laufender \eng{Tasks} \\ \hline
 \texttt{nix} & 0.30.1 & Erstellen der \texttt{AF\_PACKET}-Schnittstelle und Versenden darüber \\ \hline
 \texttt{xdp-socket} & 0.1.4 & Erstellen der \texttt{AF\_XDP}-Schnittstelle und Versenden darüber \\ \hline
-\texttt{aya} & 0.13.1 & Stellt Werkzeuge und Strukturen für die Erstellung und Nutzung von \texttt{eBPF}-Programmen zur Verfügung \\ \hline
-\texttt{dashmap} & 6.1.0 & Stellt für asynchrone Nutzung optimierte \eng{HashMaps} bereit und führt das \eng{Locking} selbstständig durch \\ \hline
-\texttt{pnet} & 0.35.0 & Nutzung als abstrahiertes Netzwerkwerkzeug zur Erstellung der Paket-\eng{Templates} \\ \hline
-\texttt{network\_types} & 0.1.0 & Parsen der \eng{Header}-Strukturen aus rohem Speicherbereich, ohne diese zu kopieren \\ \hline
+\texttt{aya} & 0.13.1 & Erstellung und Nutzung von \texttt{eBPF}-Programmen mittels bereitgestellter Werkzeuge und Strukturen \\ \hline
+\texttt{dashmap} & 6.1.0 & Nutzung von für asynchrone Umgebungen optimierten \eng{HashMaps} mit selbstständigem \eng{Locking} \\ \hline
+\texttt{pnet} & 0.35.0 & Nutzung als abstrahiertes Netzwerkwerkzeug zur Erstellung der \eng{Packet-Templates} \\ \hline
+\texttt{network\_types} & 0.1.0 & \eng{Parsing} der \eng{Header}-Strukturen aus rohem Speicherbereich, ohne diese zu kopieren \\ \hline
 \end{tabularx}
 \caption{Genutzte \eng{Crates}}
 \label{tab:crates_all}
@@ -174,21 +170,22 @@ den dafür benötigten Vorbereitungsschritten.
 \subsubsection{\eng{Rate Limiter} (\texttt{rate\_limiter.rs})}
 Wie in \cref{fig:emitting_sequence_diag} zu sehen, führt der \eng{Rate Limiter} (\texttt{rate\_limiter.rs}) dem Namen entsprechend
 die Funktion der Durchsatzlimitierung (\cref{req:F-08}) aus. Zuerst nimmt er die zu scannenden IP-Adressen vom \eng{Parser} (\texttt{parser\_std\_in})
-entgegen, bestimmt die Puffergröße anhand der in dieser Sekunde bereits gesendeten Datenmenge (TODO wahlweise kleinen Flowchart), füllt einen Puffer und erstellt 
+entgegen, bestimmt die Puffergröße anhand der in dieser Sekunde bereits gesendeten Datenmenge, füllt einen Puffer und erstellt 
+% wahlweise TODO wahlweise kleinen Flowchart
 für jeden Puffer einen \texttt{tokio} \eng{Task} mit einem \eng{Assembler} (\texttt{assembler.rs}).
 Wenn der \eng{Parser} alle IP-Adressen geparst hat, und der \eng{Rate Limiter} alle verarbeitet hat, wird der gleiche Prozess für die restlichen
 Zielports durchgeführt, mit dem entscheidenden Unterschied, dass nun auf den internen Puffer an IP-Adressen, welche zuvor gespeichert wurden zugegriffen wird,
 was den CPU-Verbrauch potenziell verringert, da die Adressen nun nicht mehr geparst und weitergeleitet werden müssen.
 
-\texttt{tokio} \eng{Tasks} oder auch \eng{Green-Threads} sind kleine Ausführungseinheiten, ähnlich eines Betriebssystem-\eng{Threads}, bloß dass diese 
+\texttt{tokio} \eng{Tasks} oder auch \eng{Green-Threads} sind kleine Ausführungseinheiten, ähnlich eines \eng{Threads} des Betriebssystems, bloß dass diese 
 durch die \texttt{tokio}-eigene Laufzeitumgebung verwaltet werden. Sie sind sehr leichtgewichtig, da sie keine \eng{Context Switches}
-benötigen und erlauben asynchrone Ausführung mehrerer \eng{Tasks}, da sie, statt wie Betriebssystem-\eng{Threads} zu blockieren, die Ressourcen
+benötigen und erlauben asynchrone Ausführung mehrerer \eng{Tasks}, da sie, statt wie \eng{Threads} des Betriebssystems zu blockieren, die Ressourcen
 für andere \eng{Tasks} freigeben und somit Nebenläufigkeit ermöglichen \cite{tokio::task_Rust}. Diese Nebenläufigkeit wird hier genutzt, um entsprechend der aktuellen 
-Senderate \eng{Assembler} zu erzeugen, die nicht den gesamten Betriebssystem-\eng{Thread} blockieren, wenn die Pakete eines \eng{Assemblers} nicht zuerst 
+Senderate \eng{Assembler} zu erzeugen, die nicht den gesamten \eng{Thread} des Betriebssystems blockieren, wenn die Pakete eines \eng{Assemblers} nicht zuerst 
 vom \eng{Sender} entgegengenommen werden. Stattdessen wartet jeder \eng{Assembler}, ohne andere Teile der Software zu beeinträchtigen. So wird sicher gestellt,
 dass immer genügend Pakete für den \eng{Sender} bereitstehen. Die Puffergröße eines \eng{Assemblers} wird bei Beginn des Programmes abhängig von der Durchsatzlimitierung
 und der \eng{Batch}-Größe rechnerisch ermittelt 
-% TODO maybe mathematische Formel ergänzen oder auf checkcurrent_sent_bytes genauer eingehen
+% wahlweise TODO mathematische Formel ergänzen oder auf checkcurrent_sent_bytes genauer eingehen
 
 \begin{figure}[htbp]
 	\centering
@@ -200,7 +197,7 @@ und der \eng{Batch}-Größe rechnerisch ermittelt
 
 \subsubsection{\eng{Assembler} (\texttt{assembler.rs})}
 Die Rolle des \eng{Assemblers} ist recht simpel: Jeder \eng{Assembler} iteriert über die ihm verfügbaren IP-Adressen, füllt \eng{Templates} mit 
-der Ziel-IP-Adresse, dem Ziel-Port, sowie der \eng{Sequence Number} und berechnet die Checksummen des \eng{IP-} und \eng{TCP-Header} neu. 
+der Ziel-IP-Adresse, dem Ziel-Port, sowie der \eng{Sequence Number} und berechnet die Checksummen des \eng{IP-Header} und \eng{TCP-Header} neu. 
 Dies dient zur Erfüllung der Anforderung \cref{req:F-01}. Die \eng{Sequence Number} wird wie folgt berechnet:
 \begin{equation}
     \text{ISN} = \text{SipHash}_{K}(\texttt{src\_ip}, \texttt{dst\_ip}, \texttt{src\_port}, \texttt{dst\_port})
@@ -209,24 +206,24 @@ Dies dient zur Erfüllung der Anforderung \cref{req:F-01}. Die \eng{Sequence Num
 \noindent wobei:
 \begin{itemize}
     \itemsep 0pt
-    \item \textbf{\text{ISN}:} die berechnete 32-Bit initiale \eng{Sequence Number} (SYN-Cookie).
+    \item \textbf{\text{ISN}:} die berechnete 32-Bit initiale \eng{Sequence Number} (\texttt{SYN}-Cookie).
     \item \textbf{\text{K}:} ein geheimer, zufälliger 128-Bit Schlüssel, der beim Start des Scanners generiert wird.
     \item \textbf{\texttt{src\_ip}, \texttt{dst\_ip}:} die Quell- und Ziel-IP-Adressen der Verbindung.
     \item \textbf{\texttt{src\_port}, \texttt{dst\_port}:} die zugehörigen TCP-Quell- und Ziel-Ports.
 \end{itemize}
 
-Die Pseudozufallsfunktion SipHash eignet sich hervorragend, da sie speziell für hohe \eng{Performance} bei kurzen Eingabedaten entwickelt wurde, aber 
-einer \textit{Hashing}-Funktion entsprechend bei gleichem Input immer den gleichen Wert zurückgibt \cite{SipHash_a_short_input_PRF_The_Linux_Kernel_documentation}.
+Die Pseudozufallsfunktion \eng{SipHash} eignet sich hervorragend, da sie speziell für hohe \eng{Performance} bei kurzen Eingabedaten entwickelt wurde, aber 
+einer \eng{Hashing}-Funktion entsprechend bei gleichem Input immer den gleichen Wert zurückgibt \cite{SipHash_a_short_input_PRF_The_Linux_Kernel_documentation}.
 Damit dies konsistent funktioniert, muss allerdings ein geheimer Schlüssel genutzt werden, welcher der Paketemissionierungs- sowie der Paketerfassungskomponente bekannt ist.
 In den \eng{Templates} sind die restlichen Werte bereits vorhanden. Die Änderungen werden direkt auf Byte-Ebene umgesetzt, da die Feldzuweisungen der 
 \eng{Header}-Felder immer gleich sind \cite{Eddy_2022} \cite{Postel_1981}.
 Somit können vollständige Pakete in sehr wenigen Schritten und ohne aufwendiges \eng{Parsing} oder gar kompletter Neuerstellung genutzt werden. 
 Diese Pakete werden anschließend je nach Konfiguration einzeln oder in \eng{Batches} an den \eng{Sender} weitergeleitet.
-% TODO (hier wahlweise flowchart einfügen) 
+% wahlweise TODO hier flowchart einfügen 
 
 \subsubsection{\eng{Sender} (\texttt{sender.rs})}
 Der \eng{Sender} agiert im Kontrast zu den anderen Subkomponenten in einem eigenen 
-Betriebssystem-\eng{Thread}. Das hat den Grund, dass er somit die komplette Kapazität des \eng{Threads} 
+\eng{Thread} des Betriebssystems. Das hat den Grund, dass er somit die komplette Kapazität des \eng{Threads} 
 alleine ausnutzen kann und bezüglich CPU-Auslastung möglichst wenig mit anderen Prozessen konkurrieren 
 soll, um möglichst performant zu sein. Um diesen Effekt zu verstärken wird außerdem der \texttt{core\_affinity}
 \eng{Crate} genutzt (siehe \cref{tab:crates_all}). Der Sender läuft in einer ständigen Schleife bis die \eng{Channels} zum Erhalt
@@ -238,7 +235,7 @@ Der \eng{Sender} kann entweder per \texttt{AF\_PACKET} oder per \texttt{AF\_XDP}
 Dies wurde so implementiert, da es bei der Schaffung einer realistischen Vergleichsbasis 
 zwischen den verschiedenen Technologien hilft. Des Weiteren bietet es die Möglichkeit, 
 die tatsächliche Notwendigkeit komplexer Technologien zu validieren. 
-% TODO wahlweise flowchart für Senden mit xdp / afp einfügen 
+% wahlweise TODO flowchart für Senden mit xdp / afp einfügen 
 
 \subsection{Ergebnisverarbeitung (\texttt{capturing\_packets})}
 In der Ergebnisverarbeitung werden die durch den \texttt{eBPF} vorgeprüften Daten der validen Antworten entgegengenommen und einer
@@ -285,11 +282,6 @@ Die Suche nach Duplikaten gestaltet sich dabei recht schnell, da \eng{HashMaps} 
 Die IP-Adresse und Ziel-Port des Zielsystems der validen Antwort wird entsprechend Anforderung \cref{req:F-07} nach der Duplikatsbereinigung in den 
 \eng{Standard Output} geschrieben. Dieser wird vom Mock-Programm (\texttt{mock\_program.rs}) in eine Datei weitergeleitet.
 
-Um die Umsetzung der Anforderung \cref{req:F-06} muss sich nicht explizit gekümmert werden, da der Linux-Netzwerk-Stack bei Erhalt einer Antwort
-nach einer gespeicherten Verbindung zu dieser Anfrage sucht, anschließend merkt, dass keine vorhanden ist, da das SYN-Paket über einen \eng{Raw-Socket} verschickt
-wurde und automatisch eine \texttt{RST}-Antwort zurückschickt 
-%[TODO Quelle? Siehe Linux kernel option net.ipv4.tcp_rst_filter].
-
 \subsection{Programmstart und Jobverwaltung (\texttt{job\_controlling})}
 Der Start des Programmes, die Konfiguration sowie das Starten und Verbinden der einzelnen Komponenten geht
 von den in dieser Sektion beschriebenen Komponenten aus. Des Weiteren übernehmen diese auch das \eng{Parsing} und
@@ -314,78 +306,86 @@ benötigten Informationen gestartet.
 
 % testen ob das wirklich Vorteile bringt, denn es wird oft auf Zero-Copy geachtet und es gibt nicht super viele Threads (maybe eher durch besseres
 % cache handling begründen) <- GANZEN ABSATZ BEI PLATZMANGEL ENTFERNEN
-%Eine ressourcensparende Maßnahme ist außerdem die Nutzung eines alternativen \eng{Allocators} \footnote{TODO}, 
+%Eine ressourcensparende Maßnahme ist außerdem die Nutzung eines alternativen \eng{Allocators}, 
 %welcher in der \texttt{main.rs}-Datei definiert wird.
 %Anstelle des \eng{System Allocators}, welcher ein breites Anwendungsfeld bedient, bietet der \texttt{jemallocator} einen Fokus auf Nebenläufigkeit
 %und Skalierbarkeit auf Multiprozessorsystemen \cite{jemalloc}. Das wird dadurch erreicht, dass viermal mehr der sogenannten Arenen als 
 %verfügbare Prozessoren erstellt und die \eng{Threads} darunter aufgeteilt werden. \eng{Threads} blockieren sich gegenseitig nur, wenn sie in der gleichen
 %Arena sind, was durch die Vielzahl deutlich seltener vorkommt. Außerdem ist die Allokierung von Speicher durch die Nutzung fester \eng{Size Classes}
 %für sehr viele kleine Allokationen, wie sie in dem Scanner zum Beispiel bei der Vielzahl an \eng{Batches} von IP-Adressen oder Pakete
-%geschieht, effizienter, als die Vorgehensweise des \eng{System Allocators}, welcher die genaue Speichergröße sucht \cite{TODO}.
+%geschieht, effizienter, als die Vorgehensweise des \eng{System Allocators}, welcher die genaue Speichergröße sucht.
 
 \subsubsection{\eng{Standard Input Parser} (\texttt{parser\_std\_in})} \label{jobverwaltung:parser}
 Der \eng{Parser} parst zum einen die Konfigurationsparameter aus dem \eng{Standard Input} und zum anderen die Ziel-IP-Adressen. 
-Um möglichst performant und ressourcensparend vorzugehen, wird im Allgemein ein Fokus auf die Vermeidung neuer 
-Allokationen und die Daten, falls möglich, mit \eng{Zero-Copy}-Operationen zu verarbeiten.
-Deshalb geschieht das Entgegennehmen, Deserialisieren und Weiterleiten der Adressen in \eng{Batches}.
-Dies minimiert unter anderem die Anzahl der \eng{Context Switches} durch die Reduzierung von \eng{System Calls}. 
+%Um möglichst performant und ressourcensparend vorzugehen, wird im Allgemein ein Fokus auf die Vermeidung neuer 
+%Allokationen und die Daten, falls möglich, mit \eng{Zero-Copy}-Operationen zu verarbeiten.
+%Deshalb geschieht das Entgegennehmen, Deserialisieren und Weiterleiten der Adressen in \eng{Batches}.
+%Dies minimiert unter anderem die Anzahl der \eng{Context Switches} durch die Reduzierung von \eng{System Calls}. 
+Das \eng{Parsing} der im Binärformat übertragenen Daten erfolgt unter Berücksichtigung verschiedener Optimierungsmaßnahmen. 
+So wird ein asynchroner \texttt{tokio}-\eng{Reader} eingesetzt, um zu gewährleisten, dass der Einleseprozess auch bei ausgelasteten 
+Kommunikationskanälen andere Programmteile nicht blockiert. Gemäß den in \cref{impl:performance_steigernde_maßnahmen} definierten 
+Prinzipien werden zudem \eng{Batching} und \eng{Zero-Copy}-Techniken angewandt. Letzteres wird unter anderem durch die Nutzung von 
+\texttt{std::mem::replace} realisiert, womit Speicherpuffer effizient durch den Austausch von \eng{Ownership} verwaltet werden, 
+statt kostenintensive Kopieroperationen durchzuführen. Um auch bei fragmentierten Datenübertragungen keine Informationen zu verlieren, 
+wird ein \eng{Offset}-basierter Ansatz verfolgt, der unvollständige IP-Adressen am Ende eines \eng{Batch}-Puffers in den nächsten
+Zyklus überträgt.
 
-Der folgende \cref{lst:parser_binary} zeigt das \eng{Parsing} der Daten welche im Binärformat übertragen wurden. 
-Um das Verarbeiten unvollständiger IP-Adressen zu vermeiden, wird sich nach jeder Iteration ein \eng{Offset} gemerkt,
-sodass keine Daten verloren gehen, falls ein \eng{Batch} nicht vollständig gefüllt oder sauber am Ende einer Adresse endet. 
-
-% TODO (Buffersize erklären (L1 Cache?)) 
-\begin{lstlisting}[caption={Binärformat-\eng{Parsing} im \eng{Standard-Input} \eng{Parser}},label=lst:parser_binary]
-const BATCH_SIZE: usize = 8192; // 8KB chunks -> 2048 IPv4-Adressen
-let mut buffer = [0u8; BATCH_SIZE];
-let mut offset = 0;
-let mut ip_batch: Vec<[u8; 4]> = Vec::with_capacity(BATCH_SIZE / 4);
-
-loop {
-    let read_len = reader.read(&mut buffer[offset..]).await?;
-    
-    if read_len == 0 { /* EOF handling */ }
-    
-    let valid_data_len = offset + read_len;
-    let mut cursor = 0;
-    
-    // Verarbeite vollstaendige IP-Pakete
-    while cursor + 4 <= valid_data_len {
-        let bytes: [u8; 4] = buffer[cursor..cursor + 4].try_into().unwrap();
-        cursor += 4;
-        
-        if bytes == [0, 0, 0, 0] { /* Terminator -> return */ }
-        
-        ip_batch.push(bytes);
-    }
-    
-    // Sende akkumulierten Batch
-    if !ip_batch.is_empty() {
-        let batch = std::mem::replace(&mut ip_batch, Vec::with_capacity(BATCH_SIZE / 4));
-        sender.send(batch).await?;
-    }
-    
-    // Kopiere fragmentierte Bytes an Puffer-Anfang
-    let remaining = valid_data_len - cursor;
-    if remaining > 0 {
-        buffer.copy_within(cursor..valid_data_len, 0);
-    }
-    offset = remaining;
-}
-\end{lstlisting}
-
-Im bereitgestellten Codeauszug wurden explizit die in \cref{tab:parser-optimizations} beschriebenen Performanz-steigernden Maßnahmen umgesetzt.
-
-\begin{table}[htbp]
-\begin{tabularx}{\textwidth}{|c|X|}\hline 
-\textbf{Maßnahme} & \textbf{Beschreibung} \\ \hline
-\texttt{Vec::with\_capacity()} & Der IP-Puffer wird in einen Puffer mit fester Größe gelesen, welcher somit nur einmal allokiert werden muss. \\ \hline
-\texttt{std::mem::replace} & Ermöglicht das Tauschen des \texttt{ip\_batch}-Puffers gegen einen neu erstellten, leeren Puffer, ohne dass die Inhalte kopiert werden müssen, da lediglich die \eng{Ownership} gewechselt wird. \\ \hline
-Asynchroner \texttt{tokio}-\eng{Reader} & Die Nutzung des asynchronen \texttt{tokio}-\eng{Readers} ermöglicht, dass auch bei vollem \eng{Channel} der \eng{Parser} nie andere Prozesse blockiert. \\ \hline
-\end{tabularx}
-\caption{Performanz-steigernde Maßnahmen im \eng{Standard-Input} \eng{Parser}}
-\label{tab:parser-optimizations}
-\end{table}
+%Der folgende \cref{lst:parser_binary} zeigt das \eng{Parsing} der Daten welche im Binärformat übertragen wurden. 
+%Um das Verarbeiten unvollständiger IP-Adressen zu vermeiden, wird sich nach jeder Iteration ein \eng{Offset} gemerkt,
+%sodass keine Daten verloren gehen, falls ein \eng{Batch} nicht vollständig gefüllt oder sauber am Ende einer Adresse endet. 
+%
+%% maybe TODO (Buffersize erklären (L1 Cache?)) 
+%\begin{lstlisting}[caption={Binärformat-\eng{Parsing} im \eng{Standard-Input} \eng{Parser}},label=lst:parser_binary]
+%const BATCH_SIZE: usize = 8192; // 8KB chunks -> 2048 IPv4-Adressen
+%let mut buffer = [0u8; BATCH_SIZE];
+%let mut offset = 0;
+%let mut ip_batch: Vec<[u8; 4]> = Vec::with_capacity(BATCH_SIZE / 4);
+%
+%loop {
+%    let read_len = reader.read(&mut buffer[offset..]).await?;
+%    
+%    if read_len == 0 { /* EOF handling */ }
+%    
+%    let valid_data_len = offset + read_len;
+%    let mut cursor = 0;
+%    
+%    // Verarbeite vollstaendige IP-Pakete
+%    while cursor + 4 <= valid_data_len {
+%        let bytes: [u8; 4] = buffer[cursor..cursor + 4].try_into().unwrap();
+%        cursor += 4;
+%        
+%        if bytes == [0, 0, 0, 0] { /* Terminator -> return */ }
+%        
+%        ip_batch.push(bytes);
+%    }
+%    
+%    // Sende akkumulierten Batch
+%    if !ip_batch.is_empty() {
+%        let batch = std::mem::replace(&mut ip_batch, Vec::with_capacity(BATCH_SIZE / 4));
+%        sender.send(batch).await?;
+%    }
+%    
+%    // Kopiere fragmentierte Bytes an Puffer-Anfang
+%    let remaining = valid_data_len - cursor;
+%    if remaining > 0 {
+%        buffer.copy_within(cursor..valid_data_len, 0);
+%    }
+%    offset = remaining;
+%}
+%\end{lstlisting}
+%
+%Im bereitgestellten Codeauszug wurden explizit die in \cref{tab:parser-optimizations} beschriebenen Performanz-steigernden Maßnahmen umgesetzt.
+%
+%\begin{table}[htbp]
+%\begin{tabularx}{\textwidth}{|c|X|}\hline 
+%\textbf{Maßnahme} & \textbf{Beschreibung} \\ \hline
+%\texttt{Vec::with\_capacity()} & Der IP-Puffer wird in einen Puffer mit fester Größe gelesen, welcher somit nur einmal allokiert werden muss. \\ \hline
+%\texttt{std::mem::replace} & Ermöglicht das Tauschen des \texttt{ip\_batch}-Puffers gegen einen neu erstellten, leeren Puffer, ohne dass die Inhalte kopiert werden müssen, da lediglich die \eng{Ownership} gewechselt wird. \\ \hline
+%Asynchroner \texttt{tokio}-\eng{Reader} & Die Nutzung des asynchronen \texttt{tokio}-\eng{Readers} ermöglicht, dass auch bei vollem \eng{Channel} der \eng{Parser} nie andere Prozesse blockiert. \\ \hline
+%\end{tabularx}
+%\caption{Performanz-steigernde Maßnahmen im \eng{Standard-Input} \eng{Parser}}
+%\label{tab:parser-optimizations}
+%\end{table}
 
 \subsubsection{\eng{Scanjob} (\texttt{scanjob.rs})}
 
@@ -417,11 +417,11 @@ ohne Kopieraufwand oder \eng{Context Switches} passiert. Durch die \texttt{XDP\_
 sodass der Netzwerkstack sowie \eng{User Space} komplett vermieden werden.  
 
 \subsection{\texttt{XDP}-Programm} \label{ebpf:xdp_program}
-Um ein \texttt{eBPF}-Programm nutzen zu können wird es in die \texttt{XDP}-\eng{Hook} des Kernels geladen und zuvor korrekt in \texttt{ELF}-Dateien übersetzt, damit die \texttt{XDP}-\eng{Hook}
-das Programm akzeptiert. Das Übersetzen des Rust-Codes übernimmt der \texttt{aya} \eng{Crate} und das Anhängen des Programmes passiert in \texttt{main.rs}, indem die 
+Um ein \texttt{eBPF}-Programm nutzen zu können wird es in die \texttt{XDP}-\eng{Hook} des Kernels geladen und zuvor korrekt in \eng{ELF}-Dateien übersetzt, damit die \texttt{XDP}-\eng{Hook}
+das Programm akzeptiert. Das Übersetzen des Rust-Codes übernimmt der \texttt{aya}-\eng{Crate} und das Anhängen des Programmes passiert in \texttt{main.rs}, indem die 
 durch \texttt{aya} übersetzten Dateien an das genutzte Netzwerkinterface gebunden wird. Auch das Laden der \texttt{eBPF Maps} wird durch \texttt{aya} übernommen und in der \texttt{main.rs}
 über die Rust-Schnittstelle dargestellt. Auch wenn immer noch ein gewisses Maß an Komplexität besteht, erleichtert der \eng{Crate} den Implementierungsaufwand
-dadurch enorm. Die zum Informationsaustausch zwischen \texttt{eBPF}-Programm und \eng{User Space}-Programm genutzten \texttt{eBPF Maps} werden in \cref{tab:ebpf_maps} aufgeführt.
+dadurch enorm. Die zum Informationsaustausch zwischen \texttt{eBPF}-Programm und \eng{User-Space}-Programm genutzten \texttt{eBPF Maps} werden in \cref{tab:ebpf_maps} aufgeführt.
 
 \begin{table}[htbp]
 \begin{tabularx}{\textwidth}{|c|c|X|}\hline 
@@ -429,7 +429,7 @@ dadurch enorm. Die zum Informationsaustausch zwischen \texttt{eBPF}-Programm und
 \texttt{STATS} & \texttt{PerCpuArray<u64>} & Effiziente, lockfreie Protokollierung von Statistiken pro CPU \cite{Map_Type_“BPF_MAP_TYPE_PERCPU_ARRAY”_-_eBPF_Docs}\\ \hline
 \texttt{WHITELIST\_IPV4} & \texttt{HashMap<[u8; 4], u8>} & \eng{HashMap} zum Abgleich der für den Scan genutzten Quell-IP-Adressen \\ \hline
 \texttt{EVENTS} & \texttt{RingBuf} & Effizienter, geteilter Puffer-Ring \cite{Map_Type_“BPF_MAP_TYPE_RINGBUF”_-_eBPF_Docs} zur Übermittlung der extrahierten Zielinformationen valider Pakete an den \eng{Receiver} \\ \hline
-\texttt{SIPHASH\_KEY} & \texttt{Array<u64>} & Schlüssel zur korrekten Auswertung des \eng{SYN-Cookies} \\ \hline
+\texttt{SIPHASH\_KEY} & \texttt{Array<u64>} & Schlüssel zur korrekten Auswertung des \texttt{SYN}-Cookies \\ \hline
 \end{tabularx}
 \caption{Genutzte \texttt{eBPF Maps}}
 \label{tab:ebpf_maps}
@@ -445,30 +445,28 @@ dadurch enorm. Die zum Informationsaustausch zwischen \texttt{eBPF}-Programm und
 	\label{fig:ebpf_component_diag}
 \end{figure}
 
-Wie in \cref{fig:ebpf_component_diag} zu sehen, wird aus allen empfangenen Paketen zuerst der \eng{Ethernet-}, \eng{IP-} und \eng{TCP-Header} extrahiert und 
-überprüft. Sollte dabei festgestellt werden, dass ein Paket kein valides \texttt{IPv4-SYN-ACK}-Paket darstellt, wird es per \texttt{XDP\_PASS} an den normalen 
+Wie in \cref{fig:ebpf_component_diag} zu sehen, wird aus allen empfangenen Paketen zuerst der \eng{Ethernet-Header}, \eng{IP-Header} und \eng{TCP-Header} extrahiert und 
+überprüft. Sollte dabei festgestellt werden, dass ein Paket kein valides \eng{IPv4}-\texttt{SYN-ACK}-Paket darstellt, wird es per \texttt{XDP\_PASS} an den normalen 
 Netzwerkstack des Kernels weitergeleitet. Auch in der anschließenden Prüfung, ob die, da es sich in dem Fall um eine Antwort handelt, Ziel-IP-Adresse
-in der \texttt{WHITELIST\_IPV4} vertreten ist oder die Prüfung des \eng{SYN-Cookies} führt bei Fehlschlag zu einem \texttt{XDP\_PASS}. Das bietet den Vorteil, 
-dass der reguläre Netzwerkverkehr trotz Nutzung des SYN-Scanners unbeeinträchtigt ist. Um den \eng{SYN-Cookie} zu vergleichen wird die Hash-Berechnung 
-mithilfe des \eng{Sip-Hashing}-Algorithmus und des per \texttt{SIPHASH\_KEY} übergegeben Schlüssels durchgeführt. Die vier in \cref{equ:syn_cookie_umsetzung} genannten 
+in der \texttt{WHITELIST\_IPV4} vertreten ist oder die Prüfung des \texttt{SYN}-Cookies führt bei Fehlschlag zu einem \texttt{XDP\_PASS}. Das bietet den Vorteil, 
+dass der reguläre Netzwerkverkehr trotz Nutzung des \texttt{SYN}-Scanners unbeeinträchtigt ist. Um den \texttt{SYN}-Cookie zu vergleichen wird die Hash-Berechnung 
+mithilfe des \eng{SipHash}-Algorithmus und des per \texttt{SIPHASH\_KEY} übergegeben Schlüssels durchgeführt. Die vier in \cref{equ:syn_cookie_umsetzung} genannten 
 Werte werden wie in \cref{equ:syn_cookie_auswertung} beschrieben verrechnet und ausgewertet, um die Anforderung \cref{req:F-05} 
 zu erfüllen.
 
-% TODO möglicherweise mit Quellen belegen müssen und schauen ob teilweise begriffe deutsch sein sollten (wie Memory Allocator)
-In dem \texttt{eBPF}-Programm können aus mehreren Gründen keine Funktionen der Standardbibliothek von Rust genutzt werden. Zum Beispiel würden viele Funktionen 
-schlichtweg nicht funktionieren, da sie per \eng{System Call} auf Betriebssystemdiensten beruhen die hier nicht verfügbar sind, weil direkt im Kernel 
-gearbeitet wird. Dynamische Speicherstrukturen wie \texttt{Vec<T>}, \texttt{String}, oder \eng{HashMap} können nicht genutzt werden, da kein 
-Zugriff auf den allgemeinen \eng{System Allocator} besteht. Im Allgemeinen ist der \texttt{eBPF}-\eng{Verifier} sehr restriktiv, weshalb im \texttt{eBPF}-Programm nur
-wenige Bibliotheken nutzbar sind. In allen bereits beschriebenen Schritten des \texttt{eBPF}s wurde deshalb mit dem \texttt{network\_types} \eng{Crate} gearbeitet.
-Dieser nutzt keine Technologien der Standardbibliothek und erlaubt es, die rohen Speicherbereiche abstrahiert darzustellen und Zeiger auf
-die Strukturen der \eng{Header} mit leichter verständlichen \eng{Enums} darzustellen. So können die gewünschten Paketstrukturen gelesen und 
-verändert werden, ohne, dass neuer Speicher allokiert werden muss. 
+Die Entwicklung des \texttt{eBPF}-Programms unterliegt architektonischen Restriktionen (vgl. \cref{Grundlagen.eBPF}). 
+Da der Code im \eng{Kernel-Space} ausgeführt wird, stehen keine Betriebssystemdienste zur Verfügung, die 
+in der Regel per \eng{System Call} aufgerufen werden \cite[S.~59]{Rice_2023}. Eine wichtige Konsequenz ist die Abwesenheit eines globalen \eng{Memory Allocators}, wodurch 
+dynamisch wachsende Datenstrukturen wie \texttt{Vec<T>}, \texttt{String} oder \eng{HashMaps} nicht verwendbar sind \cite[S.~206]{Rice_2023}. 
+Um unter diesen Bedingungen trotzdem eine typsichere Verarbeitung zu gewährleisten, wird das \texttt{network\_types}-\eng{Crate} eingesetzt. 
+Diese Bibliothek ermöglicht es, rohe Speicherbereiche direkt durch \eng{Structs} und \eng{Enums} zu abstrahieren, anstatt sie in neue Datenstrukturen zu parsen. 
+Dies erlaubt das Lesen und Modifizieren von Paket-\eng{Headern} ohne die dahinterliegenden Daten zu kopieren.
 
 Die Vermeidung neuer Speicherallokation wird unter anderem durch die Nutzung der \texttt{ptr\_at}-Funktion umgesetzt. 
 Die \texttt{ptr\_at}-Funktion dient der Navigation durch den per \texttt{ctx} übergebenen Speicherbereich, indem ein \eng{Offset} übergeben und \eng{Pointer} vom Punkt
 des \eng{Offsets}, des Endes des Speicherbereichs und die Länge des Bereichs zurückgegeben werden.
 
-% anmerken, dass der Code von aya ist, caption bei code auf Unterseite legen (AI fragens) 
+% maybe TODO anmerken, dass der Code von aya ist, caption bei code auf Unterseite legen (AI fragens) 
 \begin{lstlisting}[caption={\texttt{ptr\_at}-Funktion zum Navigieren durch Speicherbereiche},label=lst:ptr_at]
 #[inline(always)]
 unsafe fn ptr_at<T>(ctx: &XdpContext, offset: usize) -> Result<*const T, ()> {
@@ -495,22 +493,26 @@ So wird beispielsweise im folgenden Beispiel der Speicherbereich des \eng{IP-Hea
     };
 \end{lstlisting}
 
-Dabei ist zu beachten, dass diese Aufrufe von einem \texttt{unsafe}-Block umschlossen sind. Gemäß \cref{req:NF-04} ist dies zulässig, da der direkte Zugriff auf Kernel-Speicher zwingend notwendig ist und die \texttt{unsafe}-Nutzung auf diese spezifischen Interaktionen beschränkt bleibt. Da dieser Speicher vom Linux-Kernel und nicht von der Rust-Runtime 
-verwaltet wird, kann Rust nicht sicherstellen, dass die Rust-typischen Sicherheitsgarantien gewährleistet sind. Diese Entscheidung wurde bewusst 
-getroffen, da diese Arbeit performance-orientierte Implementierungen behandelt. 
-Durch die besonderen Umstände im Kontext eines \texttt{eBPF}-Programmes mit strengem \eng{Verifier} sind die Sicherheitskonzepte kaum umsetzbar, wenn \eng{Zero-Copy}
-angestrebt wird. Dies hängt damit zusammen, dass Rust normalerweise mit einem \texttt{panic!} reagiert, sollte beispielsweise auf einen falschen Index eines
-\eng{Slices} (z.B. \texttt{\&[u8]}) zugegriffen werden. Dies ist im Kernel-Kontext nicht erlaubt. Stattdessen bleibt die Möglichkeit eine Kopie des Speicherbereichs
-anzufertigen, so wie es beispielsweise der \texttt{etherparse} \eng{Crate} tut, um die Struktur dann in einem sicheren Kontext zu verwalten. Dies mindert aber die 
-\eng{Performance} deutlich und ist somit für performanz-orientiere Anwendungen, wie die hier implementierte, nicht die präferierte Lösung. 
+Dabei ist zu beachten, dass diese Speicherzugriffe durch \texttt{unsafe}-Blöcke umschlossen sind. Gemäß \cref{req:NF-04} ist dies zulässig, 
+da der direkte Zugriff auf Kernel-Speicher für den angestrebten \eng{Zero-Copy}-Ansatz zwingend notwendig ist. 
+Die Standard-Sicherheitsgarantien von Rust basieren üblicherweise auf Laufzeitüberprüfungen (z.B. \eng{Bounds Checks} bei \eng{Slices}), 
+die bei Fehlern in einem Programmabbruch (\texttt{panic!}) resultieren. Da ein solcher Abbruch im Kernel-Kontext unzulässig ist 
+und das alternative Anlegen einer sicheren Speicherkopie nicht den Performanzzielen dieser Arbeit entsprechen würde, 
+wird von den Vorteilen aus den spezifischen Restriktionen der \texttt{eBPF}-Laufzeitumgebung (vgl. \cref{Grundlagen.eBPF}) Nutzen ergriffen. 
+Diese gelten trotz roher \texttt{unsafe}-Zeigeroperationen, weshalb die Speichersicherheit dennoch gewahrt ist.
+Es findet also ein Verantwortungsübergang statt:
+Obwohl der \eng{Borrow-Checker} lokal umgangen wird, übernimmt der \texttt{eBPF}-\eng{Verifier} des Linux-Kernels die globale Sicherheitsgarantie. 
+Dieser führt bereits zur Ladezeit eine strenge statische Code-Analyse durch und verweigert die Ausführung des Programms, falls 
+theoretisch ungültige Speicherzugriffe möglich wären. Somit dient Rust in dieser Architektur primär der Typsicherheit und 
+Strukturierung, während der \eng{Verifier} die Rolle der Instanz übernimmt, die die Speichersicherheit durchsetzt.
 
 Wenn sich ein Paket als valide Antwort herausstellt, werden die Zieldaten über den \texttt{RingBuf} an den \eng{User Space} weitergeleitet. Die Daten werden in der
 in \texttt{xdp\_common} definierten Struktur namens \texttt{PacketLog} übertragen, welche die gescannte Adresse und den gescannten Port beinhaltet. Das \texttt{xdp\_common}
 Verzeichnis dient lediglich der Definition dieser Struktur und dazugehörigen Getter-Funktionen.
 
-Das anschließende Erstellen und Versenden des \texttt{RST}-Paketes dient einerseits dazu, die Verbindung beim Zielsystem korrekt zu schließen und somit einen 
-normalen TCP-Aushandlungsprozess zu simulieren, andererseits hindert es das Zielsystem am Senden weiterer \texttt{SYN-ACK}-Antworten sowie dem Aufrechterhalten
-eines Verbindungsstatuses. Um die \eng{Performance} zu erhöhen wird auch hier ein \eng{Zero-Copy}-Ansatz gewählt, indem das ursprüngliche Paket durch das Tauschen
+Das anschließende Erstellen und Versenden des \texttt{RST}-Paketes dient dazu, die Verbindung beim Zielsystem korrekt zu schließen und somit einen 
+normalen TCP-Aushandlungsprozess zu simulieren. Außerdem hindert es das Zielsystem am Senden weiterer \texttt{SYN-ACK}-Antworten sowie dem Aufrechterhalten
+eines Verbindungsstatus. Um die \eng{Performance} zu erhöhen wird auch hier ein \eng{Zero-Copy}-Ansatz gewählt, indem das ursprüngliche Paket durch das Tauschen
 entsprechender Werte und das Neuberechnen einiger Werte umgewandelt wird. Die Veränderungen der Felder sind in \cref{fig:rst_packet_creation} beschrieben.
 
 % urg_ptr und weitere Elemente vergessen

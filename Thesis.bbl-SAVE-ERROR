@@ -2065,6 +2065,41 @@
       \verb https://www.iso.org/obp/ui/#iso:std:iso-iec:25010:ed-2:v1:en
       \endverb
     \endentry
+    \entry{Love_2011}{book}{}{}
+      \name{author}{1}{}{%
+        {{hash=3262f21e1ec854d54444577e29125b8e}{%
+           family={Love},
+           familyi={L\bibinitperiod},
+           given={Robert},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {eng}%
+      }
+      \list{location}{1}{%
+        {Upper Saddle River, NJ}%
+      }
+      \list{publisher}{1}{%
+        {Addison-Wesley}%
+      }
+      \strng{namehash}{3262f21e1ec854d54444577e29125b8e}
+      \strng{fullhash}{3262f21e1ec854d54444577e29125b8e}
+      \strng{fullhashraw}{3262f21e1ec854d54444577e29125b8e}
+      \strng{bibnamehash}{3262f21e1ec854d54444577e29125b8e}
+      \strng{authorbibnamehash}{3262f21e1ec854d54444577e29125b8e}
+      \strng{authornamehash}{3262f21e1ec854d54444577e29125b8e}
+      \strng{authorfullhash}{3262f21e1ec854d54444577e29125b8e}
+      \strng{authorfullhashraw}{3262f21e1ec854d54444577e29125b8e}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{3. ed., 3. printing}
+      \field{isbn}{978-0-672-32946-3}
+      \field{series}{Developer’s library}
+      \field{title}{Linux kernel development: a thorough guide to the design and implementation of the Linux kernel}
+      \field{year}{2011}
+    \endentry
     \entry{tokio::task_Rust}{misc}{}{}
       \field{sortinit}{1}
       \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
@@ -2114,6 +2149,40 @@
       \verb https://docs.ebpf.io/linux/map-type/BPF_MAP_TYPE_PERCPU_ARRAY/
       \endverb
     \endentry
+    \entry{Rice_2023}{book}{}{}
+      \name{author}{1}{}{%
+        {{hash=43886f3c9e02ddddd3c6a84bddf71808}{%
+           family={Rice},
+           familyi={R\bibinitperiod},
+           given={Liz},
+           giveni={L\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \list{location}{1}{%
+        {Beijing Boston Farnham Sebastopol Tokyo}%
+      }
+      \list{publisher}{1}{%
+        {O’Reilly}%
+      }
+      \strng{namehash}{43886f3c9e02ddddd3c6a84bddf71808}
+      \strng{fullhash}{43886f3c9e02ddddd3c6a84bddf71808}
+      \strng{fullhashraw}{43886f3c9e02ddddd3c6a84bddf71808}
+      \strng{bibnamehash}{43886f3c9e02ddddd3c6a84bddf71808}
+      \strng{authorbibnamehash}{43886f3c9e02ddddd3c6a84bddf71808}
+      \strng{authornamehash}{43886f3c9e02ddddd3c6a84bddf71808}
+      \strng{authorfullhash}{43886f3c9e02ddddd3c6a84bddf71808}
+      \strng{authorfullhashraw}{43886f3c9e02ddddd3c6a84bddf71808}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{First edition}
+      \field{isbn}{978-1-0981-3512-6}
+      \field{title}{Learning eBPF: programming the linux kernel for enhanced observability, networking, and security}
+      \field{year}{2023}
+    \endentry
     \entry{kernel.org/doc/Documentation/filesystems/proc.txt}{misc}{}{}
       \field{sortinit}{1}
       \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
@@ -2134,6 +2203,38 @@
       \verb https://github.com/torvalds/linux/commit/9cbc948b5a20c9c054d9631099c0426c16da546b
       \endverb
     \endentry
+    \entry{bpf-helpers7_-_Linux_manual_page}{misc}{}{}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \verb{urlraw}
+      \verb https://man7.org/linux/man-pages/man7/bpf-helpers.7.html
+      \endverb
+      \verb{url}
+      \verb https://man7.org/linux/man-pages/man7/bpf-helpers.7.html
+      \endverb
+    \endentry
+    \entry{IntelI350}{manual}{}{}
+      \name{author}{1}{}{%
+        {{hash=b7f0fb90e404efb48f8a85a517dec3c9}{%
+           family={{Intel Corporation}},
+           familyi={I\bibinitperiod}}}%
+      }
+      \strng{namehash}{b7f0fb90e404efb48f8a85a517dec3c9}
+      \strng{fullhash}{b7f0fb90e404efb48f8a85a517dec3c9}
+      \strng{fullhashraw}{b7f0fb90e404efb48f8a85a517dec3c9}
+      \strng{bibnamehash}{b7f0fb90e404efb48f8a85a517dec3c9}
+      \strng{authorbibnamehash}{b7f0fb90e404efb48f8a85a517dec3c9}
+      \strng{authornamehash}{b7f0fb90e404efb48f8a85a517dec3c9}
+      \strng{authorfullhash}{b7f0fb90e404efb48f8a85a517dec3c9}
+      \strng{authorfullhashraw}{b7f0fb90e404efb48f8a85a517dec3c9}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Rev. 2.6}
+      \field{title}{Intel® Ethernet Controller I350 Datasheet}
+      \field{year}{2017}
+    \endentry
     \entry{IEEE_Standard_for_Ethernet}{misc}{}{}
       \list{publisher}{1}{%
         {IEEE}%
@@ -2153,7 +2254,6 @@
     \endentry
   \enddatalist
   \missing{TODO}
-  \missing{jemalloc}
 \endrefsection
 \endinput
 

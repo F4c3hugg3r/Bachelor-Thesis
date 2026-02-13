@@ -11,7 +11,7 @@
 \contentsline {subsection}{\numberline {2.2.1}SYN-Scanning}{5}{subsection.16}%
 \contentsline {section}{\numberline {2.3}Schnittstellen zur Paketverarbeitung unter Linux}{6}{section.18}%
 \contentsline {subsection}{\numberline {2.3.1}Linux}{6}{subsection.19}%
-\contentsline {subsection}{\numberline {2.3.2}\textit {Raw-Sockets} und \textit {Address Families}}{7}{subsection.20}%
+\contentsline {subsection}{\numberline {2.3.2}\textit {Raw-Sockets} und Adressfamilien}{7}{subsection.20}%
 \contentsline {subsection}{\numberline {2.3.3}Erweiterte Berkeley Packet Filter (\texttt {eBPF})}{8}{subsection.21}%
 \contentsline {subsection}{\numberline {2.3.4}eXpress Data Path (\texttt {XDP})}{8}{subsection.22}%
 \contentsline {section}{\numberline {2.4}Die Programmiersprache: Rust}{9}{section.25}%
@@ -55,46 +55,46 @@
 \contentsline {subsubsection}{\nonumberline Startprogramm (\texttt {mock\_program.rs})}{35}{subsubsection*.133}%
 \contentsline {subsubsection}{\nonumberline Einstiegspunkt (\texttt {main.rs})}{36}{subsubsection*.134}%
 \contentsline {subsubsection}{\nonumberline \textit {Standard Input Parser} (\texttt {parser\_std\_in})}{36}{subsubsection*.135}%
-\contentsline {subsubsection}{\nonumberline \textit {Scanjob} (\texttt {scanjob.rs})}{38}{subsubsection*.174}%
-\contentsline {section}{\numberline {5.3}\texttt {eBPF}}{39}{section.176}%
-\contentsline {subsection}{\numberline {5.3.1}\texttt {XDP}-Programm}{39}{subsection.177}%
-\contentsline {subsection}{\numberline {5.3.2}Funktionsweise}{39}{subsection.179}%
-\contentsline {section}{\numberline {5.4}Dokumentation}{43}{section.201}%
-\contentsline {chapter}{\numberline {6}Testumgebung und Durchführung}{44}{chapter.202}%
-\contentsline {section}{\numberline {6.1}Versuchsaufbau}{44}{section.203}%
-\contentsline {subsection}{\numberline {6.1.1}Aufbau des Ziel-Knotens}{45}{subsection.207}%
-\contentsline {subsection}{\numberline {6.1.2}Hardware-Spezifikation}{46}{subsection.211}%
-\contentsline {section}{\numberline {6.2}Versuchsablauf}{46}{section.213}%
-\contentsline {subsection}{\numberline {6.2.1}Datenaufbereitung und -erhebung}{47}{subsection.219}%
-\contentsline {section}{\numberline {6.3}Genutzte Parameter}{48}{section.220}%
-\contentsline {subsection}{\numberline {6.3.1}\textit {Proof of Concept}}{48}{subsection.221}%
-\contentsline {subsection}{\numberline {6.3.2}Evaluationsszenarien}{48}{subsection.224}%
-\contentsline {subsubsection}{\nonumberline \cref {req:S-01} - Performanzgrenze}{48}{subsubsection*.225}%
-\contentsline {subsubsection}{\nonumberline \cref {req:S-02} - Reale Umstände}{49}{subsubsection*.227}%
-\contentsline {section}{\numberline {6.4}Inkompatibilitäten und Limitierungen}{49}{section.229}%
-\contentsline {subsection}{\numberline {6.4.1}\textit {Zero-Copy}-Modus}{49}{subsection.230}%
-\contentsline {subsection}{\numberline {6.4.2}Paketrate}{50}{subsection.234}%
-\contentsline {chapter}{\numberline {7}Evaluation und Ausblick}{51}{chapter.235}%
-\contentsline {section}{\numberline {7.1}Darstellung und Reproduzierbarkeit der Messergebnisse}{51}{section.236}%
-\contentsline {subsection}{\numberline {7.1.1}Ergebnisse Evaluationstests: \textit {Proof of Concept}}{51}{subsection.237}%
-\contentsline {subsection}{\numberline {7.1.2}Ergebnisse \cref {req:S-01}: Performanzgrenzen}{52}{subsection.240}%
-\contentsline {subsection}{\numberline {7.1.3}Ergebnisse \cref {req:S-02}: Reales Szenario}{53}{subsection.242}%
-\contentsline {section}{\numberline {7.2}Diskussion der Ergebnisse}{53}{section.244}%
-\contentsline {subsection}{\numberline {7.2.1}\textit {Proof of Concept}}{53}{subsection.245}%
-\contentsline {subsection}{\numberline {7.2.2}Performance-Effizienz}{54}{subsection.246}%
-\contentsline {subsubsection}{\nonumberline \cref {req:S-01}}{54}{subsubsection*.247}%
-\contentsline {subsubsection}{\nonumberline \cref {req:S-02}}{55}{subsubsection*.248}%
-\contentsline {subsection}{\numberline {7.2.3}Abgleich mit den Anforderungen}{55}{subsection.249}%
-\contentsline {subsection}{\numberline {7.2.4}Wirtschaftliche und betriebliche Implikationen}{55}{subsection.251}%
-\contentsline {section}{\numberline {7.3}Ausblick}{55}{section.252}%
-\contentsline {section}{\numberline {7.4}Fazit}{55}{section.253}%
+\contentsline {subsubsection}{\nonumberline \textit {Scanjob} (\texttt {scanjob.rs})}{36}{subsubsection*.136}%
+\contentsline {section}{\numberline {5.3}\texttt {eBPF}}{38}{section.138}%
+\contentsline {subsection}{\numberline {5.3.1}\texttt {XDP}-Programm}{38}{subsection.139}%
+\contentsline {subsection}{\numberline {5.3.2}Funktionsweise}{40}{subsection.141}%
+\contentsline {section}{\numberline {5.4}Dokumentation}{42}{section.163}%
+\contentsline {chapter}{\numberline {6}Testumgebung und Durchführung}{43}{chapter.164}%
+\contentsline {section}{\numberline {6.1}Versuchsaufbau}{43}{section.165}%
+\contentsline {subsection}{\numberline {6.1.1}Aufbau des Ziel-Knotens}{44}{subsection.169}%
+\contentsline {subsection}{\numberline {6.1.2}Hardware-Spezifikation}{45}{subsection.173}%
+\contentsline {section}{\numberline {6.2}Versuchsablauf}{45}{section.175}%
+\contentsline {subsection}{\numberline {6.2.1}Datenaufbereitung und -erhebung}{46}{subsection.180}%
+\contentsline {section}{\numberline {6.3}Genutzte Parameter}{47}{section.181}%
+\contentsline {subsection}{\numberline {6.3.1}\textit {Proof of Concept}}{47}{subsection.182}%
+\contentsline {subsection}{\numberline {6.3.2}Evaluationsszenarien}{47}{subsection.185}%
+\contentsline {subsubsection}{\nonumberline \cref {req:S-01} - Performanzgrenze}{48}{subsubsection*.186}%
+\contentsline {subsubsection}{\nonumberline \cref {req:S-02} - Reale Umstände}{48}{subsubsection*.188}%
+\contentsline {section}{\numberline {6.4}Inkompatibilitäten und Limitierungen}{49}{section.190}%
+\contentsline {subsection}{\numberline {6.4.1}\textit {Zero-Copy}-Modus}{49}{subsection.191}%
+\contentsline {subsection}{\numberline {6.4.2}Paketrate}{49}{subsection.193}%
+\contentsline {chapter}{\numberline {7}Evaluation und Ausblick}{51}{chapter.194}%
+\contentsline {section}{\numberline {7.1}Darstellung und Reproduzierbarkeit der Messergebnisse}{51}{section.195}%
+\contentsline {subsection}{\numberline {7.1.1}Ergebnisse Evaluationstests: \textit {Proof of Concept}}{51}{subsection.196}%
+\contentsline {subsection}{\numberline {7.1.2}Ergebnisse \cref {req:S-01}: Performanzgrenzen}{53}{subsection.199}%
+\contentsline {subsection}{\numberline {7.1.3}Ergebnisse \cref {req:S-02}: Reales Szenario}{53}{subsection.201}%
+\contentsline {section}{\numberline {7.2}Diskussion der Ergebnisse}{54}{section.203}%
+\contentsline {subsection}{\numberline {7.2.1}\textit {Proof of Concept}}{54}{subsection.204}%
+\contentsline {subsection}{\numberline {7.2.2}\textit {Performance}-Effizienz}{55}{subsection.205}%
+\contentsline {subsubsection}{\nonumberline \cref {req:S-01}}{55}{subsubsection*.206}%
+\contentsline {subsubsection}{\nonumberline \cref {req:S-02}}{56}{subsubsection*.207}%
+\contentsline {subsection}{\numberline {7.2.3}Abgleich mit den Anforderungen}{56}{subsection.208}%
+\contentsline {subsection}{\numberline {7.2.4}Wirtschaftliche und betriebliche Implikationen}{58}{subsection.210}%
+\contentsline {section}{\numberline {7.3}Fazit}{58}{section.211}%
+\contentsline {section}{\numberline {7.4}Ausblick}{58}{section.212}%
 \def \@chapapp {\appendixname }
-\contentsline {chapter}{\numberline {A}Ergänzende Systeminformationen}{57}{appendix.254}%
-\contentsline {section}{\numberline {A.1}Netzwerkkarten-Konfiguration (Ethtool)}{57}{section.255}%
-\contentsline {section}{\numberline {A.2}Scanergebnisse \cref {req:S-01}}{57}{section.256}%
-\contentsline {chapter}{\nonumberline Abbildungsverzeichnis}{61}{chapter*.260}%
-\contentsline {chapter}{\nonumberline Tabellenverzeichnis}{62}{chapter*.261}%
-\contentsline {chapter}{\nonumberline {Quelltextverzeichnis}}{63}{chapter*.262}%
-\contentsline {chapter}{\nonumberline {Literaturverzeichnis}}{64}{chapter*.263}%
-\contentsline {chapter}{\nonumberline Eigenständigkeitserklärung}{69}{chapter*.264}%
+\contentsline {chapter}{\numberline {A}Ergänzende Systeminformationen}{61}{appendix.213}%
+\contentsline {section}{\numberline {A.1}Netzwerkkarten-Konfiguration (Ethtool)}{61}{section.214}%
+\contentsline {section}{\numberline {A.2}Scanergebnisse \cref {req:S-01}}{61}{section.215}%
+\contentsline {chapter}{\nonumberline Abbildungsverzeichnis}{65}{chapter*.219}%
+\contentsline {chapter}{\nonumberline Tabellenverzeichnis}{66}{chapter*.220}%
+\contentsline {chapter}{\nonumberline {Quelltextverzeichnis}}{67}{chapter*.221}%
+\contentsline {chapter}{\nonumberline {Literaturverzeichnis}}{68}{chapter*.222}%
+\contentsline {chapter}{\nonumberline Eigenständigkeitserklärung}{74}{chapter*.223}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

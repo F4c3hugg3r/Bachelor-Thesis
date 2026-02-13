@@ -199,7 +199,8 @@ abzuschießen, kann anschließend noch ein Paket, bei welchem die \texttt{RST}-F
 
 Um antwortende \eng{Hosts} effizient zu identifizieren, wird das Prinzip des \texttt{SYN}-Cookies adaptiert \cite{Durumeric_Wustrow_Halderman}, welches ursprünglich als 
 Abwehrmechanismus gegen \eng{Denial-of-Service}-Angriffe spezifiziert wurde \cite[S. 8]{Eddy_2007}. Dafür werden verbindungsspezifische 
-Informationen unter Verwendung eines \eng{Hash}-Algorithmus (z. B. \eng{Keyed SipHash} TODO opt. Quelle) kodiert 
+Informationen unter Verwendung eines \eng{Hash}-Algorithmus (z. B. \eng{Keyed SipHash}) kodiert 
+% maybe TODO opt. Quelle für Siphash
 und als \eng{Sequence Number} in den TCP-Header des ausgehenden \texttt{SYN}-Pakets eingetragen.
 Antwortet ein Ziel-\eng{Host} mit einem \texttt{SYN-ACK}-Paket, so enthält dessen \eng{Acknowledgment Number} gemäß TCP-Spezifikation den inkrementierten 
 Wert der ursprünglichen \eng{Sequence Number}. Die Validierung lässt sich abstrahiert wie folgt beschreiben:
@@ -249,7 +250,7 @@ Speicherbereichen, erzeugt \eng{Overhead}. Beim Versenden und Empfangen sehr vie
 summiert sich dieser \eng{Overhead}, da jedes Paket im Normalfall sowohl \eng{Kernel Space}, als auch \eng{User Space}, 
 durchschreitet. Dies belastet die CPU und wird für den Durchsatz zum Flaschenhals \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}.
 
-\subsection{\eng{Raw-Sockets} und \eng{Address Families}}
+\subsection{\eng{Raw-Sockets} und Adressfamilien}
 Als Endpunkt für die Kommunikation werden \eng{Sockets} genutzt \cite{socket2_linux_manpage}. Die traditionelle 
 Netzwerkprogrammierung unter Linux abstrahiert die Komplexität der Netzwerkprotokolle wie TCP. So übernimmt der Kernel
 dabei vollständig den \eng{Three-Way-Handshake} und die Zustandsverwaltung \cite[S.~1158]{Kerrisk_2018}. 
@@ -261,9 +262,8 @@ und zu empfangen \cite{raw7_linux_manpage}. Der Entwickler muss die Protokoll-He
 Dies ist für \eng{Half-Open} Portscanner essenziell, um individuelle Pakete zu generieren, ohne dass der Kernel 
 automatisch in den Verbindungsaufbau eingreift. 
 
-% TODO eindeutschen
-Die \eng{Address Families} definieren dabei die Interpretation der Adressen und die Ebene des Zugriffs \cite{address_families7_linux_manpage}. 
-Der Linux-Kernel stellt diverse Address-Familien bereit. Zum Verständnis, im Rahmen dieses Projektes, sind folgende Varianten von zentraler 
+Die Adressfamilien definieren dabei die Interpretation der Adressen und die Ebene des Zugriffs \cite{address_families7_linux_manpage}. 
+Der Linux-Kernel stellt diverse Adressfamilien bereit. Zum Verständnis, im Rahmen dieses Projektes, sind folgende Varianten von zentraler 
 Bedeutung:
 
 \begin{itemize} 
@@ -273,7 +273,7 @@ Bedeutung:
  	\item \textbf{\texttt{AF\_PACKET} (Sicherungsschicht):} Diese Familie ermöglicht direkten Zugriff auf Layer 2 (Ethernet-Ebene). 
 	Anwendungen erzeugen vollständige \eng{Ethernet-Frames} und haben somit die volle Kontrolle.
     Das Versenden oder Empfangen von Paketen erfordert jedoch weiterhin die Allokation von Kernel-internen Datenstrukturen \cite{packet_7_-_Linux_manual_page}.
-    \item \textbf{\texttt{AF\_XDP} (Hochperformant):} Hierbei handelt es sich um eine speziell für Hochleistungsanwendungen optimierte \eng{Address Family}.
+    \item \textbf{\texttt{AF\_XDP} (Hochperformant):} Hierbei handelt es sich um eine speziell für Hochleistungsanwendungen optimierte Adressfamilie.
 	Sie ermöglicht das Senden und Empfangen von Paketen unter Umgehung des regulären Kernel-Netzwerkstacks. Dabei ist zwischen dem universell verfügbaren \eng{Copy-Mode},
     in welchem Daten zwischen Kernel und User Space kopiert werden und dem Treiber-abhängigen \eng{Zero-Copy-Mode}, in welchem Daten direkt in den Speicher der 
     Anwendung geschrieben werden zu unterscheiden \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}. 
@@ -288,7 +288,7 @@ wurde die Technologie erweitert, sodass grundlegend neue Möglichkeiten außerha
 neu kompilieren zu müssen \cite{Nishanth_Reddy_Pinnapareddy_2025}. \texttt{eBPF}-Programme werden zur Laufzeit 
 durch einen \eng{JIT-Compiler} (\eng{Just-In-Time}) in native Maschinensprache übersetzt. Ein \eng{Verifier} stellt 
 vor der Ausführung sicher, dass der Code sicher ist \cite{Vieira_Castanho_Pacífico_Santos_Júnior_Vieira_2021}. 
-So werden Fehler wie beispielsweise Endlosschleifen oder falsche Speicherzugriffe vermieden.
+So wird undefiniertes Verhalten durch Fehler wie beispielsweise Endlosschleifen oder falsche Speicherzugriffe strikt vermieden.
 
 Da eBPF-Programme ereignisbasiert ausgeführt werden und keinen eigenen persistenten Speicher besitzen, 
 werden sogenannte \texttt{bpf} Maps verwendet, um Zustände zu bewahren und Daten auszutauschen \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}. 
