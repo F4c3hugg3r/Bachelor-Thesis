@@ -9,19 +9,19 @@
 
 \section*{Abstract}
 
-Horizontal network scanning is a fundamental method in proactive security research. Established high-performance scanners 
-such as ZMap or Masscan are predominantly based on C, which enables maximum performance but poses risks of security 
-vulnerabilities due to a lack of memory safety. This thesis investigates the extent to which a scanner implemented in 
-Rust can compete with these tools in terms of throughput and resource efficiency, while offering an intrinsically higher 
-level of security through the language's inherent guarantees.
+Horizontal scanning of networks or address spaces constitutes a fundamental method in proactive security research. Established 
+high-performance scanners such as ZMap or Masscan are predominantly based on C. While this enables maximum performance, it entails 
+risks regarding security vulnerabilities due to manual memory management.
 
-To this end, an asynchronous \texttt{SYN} scanner (\enquote{SYN-Rust}) was developed that leverages modern Linux kernel interfaces such as 
-\texttt{AF\_XDP} and \texttt{eBPF} to partially bypass the network stack. Complementing this, the user-space employs a logically decoupled 
-architecture utilizing the \texttt{tokio} runtime to ensure efficient concurrency. The prototype was evaluated against ZMap and 
-Masscan in a controlled Gigabit test environment.
+This bachelor thesis investigates to what extent a scanner implemented in Rust can compete with these tools in terms of throughput 
+and resource efficiency, while offering an intrinsically higher level of security through the language's inherent guarantees. 
+For this purpose, an asynchronous \texttt{SYN} scanner (\enquote{SYN-Rust}) was developed, which utilizes modern Linux kernel 
+interfaces such as \texttt{AF\_XDP} and \texttt{eBPF} to partially bypass the network stack. The software architecture in user-space 
+is based on a strict decoupling of functional components. Supported by the asynchronous \texttt{tokio} runtime, this design facilitates 
+efficient, concurrent processing.
 
-The results indicate that the Rust implementation in zero-copy mode fully saturates the bandwidth limit of the Gigabit 
-interface. Particularly noteworthy is the resource efficiency: SYN-Rust processed approximately three times more packets
-per percentage point of CPU utilization than Masscan and four times more than ZMap. The thesis thus demonstrates that Rust, 
-combined with modern kernel mechanisms, represents a powerful and secure alternative to C for developing low-level network 
-applications in the field of network scanning.
+The prototype was evaluated against ZMap and Masscan in a controlled gigabit test environment. The results demonstrate that the 
+Rust implementation in \eng{Zero-Copy} mode fully saturates the physical bandwidth. Of particular note is the resource efficiency: 
+SYN-Rust processed approximately three times more packets per percent of CPU utilization than Masscan and four times more than ZMap. 
+Thus, this thesis demonstrates that Rust, in combination with modern kernel mechanisms, represents a powerful and secure alternative 
+to C for the development of system-level network scanners.

@@ -136,21 +136,21 @@ des TCP-Headers nach dem in \cref{fig:tcp_handshake} beschriebenen Muster ausget
 
         % --- SERVER SEITE (Rechts) ---
         % LISTEN Zustand
-        \node[anchor=west] at (\serverx+0.2, \yListen) {<LAUSCHEN>};
+       % \node[anchor=west] at (\serverx+0.2, \yListen) {<LAUSCHEN>};
 
         % SYN_RECV Zustand
-        \node[anchor=west] at (\serverx+0.2, \ySynAckSend) {<SYN\_EMPFANGEN>};
+        %\node[anchor=west] at (\serverx+0.2, \ySynAckSend) {<SYN\_EMPFANGEN>};
         
         % ESTABLISHED Zustand
-        \node[anchor=west] at (\serverx+0.2, \yAckRecv) {<VERBUNDEN>};
+       % \node[anchor=west] at (\serverx+0.2, \yAckRecv) {<VERBUNDEN>};
 
 
         % --- CLIENT SEITE (Links) ---
         % SYN_SENT Zustand
-        \node[anchor=east] at (\clientx-0.2, \ySynSend) {<SYN\_GESENDET>};
+       % \node[anchor=east] at (\clientx-0.2, \ySynSend) {<SYN\_GESENDET>};
 
         % ESTABLISHED Zustand
-        \node[anchor=east] at (\clientx-0.2, \yAckSend) {<VERBUNDEN>};
+       % \node[anchor=east] at (\clientx-0.2, \yAckSend) {<VERBUNDEN>};
 
 
         % --- NACHRICHTEN (Pfeile) ---
@@ -265,12 +265,12 @@ Bedeutung:
 
 \begin{itemize} 
 	\itemsep 0pt
-	\item \textbf{\texttt{AF\_INET} (Netzwerk-Ebene):} Diese Familie operiert auf Layer 3 der IP-Ebene \cite{raw7_linux_manpage}. Bei Nutzung von \eng{Raw-Sockets} fügt der Kernel 
+	\item \textbf{\texttt{AF\_INET}:} Diese Familie operiert auf Layer 3 der IP-Ebene \cite{raw7_linux_manpage}. Bei Nutzung von \eng{Raw-Sockets} fügt der Kernel 
     standardmäßig den IP-Header hinzu und übernimmt das vollständige Routing zur korrekten Netzwerkschnittstelle \cite[S.~1202]{Kerrisk_2018}.
- 	\item \textbf{\texttt{AF\_PACKET} (Sicherungsschicht):} Diese Familie ermöglicht direkten Zugriff auf Layer 2 (Ethernet-Ebene). 
+ 	\item \textbf{\texttt{AF\_PACKET}:} Diese Familie ermöglicht direkten Zugriff auf Layer 2 (Ethernet-Ebene). 
 	Anwendungen erzeugen vollständige \eng{Ethernet-Frames} und haben somit die volle Kontrolle.
     Das Versenden oder Empfangen von Paketen erfordert jedoch weiterhin die Allokation von Kernel-internen Datenstrukturen \cite{packet_7_-_Linux_manual_page}.
-    \item \textbf{\texttt{AF\_XDP} (Hochperformant):} Hierbei handelt es sich um eine speziell für Hochleistungsanwendungen optimierte Adressfamilie.
+    \item \textbf{\texttt{AF\_XDP}:} Hierbei handelt es sich um eine speziell für Hochleistungsanwendungen optimierte Adressfamilie.
 	Sie ermöglicht das Senden und Empfangen von Paketen unter Umgehung des regulären Kernel-Netzwerkstacks. Dabei ist zwischen dem universell verfügbaren \eng{Copy-Mode},
     in welchem Daten zwischen Kernel und User-Space kopiert werden, und dem Treiber-abhängigen \eng{Zero-Copy-Mode}, in welchem Daten direkt in den Speicher der 
     Anwendung geschrieben werden, zu unterscheiden \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}. 
@@ -301,6 +301,13 @@ Für einen \texttt{SYN}-Scanner ist \texttt{eBPF} nützlich, da es ermöglicht, 
 zu filtern und an den \eng{User-Space} weiterzuleiten, bevor teure Speicherstrukturen des Kernels angelegt werden. 
 So werden nur relevante Daten an den \eng{User-Space} weitergereicht. 
 
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{pictures/RX_Kernel_nr.drawio.pdf}
+	\caption{Der Empfangspfad durch den Kernel bei der Nutzung von \texttt{XDP} und \texttt{eBPF} (vereinfacht). Orientiert an Høiland et al. \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}.}
+	\label{fig:rx_xdp}
+\end{figure}
+
 \subsection{eXpress Data Path (\texttt{XDP})} \label{Grundlagen.XDP}
 \texttt{XDP} definiert eine limitierte Ausführungsumgebung für \texttt{eBPF}-Programme, die direkt im Kontext des 
 Netzwerktreibers ausgeführt werden.
@@ -319,13 +326,6 @@ gesamten Netzwerk-Stack. Erst danach erreichen die Daten den \eng{User-Space}. D
 komplexer Metadatenstrukturen (eines \texttt{sk\_buff} \footnote{\eng{Socket Buffer}}) \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}\cite{Zhang_Shu_Chen_Xie_2024}.
 \texttt{XDP} greift vor dieser Allokation ein (siehe \cref{fig:rx_xdp}). Tests zeigen, dass \texttt{XDP} auf einem einzelnen CPU-Kern bis zu 
 fünfmal mehr Pakete pro Sekunde verarbeiten kann als der Standard Linux-Stack \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}.
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=\textwidth]{pictures/RX_Kernel_nr.drawio.pdf}
-	\caption{Der Empfangspfad durch den Kernel bei der Nutzung von \texttt{XDP} und \texttt{eBPF} (vereinfacht). Orientiert an Høiland et al. \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}.}
-	\label{fig:rx_xdp}
-\end{figure}
 
 Die \eng{Performance} und Verfügbarkeit von \texttt{XDP} hängen vom verwendeten Betriebsmodus ab. 
 Nach Zhang et al. \cite{Zhang_Shu_Chen_Xie_2024} und Vieira et al. \cite{Vieira_Castanho_Pacífico_Santos_Júnior_Vieira_2021} 

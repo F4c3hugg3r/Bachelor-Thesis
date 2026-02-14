@@ -586,12 +586,12 @@ INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmbxi10.tfm
 INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmbxi10.tfm
 INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmtk10.tfm
 INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmtk10.tfm
+INPUT ./pictures/RX_Kernel_nr.drawio.pdf
+INPUT ./pictures/RX_Kernel_nr.drawio.pdf
+INPUT ./pictures/RX_Kernel_nr.drawio.pdf
+INPUT ./pictures/RX_Kernel_nr.drawio.pdf
+INPUT ./pictures/RX_Kernel_nr.drawio.pdf
 INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmri10.tfm
-INPUT ./pictures/RX_Kernel_nr.drawio.pdf
-INPUT ./pictures/RX_Kernel_nr.drawio.pdf
-INPUT ./pictures/RX_Kernel_nr.drawio.pdf
-INPUT ./pictures/RX_Kernel_nr.drawio.pdf
-INPUT ./pictures/RX_Kernel_nr.drawio.pdf
 INPUT ./chapter/03_Stand_der_Technik.tex
 INPUT ./chapter/03_Stand_der_Technik.tex
 INPUT chapter/03_Stand_der_Technik.tex
@@ -622,6 +622,11 @@ INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmtt8.tfm
 INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmtt8.tfm
 INPUT c:/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc
 INPUT c:/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc
+INPUT ./pictures/XDP Batch Processing-2026-02-14-183034.png
+INPUT ./pictures/XDP Batch Processing-2026-02-14-183034.png
+INPUT ./pictures/XDP Batch Processing-2026-02-14-183034.png
+INPUT ./pictures/XDP Batch Processing-2026-02-14-183034.png
+INPUT ./pictures/XDP Batch Processing-2026-02-14-183034.png
 INPUT ./pictures/capturing_neu_nr.drawio.pdf
 INPUT ./pictures/capturing_neu_nr.drawio.pdf
 INPUT ./pictures/capturing_neu_nr.drawio.pdf

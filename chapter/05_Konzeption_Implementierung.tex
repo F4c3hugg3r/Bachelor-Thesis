@@ -266,8 +266,15 @@ Der \eng{Sender} verarbeitet in einer Endlosschleife eingehende Paket-\eng{Batch
 über die beim Start initialisierte Netzwerkschnittstelle (vgl. \cref{req:F-02}), bis die Kommunikationskanäle geschlossen werden. 
 
 Um eine fundierte Vergleichsbasis zu schaffen und den tatsächlichen Mehrwert komplexer Verfahren zu evaluieren, 
-unterstützt die Implementierung sowohl \texttt{AF\_PACKET} als auch \texttt{AF\_XDP} als Sende-Backend. 
-% wahlweise TODO flowchart für Senden mit xdp / afp einfügen 
+unterstützt die Implementierung sowohl \texttt{AF\_PACKET} als auch \texttt{AF\_XDP} als Sende-Backend. Der Sendeprozess eines
+\eng{Batches} ist in \cref{fig:send_af_xdp} beschrieben.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{pictures/XDP Batch Processing-2026-02-14-183034.png}
+	\caption{Ablauf des Sendens von Batches via AF\_XDP in SYN-Rust (vereinfacht)}
+	\label{fig:send_af_xdp}
+\end{figure}
 
 \subsection{Ergebnisverarbeitung (\texttt{capturing\_packets})}
 In der Ergebnisverarbeitung werden die durch den \texttt{eBPF} vorgeprüften Daten der gültigen Antworten entgegengenommen und einer
@@ -359,7 +366,7 @@ Der \eng{Parser} parst zum einen die Konfigurationsparameter aus dem \eng{Standa
 Das \eng{Parsing} der im Binärformat übertragenen Daten erfolgt unter Berücksichtigung verschiedener Optimierungsmaßnahmen. 
 So wird ein asynchroner \texttt{tokio}-Reader eingesetzt, um zu gewährleisten, dass der Einleseprozess auch bei ausgelasteten 
 Kommunikationskanälen andere Programmteile nicht blockiert. Gemäß den in \cref{impl:performance_steigernde_maßnahmen} definierten 
-Prinzipien werden zudem \eng{Batching} und \eng{Zero-Copy}-Techniken angewandt (vgl. \cref{lst:parser_binary}). 
+Prinzipien werden zudem \eng{Batching} und \eng{Zero-Copy}-Techniken angewandt (vgl. Codeauszug \ref{lst:parser_binary}). 
 Letzteres wird unter anderem durch die Nutzung von \texttt{std::mem::replace} realisiert, womit Speicherpuffer effizient 
 durch den Austausch von \eng{Ownership} verwaltet werden. Dies ersetzt kostenintensive Kopieroperationen. 
 %Um auch bei fragmentierten Datenübertragungen keine Informationen zu verlieren, 
