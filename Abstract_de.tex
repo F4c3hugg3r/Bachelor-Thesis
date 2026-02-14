@@ -8,15 +8,22 @@
 
 
 \section*{Kurzfassung}
-
-Diese Arbeit beschreibt die Erstellung einer internetfähigen Steuerung für elektrische Verbraucher. Anforderungen an die Steuerung werden nach dem Kano-Modell definiert. Über eine Nutzwertanalyse werden vorhandene Techniken und Standards bewertet. Exemplarisch wird die Lösung mit dem größten Nutzwert implementiert.
-
-Ein Zigbit-Modul, bestehend aus einem AVR Mikrocontroller und einem IEEE 802.15.4 Funkchip, bildet die Basis für die Hardware. Zusammen mit einem selbst dimensioniertem Kondensatornetzteil wird das Modul in einem Steckdosengehäuse verbaut.
-
-Um zukunftssicher zu sein, wird das Protokoll IPv6 eingesetzt. Die Adaptionsschicht übernimmt das Protokoll 6LoWPAN. Das verwendete Betriebssystem Contiki besitzt eine fertige Webserver-Applikation, die für die eigenen Zwecke angepasst wird. Das Protokoll IEC 60870-5-104 wird neu implementiert. Es basiert auf dem TCP/IP-Modell und wird vor allem im Umfeld von Energieleitsystemen eingesetzt. Es eignet sich besonders für einen automatisierten Zugriff.
-
-Über eine öffentliche Adresse des IPv6-Tunnelbrokers SixXS ist die Steuerung weltweit erreichbar und der elektrische Verbraucher kann über einen Webbrowser oder von einem Energieleitsystem ein- und ausgeschaltet werden.
-
-Die Anforderungen nach dem Kano-Modell wurden nahezu vollständig erfüllt. Die Implementierung eines Webservers und einer IEC 60870-5-104 Applikation ist mit den gegebenen limitierten Ressourcen möglich. Anwendungsmöglichkeiten für die Steuerung liegen im Bereich eHome und Smart Grid.
-
 %Motivation, Fragestellung, Methodik, Ergebnisse, Schlussfolgerungen
+
+Das horizontale Scannen von Netzwerken oder Adressräumen ist eine fundamentale Methode der proaktiven Sicherheitsforschung. 
+Etablierte Hochleistungsscanner wie ZMap oder Masscan basieren 
+überwiegend auf C, was zwar maximale \eng{Performance} ermöglicht, jedoch aufgrund fehlender Speichersicherheit Risiken für 
+Sicherheitslücken birgt. Diese Bachelorarbeit untersucht, inwieweit ein in Rust implementierter Scanner hinsichtlich 
+Durchsatz und Ressourceneffizienz mit diesen Tools konkurrieren kann und dabei durch die sprach-eigenen Garantien ein 
+intrinsisch höheres Sicherheitsniveau bietet.
+
+Hierfür wurde ein asynchroner \texttt{SYN}-Scanner (\enquote{SYN-Rust}) entwickelt, der moderne Linux-Kernel-Schnittstellen wie \texttt{AF\_XDP} und 
+\texttt{eBPF} nutzt, um den Netzwerkstack partiell zu umgehen. Ergänzend kommt im \eng{User-Space} eine logisch entkoppelte Architektur 
+unter Verwendung der \texttt{tokio}-Laufzeitumgebung zum Einsatz, die eine effiziente Nebenläufigkeit gewährleistet.
+In einer kontrollierten Gigabit-Testumgebung wurde der Prototyp gegen ZMap und Masscan evaluiert.
+
+Die Ergebnisse zeigen, dass die Rust-Implementierung im \eng{Zero-Copy}-Modus die Bandbreitengrenze der 
+Gigabit-Schnittstelle vollständig ausschöpft. Besonders hervorzuheben ist die Ressourceneffizienz: SYN-Rust 
+verarbeitete pro CPU-Auslastungsprozent etwa dreimal mehr Pakete als Masscan und viermal mehr als ZMap. 
+Die Arbeit belegt somit, dass Rust in Kombination mit modernen Kernel-Mechanismen eine leistungsfähige und sichere 
+Alternative zu C für die Entwicklung systemnaher Netzwerkanwendungen im Bereich des Netzwerkscannings darstellt.

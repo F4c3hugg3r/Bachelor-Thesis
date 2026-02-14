@@ -12,20 +12,18 @@ In diesem Kapitel werden die in der Testumgebung ermittelten Messergebnisse vorg
 die Leistungsfähigkeit des implementierten Rust-Scanners im Vergleich zu etablierten Tools zu bewerten und die Erfüllung der 
 definierten Anforderungen zu überprüfen. Abschließend wird ein Ausblick auf mögliche Weiterentwicklungen gegeben.
 
-% TODO add citations to Github repos
-% Um Datei aus dem Repo zu referenzieren: "erschließen sich, unter Anwendung der Auswertungsskripte \texttt{calc_efficiency.py} und \texttt{validate.py} \cite{BachelorRepo}"
-% Möglicherweise Permalink nutzen https://github.com/F4c3hugg3r/SYN-Rust/tree/9b948d456828c4e8160d2835728fde6f43a3b75c/scanner
 \section{Darstellung und Reproduzierbarkeit der Messergebnisse}
 Die Messergebnisse wurden mittels der in \cref{Versuchsablauf.Datenaufbereitung} beschriebenen Skripte aufbereitet und stehen im Anhang zur
 Verfügung. Im Folgenden wird nur auf die ausschlaggebenden Ergebnisse eingegangen. Für jede Messung liegen allerdings umfangreiche
-Daten, sowie Diagramme und Tabellen im bereitgestellten GitHub Repository \cref{TODO} zur Verfügung. Der Ablauf, inklusive Erhebung und
-Ausgaben der Tests lässt sich dort unter \texttt{logs\_benchmark\_suite.txt} und \texttt{logs\_dummy\_receiver.txt} nachvollziehen. 
-Mittels dessen und der \texttt{README.md}-Datei können die \eng{Benchmarks} exakt reproduziert und nachvollzogen werden. 
+Daten sowie Diagramme und Tabellen im bereitgestellten GitHub Repository \cite{F4c3hugg3r_2026} zur Verfügung. Der Ablauf, inklusive Erhebung und
+Ausgaben der Tests, lässt sich dort unter \texttt{logs\_benchmark\_suite.txt} und \texttt{logs\_dummy\_receiver.txt} nachvollziehen. 
+Mithilfe dieser Dateien und der \texttt{README.md}-Datei können die \eng{Benchmarks} exakt reproduziert und nachvollzogen werden. 
 
-\subsection{Ergebnisse Evaluationstests: \eng{Proof of Concept}} \label{Ergebnisse.PoC}
+% maybe TODO als Text darstellen und Tabellen in Anhang packen
+\subsection{Ergebnisse der Evaluationstests: \eng{Proof of Concept}} \label{Ergebnisse.PoC}
 Die Auswertung der Ausgabedateien der Scanner für \cref{req:T-01} zeigt bei allen Varianten für den ersten Test die in 
-\cref{tab:results_s01_quant} gezeigten Ergebnisse. Außerdem ergab die Auswertung, dass es sich exakt um jede gerade IP-Adresse des 
-genutzten IP-Raumes handelte und keine Duplikate oder \eng{False Positives} auftraten. \cref{TODO logs von scannner und von ziel-knoten referenzieren}
+\cref{tab:results_s01_quant} gezeigten Ergebnisse. Außerdem ergab die Auswertung, dass exakt jede gerade IP-Adresse des 
+genutzten IP-Raumes erfasst wurde und keine Duplikate oder \eng{False Positives} auftraten \cite{F4c3hugg3r_2026}.
 
 \begin{table}[htbp]
     \centering
@@ -46,9 +44,9 @@ genutzten IP-Raumes handelte und keine Duplikate oder \eng{False Positives} auft
     \label{tab:results_s01_quant}
 \end{table}
 
-Beim \cref{req:T-02} zeigten ebenfalls alle Variationen das gleiche Verhalten. Die \cref{tab:results_s02_quant} steht also stellvertretend für alle Testabläufe.
-Die Ergebnisse für den Ziel-Knoten sind in den Dateien \texttt{capture\_no\_rst.pcap} und \texttt{capture\_with\_rst.pcap} \cite{TODO} zu finden. Die des
-Scanner-Knotens in \texttt{xdpdump\_no\_rst.pcap} und \texttt{xdpdump\_with\_rst.pcap} \cite{TODO}.
+Bei \cref{req:T-02} zeigten ebenfalls alle Variationen das gleiche Verhalten. Die \cref{tab:results_s02_quant} steht also stellvertretend für alle Testabläufe.
+Die Ergebnisse für den Ziel-Knoten sind in den Dateien \texttt{capture\_no\_rst.pcap} und \texttt{capture\_with\_rst.pcap} \cite{F4c3hugg3r_2026} zu finden. Die Daten des
+Scanner-Knotens liegen in \texttt{xdpdump\_no\_rst.pcap} und \texttt{xdpdump\_with\_rst.pcap} \cite{F4c3hugg3r_2026} vor.
 
 \begin{table}[htbp] 
     \centering 
@@ -83,11 +81,11 @@ Scanner-Knotens in \texttt{xdpdump\_no\_rst.pcap} und \texttt{xdpdump\_with\_rst
 Gemäß \cref{Versuchsablauf.Datenaufbereitung}
 wird in \textit{Aktiv} (Zeitraum während Paketfluss besteht) und \textit{Gesamt} (Gesamte Laufzeit des Programmes)
 unterschieden. \textit{Netto} beschreibt dabei, dass die Werte von der Grundlast bereinigt wurden.
-Aus den Ergebnissen des Tests zum \cref{req:T-02} erschließen sich nach [TODO Ergebnisse] und [TODO Validierung] die
+Aus den Ergebnissen des Tests zum \cref{req:T-02}\cite{F4c3hugg3r_2026} erschließen sich nach Evaluationsszenario\_1/zusammenfassung\_ergebnisse\_final.csv und Evaluationsszenario\_1/validierung\_hits.csv die
 in \cref{tab:performance_comparison_rounded} dargestellten Werte. Aufgrund von Einschränkungen durch die eigene \eng{Blacklist} hat ZMap 
 weniger IP-Adressen gescannt, weshalb es weniger Ergebnisse hervorbrachte. Außerdem ist zu beachten, dass sowohl Masscan als auch ZMap 
-keine Option zur Vermeidung des Sendens von \texttt{RST}-Antworten besitzen. Da Masscan die Pakete in dessen eigens gefertigtem \eng{User-Space}-TCP-Stack
-erstellt und versendet, fließen diese auch in die \eng{PPS}-Metrik ein. Die durch ZMap bedingten \texttt{RST}-Antworten werden automatisch vom Kernel 
+keine Option zur Vermeidung des Sendens von \texttt{RST}-Antworten bieten. Da Masscan die Pakete in dessen eigens implementierten \eng{User-Space}-TCP-Stack
+erstellt und versendet, fließen diese auch in die \eng{PPS}-Metrik ein. Die von ZMap verursachten \texttt{RST}-Antworten werden automatisch vom Kernel 
 gesendet und nicht in den genutzten Kernel-Logs erfasst. 
 
 \begin{table}[htbp]
@@ -99,7 +97,7 @@ gesendet und nicht in den genutzten Kernel-Logs erfasst.
 & \scriptsize{[\eng{PPS}/\%]} & \scriptsize{(aktiv) [Mio]} & \scriptsize{CPU [\%]} & \scriptsize{RAM [MB]} & \scriptsize{CPU [\%]} & \scriptsize{RAM [MB]} & \scriptsize{[Mio]} \\ \hline
 
 SYN-Rust \newline \scriptsize{(\texttt{XDP}, \eng{Zero-Copy})} & 
- 258513 & 1,48 & 5,7 & 190,8 & 4,7 & 160,7 & 13,42\\ \hline
+258513 & 1,48 & 5,7 & 190,8 & 4,7 & 160,7 & 13,42\\ \hline
 
 SYN-Rust \newline \scriptsize{(\texttt{XDP}, Copy)} & 
 133989 & 1,23 & 9,2 & 237,7 & 7,7 & 203,7 & 13,42 \\ \hline
@@ -125,7 +123,8 @@ pro CPU-Prozent in jedem Durchlauf berechnet und daraus anschließend der Durchs
 \subsection{Ergebnisse \cref{req:S-02}: Reales Szenario} \label{Ergebnisse.S-02}
 Die Ergebnisse mancher Variationen des SYN-Rust in \cref{tab:performance_comparison_low_rate_efficiency} weichen bezüglich der \eng{PPS}-Metrik 
 von der Durchsatzlimitierung  (500.000 \eng{PPS}) ab. Dies ist in diesem Szenario explizit erwünscht. Die Daten der Tabelleneinträge
-sind in [TODO Ergebnisse] und [TODO Validierung] zu finden. Für ZMap gilt bezüglich der \texttt{RST}-Antworten das gleiche wie auch in \cref{Ergebnisse.S-01}.  
+sind in Evaluationsszenario\_2/zusammenfassung\_ergebnisse\_final.csv und Evaluationsszenario\_2/validierung\_hits.csv\cite{F4c3hugg3r_2026} zu finden. 
+Für ZMap gilt bezüglich der \texttt{RST}-Antworten das gleiche wie auch in \cref{Ergebnisse.S-01}.  
 
 \begin{table}[htbp]
 \label{tab:performance_comparison_low_rate_efficiency}
@@ -154,82 +153,87 @@ ZMap  \newline \scriptsize{(\texttt{RST} automatisch)} &
  13272 & 0,49 & 37,2 & 62,3 & 26,5 & 58,3 & 1,68 \\ \hline
 
 \end{tabularx}
-\caption{Vergleich der \eng{Performance}-Metriken (Unter Berücksichtigung der \texttt{RST}-Pakete)}
+\caption{Vergleich der \eng{Performance}-Metriken (unter Berücksichtigung der \texttt{RST}-Pakete)}
 \end{table}
 
 \section{Diskussion der Ergebnisse}
 Nachfolgend werden die Messergebnisse interpretiert und in den Kontext der Forschungsziele gesetzt. 
 Die Diskussion gliedert sich in die funktionale Validierung des \eng{Proof of Concept} sowie die detaillierte 
-Analyse der Performanzeffizienz im Vergleich zu bestehenden Lösungen.
+Analyse der \eng{Performance}-Effizienz im Vergleich zu bestehenden Lösungen.
 
 \subsection{\eng{Proof of Concept}}
-Die Ergebnisse zu den Evaluationstests zeigen, dass der Implementierte Scanner in allen Varianten die erwartete Verhaltensweise umsetzt.
+Die Ergebnisse zu den Evaluationstests zeigen, dass der implementierte Scanner in allen Varianten die erwartete Verhaltensweise umsetzt.
 Entsprechend den Ergebnissen zu \cref{req:T-01} wurden alle Pakete gesendet und exakt die erwarteten Pakete empfangen. 
-Es gab keinen Paketverlust oder anderweitige Fehler. 
+Es gab keinen Paketverlust oder anderweitiger Fehler. 
 
 Dabei ist anzumerken, dass in \texttt{log\_dummy\_receiver.txt} zu sehen ist, dass mehr als die
 geplante Menge an Paketen empfangen wurde, diese aber keine korrekten \texttt{SYN}-Pakete darstellen. Dies ist gewollt und passiert, da der Scanner in den 
-Modi, in welchen diese Ausgabe zu beobachten ist, am Ende des Scans ein paar invalide Pakete über den \eng{Socket} verschickt. Bei vorherigen Tests wurden 
-manche Pakete nicht mehr versendet, weshalb diese Maßnahme notwendig ist um sicherzustellen, dass alle regulären Pakete versendet werden.  
+Modi, in welchen diese Ausgabe zu beobachten ist, am Ende des Scans ein paar ungültige Pakete über den \eng{Socket} verschickt. Bei vorherigen Tests wurden 
+manche Pakete nicht mehr versendet, weshalb diese Maßnahme notwendig ist, um sicherzustellen, dass alle regulären Pakete versendet werden.  
 
-Die Ergebnisse zu \cref{req:T-02} zeigen, dass die \texttt{SYN}-Pakete korrekt gebaut werden, da Netcat und Wireshark sie als valide anerkennen. Auch die 
-\texttt{RST}-Pakete werden korrekt gebaut, was daran zu erkennen ist, dass der Netcat Server nach dem Erhalt dieser Pakete aufhört, weitere \texttt{SYN-ACK}-Antworten 
+Die Ergebnisse zu \cref{req:T-02} zeigen, dass die \texttt{SYN}-Pakete korrekt gebaut werden, da Netcat und Wireshark sie als gültig anerkennen. Auch die 
+\texttt{RST}-Pakete werden korrekt gebaut, was daran zu erkennen ist, dass der Netcat-Server nach dem Erhalt dieser Pakete aufhört, weitere \texttt{SYN-ACK}-Antworten 
 zu senden, was im Beispiel ohne \texttt{RST}-Antwort nicht passiert. 
 
 \subsection{\eng{Performance}-Effizienz}
 In diesem Abschnitt erfolgt die Auswertung der erhobenen Systemmetriken. Der Fokus liegt auf der Gegenüberstellung von 
-Durchsatz und Ressourceneffizienz unter Volllast sowie in realitätsnahen Szenarien, um die Vorteile der genutzten Technologien 
+Durchsatz und Ressourceneffizienz unter Volllast sowie in realitätsnahen Szenarien, um die Vorteile der genutzten Techniken 
 zu quantifizieren.
 
 \subsubsection{\cref{req:S-01}} \label{Auswertung:Ergebnisse:S-01}
 Gemäß der Ergebnisse des \cref{req:S-01} ist eine deutliche Steigerung der \eng{Performance}-Effizienz gegenüber den bewährten Vergleichsobjekten ZMap und Masscan zu erkennen.
-Dies unterstreicht die Effizienz der genutzten \eng{Kernel-Bypass}-Technologien \texttt{AF\_XDP} und \texttt{eBPF}. Besonders im \eng{Zero-Copy}-Modus sind deutliche Effizienzgewinne in Form einer
-Vervielfachung der Pakete pro CPU um den Faktor 3 und mehr im Vergleich zu Masscan, sowie dem Faktor 4 und mehr im Vergleich zu ZMap zu erkennen. Doch die Konfigurationen
-des Rust Scanners (SYN-Rust), welche den \eng{Copy Mode} des \texttt{AF\_XDP}-\eng{Sockets} nutzen, zeigen eine deutliche Effizienzsteigerung zu den externen Vergleichsobjekten. Die \texttt{AF\_PACKET}-Konfiguration
-von SYN-Rust ist bezüglich der Effizienz und Gesamtlast der CPU mit Masscan vergleichbar. Das ist ein sehr interessantes Ergebnis, da Masscan zum einen 
-einen eigenen TCP-Stack implementiert, um den Kernel zu umgehen und zum anderen die Nutzung von \texttt{AF\_PACKET} durch die Nutzung eines gemeinsamen Speicherbereiches von 
-\eng{User Space} und \eng{Kernel Space} drastisch optimiert hat. Die SYN-Rust Variante implementiert keine dieser Optimierungen.
+Dies unterstreicht die Effizienz der genutzten \eng{Kernel-Bypass}-Techniken \texttt{AF\_XDP} und \texttt{eBPF}. Besonders im \eng{Zero-Copy}-Modus sind deutliche Effizienzgewinne in Form einer
+Vervielfachung der Pakete pro CPU um den Faktor 3 und mehr im Vergleich zu Masscan sowie um den Faktor 4 und mehr im Vergleich zu ZMap zu erkennen. Doch auch die Konfigurationen
+des Rust Scanners, welche den \eng{Copy Mode} des \texttt{AF\_XDP}-\eng{Sockets} nutzen, zeigen eine deutliche Effizienzsteigerung zu den externen Vergleichsobjekten. Die \texttt{AF\_PACKET}-Konfiguration
+ist bezüglich der Effizienz und Gesamtlast der CPU mit Masscan vergleichbar. Das ist ein sehr interessantes Ergebnis, da Masscan 
+einen eigenen TCP-Stack implementiert, um den Kernel zu umgehen und durch die Nutzung von \eng{Memory Mapping} (\texttt{mmap}) einen gemeinsamen Speicherbereich zwischen 
+\eng{User-Space} und \eng{Kernel-Space} implementiert. Die SYN-Rust Variante implementiert keine dieser Optimierungen. Allerdings implementieren alle SYN-Rust Scanner
+im Gegensatz zu den Vergleichsobjekten keine \eng{Busy Loop}\footnote{Es wird dauerhaft ohne Verzögerung Kapazität abgefragt.} beim Senden, sondern nutzen einen linearen 
+\eng{Backoff}\footnote{Die Wartezeit zwischen Abfragen steigt linear an, sollte mehrere Male nacheinander keine Kapazität zur Verfügung stehen.}, welcher deutlich ressourceneffizienter ist.
 
-Der einzige Punkt, in welchem die Vergleichsobjekte vorne liegen, ist der RAM Verbrauch (siehe \ref{fig:ram_efficiency_diag}). ZMap und Masscan zeigen nahezu 
-keinen RAM-Verbrauch während die Rust-Implementierungen einen moderaten Verbrauch haben, der im Zuge heutiger Kapazitäten gering ausfällt. %TODO warum? (siehe Copilot chat pc)
+Bezüglich des absoluten Durchsatzes erreichte lediglich der \eng{Zero-Copy}-Modus das physikalische Limit der Gigabit-Verbindung. 
+Die Varianten im \eng{Copy}- sowie \eng{Generic-Mode} stagnierten hingegen reproduzierbar bei 
+1,23\,\eng{Mpps}\footnote{Millionen Pakete pro Sekunde}. Da die CPU-Auslastung nicht der limitierende Faktor war, deutet es darauf hin, 
+dass dieser Engpass auf die Latenz der Kopiervorgänge zwischen \eng{User-Space} und \eng{Kernel-Space} sowie auf  
+Limitierungen des verwendeten \texttt{igb}-Treibers zurückzuführen ist. Da ZMap, welches ebenso wie Masscan \eng{Memory Mapping} nutzt, müssen keine Kopien angelegt werden,
+um Pakete in den Kernel zu übergeben, was der Latenz zugutekommt. Der Unterschied zwischen dem Durchsatz von ZMap und Masscan ist darauf zurückzuführen, 
+dass Masscan nur mit maximal einem Thread sendet, während ZMap bei hoher Last mehrere nutzt.
 
-Anhand von Abbildung \ref{fig:cpu_efficiency_diag}, welche die Verteilung der CPU Gesamtlast auf die verschiedenen Bereiche \eng{User Space}, \eng{Kernel Space} und \eng{SoftIRQ} verbildlicht, lässt 
-sich gut erkennen, dass ZMap und SYN-Rust (\texttt{AF\_PACKET}), welche die gleiche Adressfamilie nutzen einen ähnlichen Verbrauch im \eng{Kernel Space} haben und Scanner die \texttt{XDP} nutzen einen deutlich
-niedrigeren. Dies zeigt die Effizienz der \eng{Kernel-Bypass}-Technologie von \texttt{AF\_XDP}. Die Scanner, die \texttt{XDP} im \eng{Native Mode} nutzen, zeigen eine verminderte \eng{SoftIRQ}-Auslastung, da Schritte wie das Erstellen
-eines \texttt{sk\_bufs} vermieden werden. An der \eng{User-Space}-Auslastung ist zu erkennen, dass die Maßnahmen zur Effizienzsteigerung (vgl. \ref{Implementierung}) wirkungsvoll sind. Auch die fehlende
-Notwendigkeit, empfangene Pakete im \eng{User Space} parsen zu müssen, da es schon im \texttt{eBPF}-Programm getan wird, spielt dem zu.
+Die Vergleichsobjekte zeigen bezüglich des RAM-Verbrauchs bessere Ergebnisse als die Rust-Implementierung (siehe \cref{fig:ram_efficiency_diag}). ZMap und Masscan zeigen nahezu 
+keinen RAM-Verbrauch, während die Rust-Implementierungen eine moderate RAM-Nutzung haben, die im Zuge heutiger Speicherkapazitäten aber als gering einzustufen ist. 
 
-Um die Ergebnisse in das korrekte Verhältnis zu setzen ist es wichtig, die Unterschiede zwischen der Funktionsweise aufzuzeigen. Im Gegensatz zu ZMap und Masscan hat SYN-Rust
+Anhand von \cref{fig:cpu_efficiency_diag}, welche die Verteilung der CPU-Gesamtlast auf die verschiedenen Bereiche \eng{User-Space}, \eng{Kernel-Space} und \eng{SoftIRQ} verbildlicht, lässt 
+sich gut erkennen, dass ZMap und SYN-Rust (\texttt{AF\_PACKET}), welche die gleiche Adressfamilie nutzen, einen ähnlichen Verbrauch im \eng{Kernel-Space} haben und Scanner, die \texttt{XDP} nutzen, einen deutlich
+niedrigeren. Dies verdeutlicht die Effizienz der \eng{Kernel-Bypass}-Technik \texttt{AF\_XDP}. Die Scanner, die \texttt{XDP} im \eng{Native Mode} nutzen, zeigen einheitlich eine verminderte \eng{SoftIRQ}-Auslastung, da Schritte wie das Erstellen
+eines \texttt{sk\_buffs} vermieden werden. An der \eng{User-Space}-Auslastung ist zu erkennen, dass die Maßnahmen zur Effizienzsteigerung (vgl. \cref{Implementierung}) wirkungsvoll sind. Auch die fehlende
+Notwendigkeit, empfangene Pakete im \eng{User-Space} parsen zu müssen, da es bereits im \texttt{eBPF}-Programm getan wird, spielt dem zu.
+
+Um die Ergebnisse in das korrekte Verhältnis zu setzen, ist es wichtig, die Unterschiede zwischen der Funktionsweise aufzuzeigen. Im Gegensatz zu ZMap und Masscan hat SYN-Rust
 die zu scannenden IP-Adressen nicht randomisiert. Dies erfordert für jede Ziel-IP-Adresse eine einmalige Berechnung.
-ZMap nutzt beispielsweise eine zyklische multiplikative Gruppe über einem endlichen Körper, welche eine Multiplikation und eine Modulo Operation erfordert.
-Allerdings ist der Ressourcenverbrauch dieser Operationen sehr gering und trägt vermutlich keinen größeren Beitrag zur gesamten CPU 
-Auslastung des Programmes bei. Die Ausgabe der Ergebnisse von Masscan erfolgte in eine \texttt{.txt}-Datei statt in eine \texttt{CSV}-Datei wie bei den anderen Scannern.
+ZMap nutzt beispielsweise eine zyklische multiplikative Gruppe über einem endlichen Körper, welche eine Multiplikation und eine Modulo-Operation erfordert.
 
 \subsubsection{\cref{req:S-02}} \label{Auswertung:Ergebnisse:S-02}
-In \cref{req:S-02} schlossen die SYN-Rust Varianten die \texttt{XDP} nutzen schlechter ab als zuvor. Dies ist einerseits den aktivierten \eng{Features} wie der Duplikationserkennung und dem Senden von 
-\texttt{RST}-Antworten zuzuschreiben. Andererseits könnte es auch bedeuten, dass diese bei einer niedrigeren Durchsatzlimitierung die Ressourcen ein wenig schlechter verwalten. Trotzdem
-sind die Ergebnisse sehr gut und die RAM-Auslastung skaliert den Ergebnissen nach gut bei gedrosselten Raten. Interessant ist, dass die \texttt{AF\_PACKET}-Konfiguration bezüglich der
+In \cref{req:S-02} schlossen die SYN-Rust Varianten, die \texttt{XDP} nutzen, schlechter ab als zuvor. Dies ist einerseits den aktivierten \eng{Features} wie der Duplikationserkennung und dem Senden von 
+\texttt{RST}-Antworten zuzuschreiben. Andererseits könnte es auch bedeuten, dass diese bei einer niedrigeren Durchsatzlimitierung die Ressourcen etwas schlechter verwalten. Trotzdem
+sind die Ergebnisse sehr gut und die RAM-Auslastung skaliert den Ergebnissen zufolge gut bei gedrosselten Raten. Interessant ist, dass die \texttt{AF\_PACKET}-Konfiguration bezüglich der
 Effizienz hier deutlich besser als im Performancetest abschneidet. Dies ist mit einer verminderten \eng{Lock Contention} zu erklären, da in diesem Szenario nur einer statt 
-zwei \eng{Sender}-\eng{Threads} benötigt wurde. Auch interessant ist, dass ZMap hier deutlich schlechter abschneidet und mehr als dreizehnmal mehr CPU bei nur etwas geringerem RAM Verbrauch 
+zwei \eng{Sender}-\eng{Threads} benötigt wurde. Auch interessant ist, dass ZMap hier deutlich schlechter abschneidet und mehr als dreizehnmal mehr CPU bei nur etwas geringerem RAM-Verbrauch 
 als die \eng{Zero-Copy}-Lösung aufzeigt. Selbst die \texttt{AF\_PACKET}-Lösung, welche die ineffizienteste der SYN-Rust Konfigurationen ist, verbraucht sechsmal weniger CPU. 
 
 Die Ergebnisse der Effizienz von ZMap und Masscan sind in diesem Fall nur bedingt mit den restlichen (bis auf \eng{Zero-Copy}) vergleichbar, da SYN-Rust eine andere Designphilosophie  
 verfolgt und die gesendeten \texttt{RST}-Pakete nicht in das Durchsatzlimit mit einbezieht. Außerdem gibt es bei Masscan keine Option zur Deduplizierung der Antworten, was die Vergleichbarkeit
 weiter schmälert.
 
-In \cref{tab:performance_comparison_low_rate_efficiency} ist zu sehen, dass die Rust Scanner mit 1,64 Mio Ergebnissen rund 2,4\,\% weniger Ergebnisse als die erwartete Menge erkannt haben.
-
-$2^28 (IP-Adressraum) * 0,2 (Antwortrate) * 2 (Ports) = ~1.68 Mio$ % TODO in idiomatische Formel umwandeln
-
-In der \texttt{ethtool.csv}-Datei \cite{TODO} ist zu sehen, dass die Gesamtanzahl der versendeten Pakete (inklusive \texttt{RST}-Pakete) sowohl beim Zähler der Netzwerkkarte, als auch beim Zähler 
-von \texttt{procfs}, um rund 2,3\,\% vom erwarteten Wert (10.066.330) abweicht. Aufgrund dieser Informationen und da dieses Problem in keinem anderen der Tests auftrat, ist es wahrscheinlich, 
+In \cref{tab:performance_comparison_low_rate_efficiency} ist zu sehen, dass die Rust Scanner mit rund 1,64 Millionen Ergebnissen rund 2,4\,\% weniger Ergebnisse als die erwartete Menge 
+(rund 1,68 Millionen\footnote{$2^{28}\,(\text{IP-Adressraum}) \cdot 0,2\,(\text{Antwortrate}) \cdot 2\,(\text{Ports}) \approx 1,68\,\text{Mio.}$}) erkannt haben.
+Laut der Datei Evaluationsszenario\_2/ethtool.csv\cite{F4c3hugg3r_2026} weicht die Gesamtanzahl der versendeten Pakete (inklusive \texttt{RST}-Pakete) sowohl beim Zähler der Netzwerkkarte, als auch beim Zähler 
+von \texttt{procfs}, um rund 2,3\,\% vom erwarteten Wert (10.066.330) ab. Aufgrund dieser Informationen und da dieses Problem in keinem anderen der Tests auftrat, ist es wahrscheinlich, 
 dass es sich um einen Bug im \eng{User-Space}-Programm handelt, welcher vermutlich bei der Durchsatzlimitierung auftritt und möglicherweise im Zusammenhang mit der Konfiguration mehrerer
 Ziel-Ports steht.
 
 \subsection{Abgleich mit den Anforderungen}
 Abschließend erfolgt in \cref{tab:requirements_compliance} eine Bewertung der in \cref{Anforderungen} definierten Anforderungen. Die Überprüfung basiert auf den Ergebnissen der dynamischen Tests (\cref{Tests}) 
 sowie der statischen Inspektion der Implementierung (\cref{Implementierung}).
-
 \begin{table}[htbp]
     \centering
     \small
@@ -255,8 +259,8 @@ sowie der statischen Inspektion der Implementierung (\cref{Implementierung}).
     Moderne Kernel-Mechanismen & Erfüllt & Nutzung von \texttt{XDP} und \texttt{eBPF} (vgl. \cref{Implementierung}) \\ \hline
     Speichersicherheit & Erfüllt & \eng{eBPF-Verifier} und externe Bibliotheken\tnote{1}
     als Sicherheitsmaßnahme für \texttt{unsafe}-Operationen verwendet (vgl. \cref{Implementierung}) \\ \hline
-    Minimale Ressourcennutzung & Erfüllt & Höchste \eng{Performance}-Effizienz im Vergleich (siehe \cref{fig:performance_efficiency_diag}) bei moderater RAM Nutzung \\ \hline
-    Technologische Einschränkung & Erfüllt & Keine proprietären Treiber verwendet (vgl. \cref{Implementierung}) \\ \hline
+    Minimale Ressourcennutzung & Erfüllt & Höchste \eng{Performance}-Effizienz im Vergleich (siehe \cref{fig:performance_efficiency_diag}) bei moderater RAM-Nutzung \\ \hline
+    Technische Einschränkung & Erfüllt & Keine proprietären Treiber verwendet (vgl. \cref{Implementierung}) \\ \hline
     \end{tabularx}
     \begin{tablenotes}
     \item[1] Diese kapseln \texttt{unsafe}-Blöcke intern häufig sicher \cite{RustBelt}, sodass Sicherheitsniveau erhalten bleibt.
@@ -266,13 +270,61 @@ sowie der statischen Inspektion der Implementierung (\cref{Implementierung}).
     \label{tab:requirements_compliance}
 \end{table}
 
-% TODO Text dazu
-
 \subsection{Wirtschaftliche und betriebliche Implikationen}
+Die in dieser Arbeit erarbeiteten Ergebnisse zeigen, dass der Einsatz von Rust und modernen Kernel-Techniken eine
+überaus sinnvolle Alternative für bisherige Ansätze darstellt. Dies impliziert auch signifikante ökonomische Vorteile 
+für Unternehmen und Organisationen, die Internet-weite Messungen oder Sicherheitsanalysen durchführen. Darunter fallen:
+
+\begin{itemize}
+    \item \textbf{Risikominimierung durch Sicherheitsgarantien:} Die in \cref{rust} beschriebenen Speichersicherheitsgarantien 
+    eliminieren ganze Fehlerklassen, die in C-basierten Systemen häufig zu Sicherheitslücken führen (vgl. \cref{Ch3_Alternative_Implementierungsansätze}). 
+    Dies minimiert das Risiko teurer Sicherheitsvorfälle und ungeplanter Ausfallzeiten. Dieser präventive Ansatz deckt sich mit den 
+    Empfehlungen des \eng{National Institute of Standards and Technology} (NIST), welches die Integration von Sicherheitsanforderungen 
+    in den gesamten Systemlebenszyklus (\eng{Security-by-Design}) als kosteneffektivste Methode zur Umsetzung von Schutzstrategien 
+    identifiziert \cite[S~66]{Joint_Task_Force_Transformation_Initiative_2018}. Für Unternehmen resultiert dies in einer 
+    erhöhten Betriebsstabilität, dem Schutz der Reputation sowie der Einhaltung relevanter \eng{Compliance}-Vorgaben.
+
+    \item \textbf{Senkung der Betriebskosten und Nachhaltigkeit:} Durch die in \cref{Ergebnisse.S-01} nachgewiesene massive 
+    Steigerung der \eng{Performance}-Effizienz lassen sich gleichbleibende Scan-Leistungen mit signifikant geringerem Hardwareaufwand realisieren. 
+    Dies ermöglicht eine direkte Reduktion der operativen Ausgaben, da preiswertere Server oder kleinere Cloud-Instanzen 
+    für dieselbe Arbeitslast ausreichen. Gleichzeitig wird der Energiebedarf reduziert, was in Anbetracht steigender Energiekosten 
+    einen weiteren monetären Vorteil darstellt.
+
+    \item \textbf{Senkung der Wartungskosten und Investitionsschutz:} Der Verzicht auf proprietäre Kerneltreiber zugunsten von 
+    \eng{Mainline-Kernel}-Techniken (vgl. \cref{Ch3_Alternative_Implementierungsansätze}) minimiert externe Abhängigkeiten und 
+    verhindert wartungsintensive Anpassungen bei Betriebssystem-Updates. Dies führt zu einer 
+    nachhaltigen Senkung der \eng{Total Cost of Ownership} und bietet Investitionsschutz durch die Nutzung eines zukunftssicheren 
+    Technik-Stacks.
+\end{itemize}
+
 
 \section{Fazit}
-% Zusammenfassung der gesamten Arbeit.
-% Forschungsfrage beantworten: Ist Rust/eBPF geeignet für High-Speed Scanning?
+Diese Arbeit untersuchte das Potenzial der Programmiersprache Rust für die Entwicklung von Hochleistungs-Netzwerkscannern, ein Feld, 
+das bisher primär von C-basierten Anwendungen dominiert wird. Ausgangspunkt war die Forschungsfrage, inwieweit ein in Rust 
+implementierter Scanner hinsichtlich Durchsatz und Ressourceneffizienz mit etablierten Tools konkurrieren kann, ohne dabei auf 
+die sprach-eigenen Sicherheitsgarantien zu verzichten.
+
+Zur Beantwortung dieser Frage wurde der Prototyp SYN-Rust entwickelt, welcher eine asynchrone Architektur auf Basis der \texttt{tokio}-Runtime 
+mit modernen Linux-Kernel-Schnittstellen wie \texttt{AF\_XDP} und \texttt{eBPF} kombiniert. Die Evaluation demonstrierte, dass diese Kombination nicht 
+nur funktional robust ist, sondern auch signifikante \eng{Performance}-Vorteile bieten kann.
+
+Die in Kapitel 7 vorgestellten Messergebnisse belegen, dass der entwickelte Scanner im \texttt{AF\_XDP} \eng{Zero-Copy}-Modus eine deutlich höhere 
+CPU-Effizienz aufweist als die etablierten Referenzwerkzeuge. Spezifisch konnte eine Steigerung der verarbeiteten Pakete pro CPU-Prozent 
+um den Faktor drei gegenüber Masscan und den Faktor vier gegenüber ZMap nachgewiesen werden. Die theoretische Durchsatzgrenze der 
+verwendeten Gigabit-Hardware konnte dabei problemlos ausgeschöpft werden.
+Selbst unter Nutzung der herkömmlichen \texttt{AF\_PACKET}-Schnittstelle, welche den Kernel-Stack nicht vollständig umgeht, erzielte die 
+Rust-Implementierung Ergebnisse, die mit den hochoptimierten C-Scannern vergleichbar waren.
+
+Einschränkend muss angemerkt werden, dass die Hardwarelimitierung der Testumgebung eine Ermittlung der maximalen Durchsatzgrenze des 
+\eng{Zero-Copy}-Modus verhinderte. Zudem zeigten sich im gedrosselten realitätsnahen Szenario geringfügige Abweichungen in der Paketanzahl 
+von ca. 2,4\,\%, welche auf Optimierungsbedarf in der \eng{User-Space}-Logik hindeuten. Dennoch validieren die Ergebnisse, dass der moderat 
+höhere Arbeitsspeicherbedarf der Rust-Anwendung durch die massiven Gewinne in der CPU-Effizienz gerechtfertigt ist.
+
+Zusammenfassend lässt sich die Forschungsfrage positiv beantworten: Ein in Rust implementierter asynchroner \texttt{SYN}-Scanner stellt eine 
+absolut tragfähige Alternative für den produktiven Einsatz dar. Die Arbeit zeigt, dass die Nutzung von Rust und seiner 
+Sicherheitsgarantien nicht im Widerspruch zu hoher \eng{Performance} steht. Vielmehr ermöglicht die Integration moderner 
+\eng{Kernel-Bypass}-Techniken wie \texttt{XDP} eine Effizienz, die klassische C-basierte Ansätze sogar übertreffen kann. Rust empfiehlt 
+sich somit als zukunftssichere Technologie für die Entwicklung systemnaher Netzwerkanwendungen.
 
 \section{Ausblick}
 Die vorliegende Arbeit hat die Eignung von Rust für die Entwicklung hochperformanter \texttt{SYN}-Scanner unter Nutzung moderner Kernel-Mechanismen demonstriert. 
@@ -284,30 +336,30 @@ Aus den gewonnenen Erkenntnissen und den methodischen Grenzen dieser Untersuchun
     zu isolieren und die Robustheit des Systems für den Dauerbetrieb sicherzustellen.
     
     \item \textbf{Evaluation der Scangenauigkeit:} Der Fokus dieser Arbeit lag primär auf der Maximierung der \eng{Performance}-Effizienz. 
-    Für den produktiven Einsatz ist jedoch auch die Scangenauigkeit von kritischer 
-    Bedeutung, wie bereits in verwandten Arbeiten dargelegt wurde \cite{TODO}. Eine weiterführende Untersuchung sollte analysieren, 
+    Für den produktiven Einsatz ist jedoch auch die Scangenauigkeit von Bedeutung. Eine weiterführende Untersuchung sollte analysieren, 
     wie sich die hier genutzte \eng{Kernel-Bypass}-Technik auf die Zuverlässigkeit der Paketerkennung unter variierenden Netzwerklasten auswirkt.
     
-    \item \textbf{Hardwareanpassung und -Skalierung:} Wie in \cref{Inkompatibilitäten} diskutiert, stellte der verwendete 
-    Netzwerkkartentreiber sowie die Hardwarelimitierung auf 1 Gbit/s (\cref{tab:specs_combined}) einen Flaschenhals dar 
-    (vgl. \cref{Ergebnisse.S-01}). Zukünftige Evaluationen sollten den Scanner in 10 Gbit/s-Umgebungen oder noch schnelleren 
+    \item \textbf{Hardware-Anpassung und -Skalierung:} Wie in \cref{Inkompatibilitäten} diskutiert, stellte der verwendete 
+    Netzwerkkartentreiber sowie die Hardwarebeschränkung auf 1\,Gbit/s (\cref{tab:specs_combined}) einen Flaschenhals dar 
+    (vgl. \cref{Ergebnisse.S-01}). Zukünftige Evaluationen sollten den Scanner in 10\,Gbit/s-Umgebungen oder noch schnelleren 
     testen. Dabei wäre besonders interessant herauszufinden, bei welcher Durchsatzrate das Programm an seine Grenzen stößt und
     welche Faktoren letztendlich den Flaschenhals bilden.
     
-    \item \textbf{Validierung im Realen Anwendungsfall:} Da die Evaluation in einer kontrollierten Laborumgebung stattfand, 
+    \item \textbf{Validierung im realen Anwendungsfall:} Da die Evaluation in einer kontrollierten Laborumgebung stattfand, 
     steht ein Test in einem realen Szenario, wie dem Scan großer Teile des öffentlichen IPv4-Adressraums, noch aus. Dies 
     würde Rückschlüsse auf das Verhalten des Scanners bei realer Latenz, Paketverlusten und Sicherheitsmechanismen 
-    (z.B. \eng{Firewalls}) von Zielsystemen ermöglichen.
+    (z.\,B. \eng{Firewalls}) von Zielsystemen ermöglichen.
 
     \item \textbf{Erweiterung auf IPv6:} Diese Arbeit beschränkt sich auf den IPv4-Adressraum. Da der IPv6-Adressraum durch 
-    die zunehmende Verbreitung an Relevanz gewinnt \cite{TODO}, stellt die Anpassung des Scanners, sodass auch dieses Protokoll 
+    die zunehmende Verbreitung an Relevanz gewinnt \cite{Valapu_Heidemann_2025}, stellt die Anpassung des Scanners, sodass auch dieses Protokoll 
     unterstützt wird, einen logischen nächsten Schritt dar. Hierbei wäre insbesondere zu untersuchen, wie sich die vergrößerten 
-    Adressstrukturen (128 Bit) auf die Speicherverwaltung im \texttt{eBPF}-Programm, der veränderte \eng{Parsing}-Aufwand aufgrund von \eng{Next Header}-Verkettungen und die damit verbundene Rechenlast für \eng{Hashing}-Operationen auf den Durchsatz, sowie die Effizienz im Kontext
+    Adressstrukturen (128 Bit) auf die Speicherverwaltung im \texttt{eBPF}-Programm, der veränderte \eng{Parsing}-Aufwand aufgrund von \eng{Next Header}-Verkettungen 
+    und die damit verbundene Rechenlast für \eng{Hashing}-Operationen auf den Durchsatz sowie die Effizienz im Kontext
     eines \texttt{SYN}-Scanners auswirken.
 
-    \item \textbf{Adaption auf weitere Scan-Methoden:} Die in dieser Arbeit entwickelte Architektur zur Kernelumgehung ist 
+    \item \textbf{Adaption an weitere Scan-Methoden:} Die in dieser Arbeit entwickelte Architektur zur Kernelumgehung ist 
     prinzipiell protokollunabhängig. Zukünftige Forschungen könnten untersuchen, wie effizient sich das System auf alternative 
-    verbindungslose Szenarien (z.B. UDP-Scans) oder andere TCP-Scan-Techniken (z.B. \texttt{ACK}- oder \texttt{FIN}-Scans) übertragen lässt. 
+    verbindungslose Szenarien (z.\,B. UDP-Scans) oder andere TCP-Scan-Techniken (z.\,B. \texttt{ACK}- oder \texttt{FIN}-Scans) übertragen lässt. 
     Dies würde validieren, ob die \eng{High-Performance}-Vorteile von Rust und \eng{Kernel-Bypass}-Ansatz auch bei veränderter logischer Komplexität
     Bestand haben.
 \end{itemize}

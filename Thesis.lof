@@ -7,20 +7,22 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {5.1}{\ignorespaces Diagramm logischer Komponenten des Scanners (vereinfacht)}}{25}{figure.83}%
-\contentsline {figure}{\numberline {5.2}{\ignorespaces Weg der Pakete durch den Linux Kernel (vereinfacht)}}{27}{figure.84}%
-\contentsline {figure}{\numberline {5.3}{\ignorespaces Ablaufes und Funktionsweise der \texttt {emitting\_packets}-Komponente (vereinfacht)}}{32}{figure.123}%
-\contentsline {figure}{\numberline {5.4}{\ignorespaces Exemplarisches Diagramm zur Funktionsweise der \texttt {capturing\_packets}-Komponente (vereinfacht)}}{34}{figure.128}%
-\contentsline {figure}{\numberline {5.5}{\ignorespaces Funktionsweise der \texttt {scan\_job.rs} Datei (vereinfacht)}}{37}{figure.137}%
-\contentsline {figure}{\numberline {5.6}{\ignorespaces Funktionsweise des \texttt {eBPF}-Programmes (vereinfacht)}}{39}{figure.142}%
-\contentsline {figure}{\numberline {5.7}{\ignorespaces \textit {In-Memory}-Modifikation des \texttt {SYN-ACK}-Paketes zum \texttt {RST}-Paket}}{42}{figure.162}%
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Diagramm logischer Komponenten des Scanners (vereinfacht)}}{24}{figure.82}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Weg der Pakete durch den Linux-Kernel im SYN-Rust Scanner (vereinfacht)}}{26}{figure.83}%
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Ablauf und Funktionsweise der \texttt {emitting\_packets}-Komponente (vereinfacht)}}{31}{figure.124}%
+\contentsline {figure}{\numberline {5.4}{\ignorespaces Exemplarisches Diagramm zur Funktionsweise der \texttt {capturing\_packets}-Komponente (vereinfacht)}}{33}{figure.129}%
+\contentsline {figure}{\numberline {5.5}{\ignorespaces Funktionsweise des \texttt {eBPF}-Programmes (vereinfacht)}}{39}{figure.167}%
+\contentsline {figure}{\numberline {5.6}{\ignorespaces \textit {In-Memory}-Modifikation des \texttt {SYN-ACK}-Pakets zum \texttt {RST}-Paket}}{40}{figure.185}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \def \@chapapp {\appendixname }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {A.1}{\ignorespaces Effizienz der SYN-Scanner im Benchmark (aktiv)}}{62}{figure.216}%
-\contentsline {figure}{\numberline {A.2}{\ignorespaces CPU-Auslastung der SYN-Scanner im Benchmark (gesamt)}}{62}{figure.217}%
-\contentsline {figure}{\numberline {A.3}{\ignorespaces Effizienz der SYN-Scanner im Benchmark (gesamt)}}{63}{figure.218}%
+\contentsline {figure}{\numberline {A.1}{\ignorespaces Funktionsweise der alten \texttt {receiver.rs}-Datei (vereinfacht)}}{62}{figure.241}%
+\contentsline {figure}{\numberline {A.2}{\ignorespaces Funktionsweise der \texttt {scan\_job.rs}-Datei (vereinfacht)}}{63}{figure.242}%
+\contentsline {figure}{\numberline {A.3}{\ignorespaces Effizienz der SYN-Scanner im Benchmark (aktiv)}}{64}{figure.245}%
+\contentsline {figure}{\numberline {A.4}{\ignorespaces CPU-Auslastung der SYN-Scanner im Benchmark (gesamt)}}{64}{figure.246}%
+\contentsline {figure}{\numberline {A.5}{\ignorespaces Effizienz der SYN-Scanner im Benchmark (gesamt)}}{65}{figure.247}%
+\addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

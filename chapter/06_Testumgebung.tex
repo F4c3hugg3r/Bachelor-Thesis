@@ -49,11 +49,11 @@ Es ermöglicht die manuelle Überprüfung der \eng{Header}-Felder, \eng{Sequence
 \label{tab:tools_validation}
 \end{table}
 
-In den Evaluationsszenarien (\cref{Methodik.Szenarien}) erfolgt die Messung der Metriken (siehe \cref{Methodik}) mit einer Abtastrate von $10\,\text{Hz}$ (Intervall $t=0,1\,\text{s}$). 
+In den Evaluationsszenarien (\cref{Methodik.Szenarien}) erfolgt die Messung der Metriken (siehe \cref{Methodik}) mit einer Abtastrate von $10\,\text{Hz}$. 
 Da die Scanner Subprozesse und mehrere \eng{Threads} starten, wird die gesamte Systemlast gemessen.
 Das \eng{Benchmarking}-Programm verzichtet auf \eng{High-Level}-Tools, um den \eng{Overhead} der Messung selbst 
 zu minimieren und liest die erforderlichen Kernel-Statistiken direkt aus \texttt{procfs}.
-Dies ist ein virtuelles Dateisystem, welches der Anzeige und Änderung von Systemparametern dient \cite{kernel.org/doc/Documentation/filesystems/proc.txt}
+Dies ist ein virtuelles Dateisystem, welches der Anzeige und Änderung von Systemparametern dient \cite{procfs_doc}
 und eine direkte Schnittstelle zu den internen Datenstrukturen des Linux-Kernels bietet. 
 
 \subsection{Aufbau des Ziel-Knotens} \label{versuchsaufbau:ablauf}
@@ -103,7 +103,7 @@ Treiber & igb (6.14.0-37) & igb (6.14.0-37) \\ \hline
 \end{table}
 
 \section{Versuchsablauf}
-Die \texttt{benchmark\_suite.py} \cref{TODO anhang}, welche für Test 1 (\cref{req:T-01}), Evaluationsszenario 1 (\cref{req:S-01}) und Szenario 2 (\cref{req:S-02}) genutzt wird,
+Die \texttt{benchmark\_suite.py} \cite{F4c3hugg3r_2026}, welche für Test 1 (\cref{req:T-01}), Evaluationsszenario 1 (\cref{req:S-01}) und Szenario 2 (\cref{req:S-02}) genutzt wird,
 startet die Scanner-Prozesse nacheinander und misst mit einem parallelen \eng{Monitoring}-\eng{Thread} die Systemressourcen in folgenden Phasen:
 
 \begin{enumerate}
@@ -112,29 +112,29 @@ startet die Scanner-Prozesse nacheinander und misst mit einem parallelen \eng{Mo
     \item \textbf{Aufzeichnung:} Die Aufzeichnung der Metriken beginnt eine Sekunde vor dem Prozessstart, 
     um das Anlaufverhalten und Initialisierungsspitzen der Scanner vollständig zu erfassen.
     \item \textbf{Aktive Phase:} Während der Scanner läuft, werden regelmäßig Daten ausgelesen und persistiert.
-    Der Scanner gilt als aktiv, sobald die Senderate 100 \eng{PPS} überschreitet und als inaktiv, sobald die Grenze wieder unterschritten wird.
-    \item \textbf{Externes Beenden:} Sollte die Rate nach dem Start für mehr als sieben Sekunden unter einen Schwellenwert von 100 \eng{PPS} fallen, 
+    Der Scanner gilt als aktiv, sobald die Senderate 100\,\eng{PPS} überschreitet und als inaktiv, sobald die Grenze wieder unterschritten wird.
+    \item \textbf{Externes Beenden:} Sollte die Rate nach dem Start für mehr als sieben Sekunden unter einen Schwellenwert von 100\,\eng{PPS} fallen, 
     wird der Prozess terminiert. Dies ist notwendig, da Masscan sich häufig nicht von alleine beendet.
 \end{enumerate}
 
 In Test 2 (\cref{req:T-02}) werden die Programme und Tools (siehe \cref{tab:tools_validation}) manuell gestartet und ausgewertet. 
 
 \subsection{Datenaufbereitung und -erhebung} \label{Versuchsablauf.Datenaufbereitung}
-Um die Scanergebnisse zu plausibilisieren wird zusätzlich via \texttt{validate\_responses.py} \cref{TODO anhang} die Anzahl der ausgegebenen Ergebnisse gezählt. 
-Die Rohdaten werden nach der Messung mithilfe des \texttt{plot\_benchmark\_suite.py} \cref{TODO anhang} statistisch bereinigt und visualisiert. 
+Um die Scanergebnisse zu plausibilisieren wird zusätzlich via \texttt{validate\_responses.py} \cite{F4c3hugg3r_2026} die Anzahl der ausgegebenen Ergebnisse gezählt. 
+Die Rohdaten werden nach der Messung mithilfe des \texttt{plot\_benchmark\_suite.py} \cite{F4c3hugg3r_2026} statistisch bereinigt und visualisiert. 
 Eine einfache Mittelwertbildung über die gesamte Laufzeit alleine ist nicht zielführend, da Start- und Stopp-Phasen die Ergebnisse verzerren würden. 
 Stattdessen werden die Ergebnisse mit folgenden Vorgehensweisen aufbereitet:
 
 \begin{itemize}
-    \item \textbf{Isolation der Hochlastphase:} Für die Berechnung des durchschnittlichen Durchsatzes und der Effizienz (\eng{PPS}/CPU Auslastung) 
+    \item \textbf{Isolation der Hochlastphase:} Für die Berechnung des durchschnittlichen Durchsatzes und der Effizienz (\eng{PPS}/CPU-Auslastung) 
     werden nur jene Zeitfenster berücksichtigt, in denen der Scanner aktiv sendet.
-    \item \textbf{Netto-Ressourcenberechnung:} Von den gemessenen CPU- und RAM-Werten wird der in Phase (siehe \cref{Methodik}) ermittelte \eng{Baseline}-Wert subtrahiert.
+    \item \textbf{Netto-Ressourcenberechnung:} Von den gemessenen CPU- und RAM-Werten wird der in Phase 1 (siehe \cref{Methodik}) ermittelte \eng{Baseline}-Wert subtrahiert.
     Dies stellt sicher, dass die dargestellten Ergebnisse ausschließlich den Ressourcenbedarf des Scanners abbilden und unabhängig von Hintergrundprozessen des Betriebssystems sind.
 \end{itemize}
 
 Aus den bereinigten Daten werden anschließend Diagramme und Tabellen via Python \texttt{matplotlib} generiert, welche die Daten in anschaulicher Weise darstellen.
 
-In Test 1 (\cref{req:T-01}) wird zur Auswertung \texttt{validate\_scanner.py} \cite{TODO} 
+In Test 1 (\cref{req:T-01}) wird zur Auswertung \texttt{validate\_scanner.py} \cite{F4c3hugg3r_2026} 
 genutzt, welches die Ausgaben der Scanner bezüglich der Anzahl, Duplikate und der Korrektheit (Ein Paket pro gerader \eng{IP}-Adresse des genutzten Adressraumes)
 validiert. Außerdem werden die \eng{Logs} des Ziel-Knotens genutzt. Die Metriken (siehe \cref{Methodik}) und das \texttt{plot\_benchmark\_suite.py}-Programm sind hier nicht notwendig.   
 
@@ -148,7 +148,7 @@ Um die Tests zur Validierung (siehe \cref{Methodik}) der Funktionsweise korrekt 
 
 \begin{enumerate}
     \item Hierbei wird ein kleiner \eng{IP}-Adressraum (\texttt{/20}) gescannt.
-    Der Ziel-Knoten wird so konfiguriert, dass er auf alle \eng{IP}-Adressen welche mit einer geraden Zahl enden antwortet, 
+    Der Ziel-Knoten wird so konfiguriert, dass er auf alle \eng{IP}-Adressen, welche mit einer geraden Zahl enden, antwortet, 
     um die anschließende Auswertung zu vereinfachen. Dabei wird das Senden von \texttt{RST}-Paketen aktiviert. 
     \item Im zweiten Test werden nur jeweils 4 Pakete verschickt. Dies genügt, um zu erkennen, ob die Pakete korrekt sind und fördert
     die Übersichtlichkeit. Um auch die \texttt{RST}-Pakete zu testen, wird dieser Test einmal mit der \texttt{RST}-Funktion und einmal ohne durchgeführt. 
@@ -173,7 +173,7 @@ von Paketen sind, oder die Vergleichbarkeit stören könnten deaktiviert:
     \itemsep 0pt
     \item \textbf{Senderate:} Die Senderate wird so gewählt, dass sie das theoretische Limit der Gigabit-Leitung übersteigt.
     \item \textbf{\eng{Features}:} Es wird auf rechenintensive Funktionen wie die Deduplizierung von Antworten, sowie das Senden von \texttt{RST}-Antworten verzichtet.
-    \item \textbf{\eng{IP}-Raum:} Als Ziel dient ein \texttt{/6}-Netzwerk\footnote{67.108.864 Millionen \eng{IP}-Adressen}, 
+    \item \textbf{\eng{IP}-Raum:} Als Ziel dient ein \texttt{/6}-Netzwerk\footnote{67.108.864 \eng{IP}-Adressen}, 
     um eine hinreichend lange Laufzeit für die Erfassung stabiler Messwerte zu gewährleisten.
     \item \textbf{Zielport:} Ein einzelner Zielport ($80$) wird genutzt.
     \item \textbf{Quellport:} Ein einzelner Quellport ($60000$) wird genutzt.
@@ -188,7 +188,7 @@ die Zuordnung von Antworten zu erleichtern:
     \item \textbf{Senderate:} Die Senderate wird auf $500.000$ \eng{PPS} fixiert, da sehr hohe Raten die Wahrscheinlichkeit erhöhen, 
     dass Scan-Muster von \eng{Firewalls} oder \eng{IPS} erkannt und blockiert werden.
     \item \textbf{\eng{Features}:} Die Deduplizierung wird aktiviert, auch wenn der Ziel-Knoten nur eine Antwort pro Paket schickt. Das Senden von \texttt{RST}-Antworten wird aktiviert.
-    \item \textbf{\eng{IP}-Raum:} Der Zielbereich wird auf ein \texttt{/10}-Netzwerk\footnote{4.194.304 Millionen \eng{IP}-Adressen} beschränkt, 
+    \item \textbf{\eng{IP}-Raum:} Der Zielbereich wird auf ein \texttt{/10}-Netzwerk\footnote{4.194.304 \eng{IP}-Adressen} beschränkt, 
     um die Gesamtdauer des Tests in einem praktikablen Rahmen zu halten.
     \item \textbf{Zielports:} Der Scan erfolgt auf die Ports $80$ und $443$, um das Scan-Verhalten zu diversifizieren und weiter zu verschleiern.
     \item \textbf{Quellports:} Es wird ein Bereich von 128 \eng{Source-Ports} ($60000-60127$) verwendet. 
@@ -197,7 +197,7 @@ die Zuordnung von Antworten zu erleichtern:
 
 \section{Inkompatibilitäten und Limitierungen} \label{Inkompatibilitäten}
 Bei der Realisierung der Testumgebung wurden spezifische hardware- und treiberbedingte Einschränkungen identifiziert. 
-Diese Sektion beleuchtet deren Auswirkungen auf die Testdurchführung, insbesondere im Hinblick auf den \eng{Zero-Copy}-Modus 
+Dieser Abschnitt beleuchtet deren Auswirkungen auf die Testdurchführung, insbesondere im Hinblick auf den \eng{Zero-Copy}-Modus 
 und die maximal erzielbaren Paketraten.
 
 \subsection{\eng{Zero-Copy}-Modus}
@@ -207,11 +207,11 @@ keine exklusive Zuweisung von \eng{Queues} an das \texttt{XDP}-Programm erlaubt.
 und dem \texttt{AF\_XDP}-\eng{Socket}, was unweigerlich zu \eng{Lock Contention}\footnote{Der Zugriff auf den Ring ist durch einen \eng{Spinlock} 
 geschützt und muss bei jedem Zugriff ausgehandelt werden. Wollen mehrere Parteien gleichzeitig senden, müssen sie aufeinander warten.} führt \cite{igb}.
 
-Dieser Ressourcenkonflikt äußerte sich in internen Tests. Bei Nutzung von vier \eng{Queues} fehlten unter Last konstant rund 25\% der \texttt{RST}-Pakete am 
+Dieser Ressourcenkonflikt äußerte sich in internen Tests. Bei Nutzung von vier \eng{Queues} fehlten unter Last konstant rund 25\,\% der \texttt{RST}-Pakete am 
 Ziel-Knoten. Da der Scanner primär über eine dedizierte \eng{Queue} sendet, kollidiert der Antwortverkehr auf genau dieser einen von vier \eng{Queues}, 
 während die anderen drei \eng{Queues} die \texttt{RST}-Pakete ungehindert verarbeiten konnten. Gegenproben mit einer Limitierung der 
-Hardware-Ringe (\texttt{ethtool -L ...}) verifizierten dies: Bei Reduktion auf eine einzige \eng{Queue} (totale Kollision) stieg der Verlust auf nahe 100\%, 
-bei drei \eng{Queues} (Kollision auf einer von drei) lag er bei ca. 33\%.
+Hardware-Ringe (\texttt{ethtool -L ...}) verifizierten dies: Bei Reduktion auf eine einzige \eng{Queue} (totale Kollision) stieg der Verlust auf nahe 100\,\%, 
+bei drei \eng{Queues} (Kollision auf einer von drei) lag er bei ca. 33\,\%.
 
 Ein per \texttt{XDP\_TX} generiertes \texttt{RST}-Paket wird standardmäßig 
 über dieselbe \eng{Queue} ausgesendet, auf der das auslösende Paket empfangen wurde \cite{bpf-helpers7_-_Linux_manual_page}. Da der eingehende Antwortverkehr
@@ -223,6 +223,6 @@ Fall zum Überlauf des Rings und somit zum Verwerfen der \texttt{RST}-Antworten.
 Aufgrund dessen wird der \eng{Zero-Copy}-Modus für die Evaluationsszenarien (\cref{Methodik.Szenarien}) ausschließlich ohne das Senden von \texttt{RST}-Paketen getestet.
 
 \subsection{Paketrate}
-Die Durchsatzrate ist durch die genutzten Netzwerkkarten sowie dem \eng{LAN}-Kabel auf das Limit einer Gigabit-Verbindung beschränkt. Die Tests zur maximalen Durchsatzrate 
+Die Durchsatzrate ist durch die genutzten Netzwerkkarten sowie durch das \eng{LAN}-Kabel auf das Limit einer Gigabit-Verbindung beschränkt. Die Tests zur maximalen Durchsatzrate 
 können deshalb nur eingeschränkt durchgeführt werden. Das theoretische Limit einer Gigabit-Leitung liegt nach \eng{IEEE} 802.3 \cite{IEEE_Standard_for_Ethernet}, 
 bei einer Paketgröße von 64 Byte plus 20 Byte \eng{Overhead}, bei 1,488 Millionen \eng{PPS}. Deshalb wird der Fokus dort verstärkt auf die gemessene Ressourcenauslastung gelegt.
