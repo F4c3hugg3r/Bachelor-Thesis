@@ -247,7 +247,7 @@ Speicherbereichen erzeugt \eng{Overhead}. Beim Versenden und Empfangen sehr viel
 summiert sich dieser \eng{Overhead}, da jedes Paket im Normalfall sowohl \eng{Kernel-Space} als auch \eng{User-Space} 
 durchschreitet. Dies belastet die CPU und wird für den Durchsatz zum Flaschenhals \cite{Høiland-Jørgensen_Brouer_Borkmann_Fastabend_Herbert_Ahern_Miller_2018}.
 
-\subsection{\eng{Raw-Sockets} und Adressfamilien}
+\subsection{Raw-Sockets und Adressfamilien}
 Als Endpunkt für die Kommunikation werden \eng{Sockets} genutzt \cite{socket2_linux_manpage}. Die traditionelle 
 Netzwerkprogrammierung unter Linux abstrahiert die Komplexität der Netzwerkprotokolle wie TCP. So übernimmt der Kernel
 dabei vollständig den \eng{Three-Way-Handshake} und die Zustandsverwaltung \cite[S.~1158]{Kerrisk_2018}. 
@@ -332,15 +332,15 @@ Nach Zhang et al. \cite{Zhang_Shu_Chen_Xie_2024} und Vieira et al. \cite{Vieira_
 lassen sich drei Modi unterscheiden:
 
 \begin{itemize} 
-	\item \textbf{\eng{Native Mode} (\eng{Driver Mode}):} Dies ist der Standardmodus für Hochleistungsanwendungen. 
+	\item \textbf{\eng{Native Mode} (\eng{DRV}):} Dies ist der Standardmodus für Hochleistungsanwendungen. 
 	Das \texttt{XDP}-Programm wird direkt im Netzwerkkartentreiber ausgeführt. Die Verarbeitung erfolgt nach dem 
 	\eng{DMA}-Transfer (\eng{Direct Memory Access}) in den \eng{Ring-Buffer}, aber vor der \texttt{sk\_buff}-Allokation. 
 	Dies erfordert explizite Unterstützung durch den Treiber der Netzwerkkarte. 
-	\item \textbf{\eng{Offloaded Mode} (\eng{Hardware Mode}):} Hierbei wird das \texttt{eBPF}-Programm vom Kernel auf die 
+	\item \textbf{\eng{Offloaded Mode} (\eng{HW}):} Hierbei wird das \texttt{eBPF}-Programm vom Kernel auf die 
 	Netzwerkkarte ausgelagert und direkt auf der Hardware ausgeführt. Dies bietet die höchste 
 	\eng{Performance}, da die Host-CPU vollständig von der Paketverarbeitung entlastet wird, setzt aber
 	die Nutzung einer sogenannten \eng{SmartNIC} voraus. 
-	\item \textbf{\eng{Generic Mode} (\eng{SKB Mode}):} Dieser Modus dient der Kompatibilität. Wenn ein Treiber \texttt{XDP} 
+	\item \textbf{\eng{Generic Mode} (\eng{SKB}):} Dieser Modus dient der Kompatibilität. Wenn ein Treiber \texttt{XDP} 
 	nicht nativ unterstützt, führt der Kernel das \texttt{XDP}-Programm im Netzwerkstack des Kernels
 	aus. Zwar gehen hier die massiven \eng{Performance}-Vorteile der Speicherersparnis verloren, 
 	jedoch wird sichergestellt, dass \texttt{XDP}-Anwendungen auf jeder Hardware funktionsfähig bleiben. 
@@ -379,7 +379,7 @@ Budgen et al. \cite{Bugden_Alahmar_2022} führen weitere Konzepte auf, wie das
 \eng{Bounds Checking}, welches auf ungültige Indexzugriffe prüft, oder 
 die Nutzung von \texttt{Option}s, welche Zugriffe auf nicht initialisierte Werte vermeiden, indem
 sie eine Struktur zurückgeben, die entweder den gewünschten Wert x als \texttt{Some(x)} oder \texttt{None} enthält. 
-Außerdem muss \eng{Pointer}-Arithmetik in sogenannte \texttt{unsafe}-Blöcke ausgelagert werden.
+Außerdem muss Zeiger-Arithmetik in sogenannte \texttt{unsafe}-Blöcke ausgelagert werden.
 Diese dienen als Möglichkeit zur Umgehung der anderen Konzepte. Sie lösen
 im Fehlerfall eine Programm-beendenden \texttt{panic} aus, welche verhindert, dass das Programm
 in einem undefinierten Zustand weiter läuft.
@@ -395,7 +395,7 @@ gängigen Sprachen macht \cite{bugden2022safety}. Allerdings müssen deshalb auc
 Regeln bei der Programmierung beachtet und eingehalten werden, weshalb der Sprache eine 
 steile Lernkurve zugeschrieben wird \cite{Cui_Xu_2025}.
 
-\subsection{Asynchrone Programmierung und \eng{Performance} von Rust}
+\subsection{Asynchrone Programmierung und Performance von Rust}
 Die im letzten Abschnitt genannten Konzepte schließen auch \eng{Data Races}, 
 welche beim Zugriff mehrerer \eng{Threads} \footnote{Untergeordnete Arbeitseinheiten eines Prozesses} auf 
 den gleichen Speicher entstehen können, bereits zur Kompilierzeit aus \cite{Costanzo_Rucci_Naiouf_Giusti_2021}. 
@@ -415,7 +415,7 @@ Aufgaben zum gleichen Zeitpunkt \cite{Silberschatz_Galvin_Gagne_2018}, was eine 
 Der Vorteil der Parallelität liegt in der Leistungssteigerung und der Maximierung des 
 Datendurchsatzes bei rechenintensiven Problemen \cite{Silberschatz_Galvin_Gagne_2018}\cite{Arpaci-Dusseau_Arpaci-Dusseau_2018}.
 
-\subsubsection{Rusts Konzepte zur \eng{Performance}-Steigerung}
+\subsubsection{Rusts Konzepte zur Performance-Steigerung}
 Neben den möglichen \eng{Performance}-Vorteilen durch die nebenläufige Programmierung, welche
 aber letztendlich dem Programmierer überlassen ist, bietet die Sprache ihre 
 größten internen \eng{Performance}-Vorteile durch die \eng{Zero-Cost Abstraction}. 

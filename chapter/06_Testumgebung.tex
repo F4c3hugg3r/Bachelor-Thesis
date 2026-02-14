@@ -143,7 +143,7 @@ In Test 2 (\cref{req:T-02}) stellen die Ausgaben von \texttt{xdpdump} und der Be
 \section{Genutzte Parameter}
 Im Folgenden werden die relevanten zur Umsetzung der Tests genutzten Parameter erläutert. 
 
-\subsection{\eng{Proof of Concept}}
+\subsection{Proof of Concept}
 Um die Tests zur Validierung (siehe \cref{Methodik}) der Funktionsweise korrekt auszuführen, werden folgende Parameter genutzt:
 
 \begin{enumerate}
@@ -200,7 +200,7 @@ Bei der Realisierung der Testumgebung wurden spezifische hardware- und treiberbe
 Dieser Abschnitt beleuchtet deren Auswirkungen auf die Testdurchführung, insbesondere im Hinblick auf den \eng{Zero-Copy}-Modus 
 und die maximal erzielbaren Paketraten.
 
-\subsection{\eng{Zero-Copy}-Modus}
+\subsection{Zero-Copy-Modus}
 Die Evaluation unterliegt Einschränkungen durch die verwendete Hardware (vgl. \cref{tab:specs_combined}). Der effiziente \eng{Zero-Copy}-Modus 
 ist bei Netzwerkkarten mit dem \texttt{igb}-Treiber nur bedingt nutzbar, da die geringe Anzahl verfügbarer Hardware-Ringe 
 keine exklusive Zuweisung von \eng{Queues} an das \texttt{XDP}-Programm erlaubt. Dies erzwingt das Teilen der Sende-Ringe zwischen dem Betriebssystem 

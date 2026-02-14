@@ -11,6 +11,9 @@ Dieses Kapitel definiert die funktionalen und nicht-funktionalen Anforderungen a
 beschreibt das gewählte Vorgehensmodell zur Umsetzung in Rust und legt das Untersuchungsdesign für die anschließende Evaluation fest.
 
 \section{Anforderungsanalyse} \label{Anforderungen}
+Der folgende Abschnitt spezifiziert die Anforderungen an den zu entwickelnden Portscanner. 
+Dabei wird zwischen funktionalen Anforderungen, die das Verhalten des Systems beschreiben, und nicht-funktionalen 
+Anforderungen, welche qualitative Eigenschaften und technische Randbedingungen festlegen, unterschieden.
 
 \subsection{Funktionale Anforderungen} \label{Anforderungen.fa}
 Die funktionalen Anforderungen definieren das Verhalten des Systems sowie die logischen Operationen, die der Scanner ausführen muss, 
@@ -94,7 +97,7 @@ Die Verifikation der in \cref{Anforderungen} definierten Anforderungen erfolgt a
 
 Anschließend wird erklärt, wie \eng{Performance} im Kontext eines \texttt{SYN}-Scanners zu definieren ist und zuletzt werden die, in dieser Arbeit zur Evaluation genutzten, Metriken und Evaluationsszenarien festgelegt.
 
-\subsection{Evaluationstests für den \eng{Proof of Concept}}
+\subsection{Evaluationstests für den Proof of Concept}
 Um die Funktionsweise, beziehungsweise den Scanner nach \cref{Anforderungen} prüfen zu können,
 werden zwei Tests durchgeführt:
 
@@ -113,7 +116,7 @@ werden zwei Tests durchgeführt:
 
 Die konkrete Umsetzung und genaue Spezifizierung der Tools wird in \cref{Tests} beschrieben. 
 
-\subsection{Evaluationsszenarien} \label{Methodik.Szenarien}
+\subsection{Evaluationsszenarien für die Performance-Messung} \label{Methodik.Szenarien}
 Um die in \cref{Anforderungen} definierten Anforderungen zu validieren, werden zwei zu untersuchende 
 Szenarien definiert:
 

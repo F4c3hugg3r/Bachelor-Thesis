@@ -11,14 +11,14 @@
 \contentsline {subsection}{\numberline {2.2.1}SYN-Scanning}{5}{subsection.16}%
 \contentsline {section}{\numberline {2.3}Schnittstellen zur Paketverarbeitung unter Linux}{6}{section.18}%
 \contentsline {subsection}{\numberline {2.3.1}Linux}{6}{subsection.19}%
-\contentsline {subsection}{\numberline {2.3.2}\textit {Raw-Sockets} und Adressfamilien}{7}{subsection.20}%
+\contentsline {subsection}{\numberline {2.3.2}Raw-Sockets und Adressfamilien}{7}{subsection.20}%
 \contentsline {subsection}{\numberline {2.3.3}Erweiterte Berkeley Packet Filter (\texttt {eBPF})}{8}{subsection.21}%
 \contentsline {subsection}{\numberline {2.3.4}eXpress Data Path (\texttt {XDP})}{8}{subsection.23}%
 \contentsline {section}{\numberline {2.4}Die Programmiersprache: Rust}{10}{section.25}%
 \contentsline {subsection}{\numberline {2.4.1}Konzepte und Besonderheiten}{10}{subsection.26}%
-\contentsline {subsection}{\numberline {2.4.2}Asynchrone Programmierung und \textit {Performance} von Rust}{11}{subsection.27}%
+\contentsline {subsection}{\numberline {2.4.2}Asynchrone Programmierung und Performance von Rust}{11}{subsection.27}%
 \contentsline {subsubsection}{\nonumberline Nebenläufige und Parallele Programmierung}{12}{subsubsection*.29}%
-\contentsline {subsubsection}{\nonumberline Rusts Konzepte zur \textit {Performance}-Steigerung}{12}{subsubsection*.31}%
+\contentsline {subsubsection}{\nonumberline Rusts Konzepte zur Performance-Steigerung}{12}{subsubsection*.31}%
 \contentsline {chapter}{\numberline {3}Stand der Technik}{13}{chapter.33}%
 \contentsline {section}{\numberline {3.1}Historische Entwicklung des horizontalen Netzwerkscannings}{13}{section.34}%
 \contentsline {subsection}{\numberline {3.1.1}Der Standard Scanner: ZMap}{13}{subsection.35}%
@@ -26,75 +26,74 @@
 \contentsline {section}{\numberline {3.3}Weitere relevante wissenschaftliche Arbeiten}{15}{section.37}%
 \contentsline {section}{\numberline {3.4}Vergleichsobjekte für die Evaluation}{16}{section.39}%
 \contentsline {section}{\numberline {3.5}Nachteile bisheriger Ansätze}{16}{section.40}%
-\contentsline {subsection}{\numberline {3.5.1}Nachteile C-basierter Ansätze}{16}{subsection.41}%
-\contentsline {subsection}{\numberline {3.5.2}Lösungsansatz}{17}{subsection.42}%
-\contentsline {chapter}{\numberline {4}Anforderungsanalyse und Methodik}{18}{chapter.43}%
-\contentsline {section}{\numberline {4.1}Anforderungsanalyse}{18}{section.44}%
-\contentsline {subsection}{\numberline {4.1.1}Funktionale Anforderungen}{18}{subsection.45}%
-\contentsline {subsection}{\numberline {4.1.2}Nicht-funktionale Anforderungen}{19}{subsection.55}%
-\contentsline {section}{\numberline {4.2}Untersuchungsdesign}{20}{section.62}%
-\contentsline {subsection}{\numberline {4.2.1}Evaluationstests für den \textit {Proof of Concept}}{20}{subsection.63}%
-\contentsline {subsection}{\numberline {4.2.2}Evaluationsszenarien}{21}{subsection.69}%
-\contentsline {subsection}{\numberline {4.2.3}Metriken}{21}{subsection.74}%
-\contentsline {chapter}{\numberline {5}Konzeption und Implementierung}{23}{chapter.79}%
-\contentsline {section}{\numberline {5.1}Konzeptioneller Lösungsansatz}{23}{section.80}%
-\contentsline {subsection}{\numberline {5.1.1}Logische Komponenten des Scanners}{23}{subsection.81}%
-\contentsline {subsection}{\numberline {5.1.2}Performancesteigernde Maßnahmen}{27}{subsection.84}%
-\contentsline {section}{\numberline {5.2}Implementierung und Funktionsweise der Komponenten}{27}{section.87}%
-\contentsline {subsection}{\numberline {5.2.1}Projektstruktur Basisimplementierung}{27}{subsection.88}%
-\contentsline {subsection}{\numberline {5.2.2}Übersicht genutzter \textit {Crates}}{28}{subsection.118}%
-\contentsline {subsection}{\numberline {5.2.3}Paketemissionierung (\texttt {emitting\_packets})}{29}{subsection.120}%
-\contentsline {subsubsection}{\nonumberline \textit {Rate Limiter} (\texttt {rate\_limiter.rs})}{29}{subsubsection*.121}%
-\contentsline {subsubsection}{\nonumberline \textit {Assembler} (\texttt {assembler.rs})}{30}{subsubsection*.125}%
-\contentsline {subsubsection}{\nonumberline \textit {Sender} (\texttt {sender.rs})}{32}{subsubsection*.127}%
-\contentsline {subsection}{\numberline {5.2.4}Ergebnisverarbeitung (\texttt {capturing\_packets})}{32}{subsection.129}%
-\contentsline {subsubsection}{\nonumberline \textit {Receiver} (\texttt {receiver.rs})}{35}{subsubsection*.131}%
-\contentsline {subsubsection}{\nonumberline \textit {Bucket} (\texttt {bucket.rs})}{35}{subsubsection*.133}%
-\contentsline {subsection}{\numberline {5.2.5}Programmstart und Jobverwaltung (\texttt {job\_controlling})}{36}{subsection.135}%
-\contentsline {subsubsection}{\nonumberline Startprogramm (\texttt {mock\_program.rs})}{36}{subsubsection*.136}%
-\contentsline {subsubsection}{\nonumberline Einstiegspunkt (\texttt {main.rs})}{36}{subsubsection*.137}%
-\contentsline {subsubsection}{\nonumberline \textit {Standard Input Parser} (\texttt {parser\_std\_in})}{36}{subsubsection*.138}%
-\contentsline {subsubsection}{\nonumberline \textit {Scanjob} (\texttt {scanjob.rs})}{37}{subsubsection*.163}%
-\contentsline {section}{\numberline {5.3}\texttt {eBPF}}{38}{section.164}%
-\contentsline {subsection}{\numberline {5.3.1}\texttt {XDP}-Programm}{38}{subsection.165}%
-\contentsline {subsection}{\numberline {5.3.2}Funktionsweise}{39}{subsection.167}%
-\contentsline {chapter}{\numberline {6}Testumgebung und Durchführung}{42}{chapter.187}%
-\contentsline {section}{\numberline {6.1}Versuchsaufbau}{42}{section.188}%
-\contentsline {subsection}{\numberline {6.1.1}Aufbau des Ziel-Knotens}{43}{subsection.192}%
-\contentsline {subsection}{\numberline {6.1.2}Hardware-Spezifikation}{44}{subsection.196}%
-\contentsline {section}{\numberline {6.2}Versuchsablauf}{44}{section.198}%
-\contentsline {subsection}{\numberline {6.2.1}Datenaufbereitung und -erhebung}{45}{subsection.203}%
-\contentsline {section}{\numberline {6.3}Genutzte Parameter}{46}{section.204}%
-\contentsline {subsection}{\numberline {6.3.1}\textit {Proof of Concept}}{46}{subsection.205}%
-\contentsline {subsection}{\numberline {6.3.2}Evaluationsszenarien}{46}{subsection.208}%
-\contentsline {subsubsection}{\nonumberline \cref {req:S-01} - Performanzgrenze}{47}{subsubsection*.209}%
-\contentsline {subsubsection}{\nonumberline \cref {req:S-02} - Reale Umstände}{47}{subsubsection*.211}%
-\contentsline {section}{\numberline {6.4}Inkompatibilitäten und Limitierungen}{48}{section.213}%
-\contentsline {subsection}{\numberline {6.4.1}\textit {Zero-Copy}-Modus}{48}{subsection.214}%
-\contentsline {subsection}{\numberline {6.4.2}Paketrate}{48}{subsection.216}%
-\contentsline {chapter}{\numberline {7}Evaluation und Ausblick}{50}{chapter.217}%
-\contentsline {section}{\numberline {7.1}Darstellung und Reproduzierbarkeit der Messergebnisse}{50}{section.218}%
-\contentsline {subsection}{\numberline {7.1.1}Ergebnisse der Evaluationstests: \textit {Proof of Concept}}{50}{subsection.219}%
-\contentsline {subsection}{\numberline {7.1.2}Ergebnisse \cref {req:S-01}: Performanzgrenzen}{52}{subsection.222}%
-\contentsline {subsection}{\numberline {7.1.3}Ergebnisse \cref {req:S-02}: Reales Szenario}{52}{subsection.224}%
-\contentsline {section}{\numberline {7.2}Diskussion der Ergebnisse}{53}{section.226}%
-\contentsline {subsection}{\numberline {7.2.1}\textit {Proof of Concept}}{53}{subsection.227}%
-\contentsline {subsection}{\numberline {7.2.2}\textit {Performance}-Effizienz}{54}{subsection.228}%
-\contentsline {subsubsection}{\nonumberline \cref {req:S-01}}{54}{subsubsection*.229}%
-\contentsline {subsubsection}{\nonumberline \cref {req:S-02}}{55}{subsubsection*.233}%
-\contentsline {subsection}{\numberline {7.2.3}Abgleich mit den Anforderungen}{56}{subsection.235}%
-\contentsline {subsection}{\numberline {7.2.4}Wirtschaftliche und betriebliche Implikationen}{56}{subsection.237}%
-\contentsline {section}{\numberline {7.3}Fazit}{58}{section.238}%
-\contentsline {section}{\numberline {7.4}Ausblick}{59}{section.239}%
+\contentsline {subsection}{\numberline {3.5.1}Lösungsansatz}{17}{subsection.41}%
+\contentsline {chapter}{\numberline {4}Anforderungsanalyse und Methodik}{18}{chapter.42}%
+\contentsline {section}{\numberline {4.1}Anforderungsanalyse}{18}{section.43}%
+\contentsline {subsection}{\numberline {4.1.1}Funktionale Anforderungen}{18}{subsection.44}%
+\contentsline {subsection}{\numberline {4.1.2}Nicht-funktionale Anforderungen}{19}{subsection.54}%
+\contentsline {section}{\numberline {4.2}Untersuchungsdesign}{20}{section.61}%
+\contentsline {subsection}{\numberline {4.2.1}Evaluationstests für den Proof of Concept}{20}{subsection.62}%
+\contentsline {subsection}{\numberline {4.2.2}Evaluationsszenarien für die Performance-Messung}{21}{subsection.68}%
+\contentsline {subsection}{\numberline {4.2.3}Metriken}{21}{subsection.73}%
+\contentsline {chapter}{\numberline {5}Konzeption und Implementierung}{23}{chapter.78}%
+\contentsline {section}{\numberline {5.1}Konzeptioneller Lösungsansatz}{23}{section.79}%
+\contentsline {subsection}{\numberline {5.1.1}Logische Komponenten des Scanners}{23}{subsection.80}%
+\contentsline {subsection}{\numberline {5.1.2}Performancesteigernde Maßnahmen}{27}{subsection.83}%
+\contentsline {section}{\numberline {5.2}Implementierung und Funktionsweise der Komponenten}{27}{section.86}%
+\contentsline {subsection}{\numberline {5.2.1}Projektstruktur Basisimplementierung}{27}{subsection.87}%
+\contentsline {subsection}{\numberline {5.2.2}Übersicht genutzter Crates}{28}{subsection.117}%
+\contentsline {subsection}{\numberline {5.2.3}Paketemissionierung (\texttt {emitting\_packets})}{29}{subsection.119}%
+\contentsline {subsubsection}{\nonumberline Rate Limiter (\texttt {rate\_limiter.rs})}{29}{subsubsection*.120}%
+\contentsline {subsubsection}{\nonumberline Assembler (\texttt {assembler.rs})}{30}{subsubsection*.124}%
+\contentsline {subsubsection}{\nonumberline Sender (\texttt {sender.rs})}{32}{subsubsection*.126}%
+\contentsline {subsection}{\numberline {5.2.4}Ergebnisverarbeitung (\texttt {capturing\_packets})}{32}{subsection.128}%
+\contentsline {subsubsection}{\nonumberline Receiver (\texttt {receiver.rs})}{35}{subsubsection*.130}%
+\contentsline {subsubsection}{\nonumberline Bucket (\texttt {bucket.rs})}{35}{subsubsection*.132}%
+\contentsline {subsection}{\numberline {5.2.5}Programmstart und Jobverwaltung (\texttt {job\_controlling})}{36}{subsection.134}%
+\contentsline {subsubsection}{\nonumberline Startprogramm (\texttt {mock\_program.rs})}{36}{subsubsection*.135}%
+\contentsline {subsubsection}{\nonumberline Einstiegspunkt (\texttt {main.rs})}{36}{subsubsection*.136}%
+\contentsline {subsubsection}{\nonumberline Standard Input Parser (\texttt {parser\_std\_in})}{36}{subsubsection*.137}%
+\contentsline {subsubsection}{\nonumberline Scanjob (\texttt {scanjob.rs})}{37}{subsubsection*.162}%
+\contentsline {section}{\numberline {5.3}\texttt {eBPF}}{38}{section.163}%
+\contentsline {subsection}{\numberline {5.3.1}\texttt {XDP}-Programm}{38}{subsection.164}%
+\contentsline {subsection}{\numberline {5.3.2}Funktionsweise}{39}{subsection.166}%
+\contentsline {chapter}{\numberline {6}Testumgebung und Durchführung}{42}{chapter.186}%
+\contentsline {section}{\numberline {6.1}Versuchsaufbau}{42}{section.187}%
+\contentsline {subsection}{\numberline {6.1.1}Aufbau des Ziel-Knotens}{43}{subsection.191}%
+\contentsline {subsection}{\numberline {6.1.2}Hardware-Spezifikation}{44}{subsection.195}%
+\contentsline {section}{\numberline {6.2}Versuchsablauf}{44}{section.197}%
+\contentsline {subsection}{\numberline {6.2.1}Datenaufbereitung und -erhebung}{45}{subsection.202}%
+\contentsline {section}{\numberline {6.3}Genutzte Parameter}{46}{section.203}%
+\contentsline {subsection}{\numberline {6.3.1}Proof of Concept}{46}{subsection.204}%
+\contentsline {subsection}{\numberline {6.3.2}Evaluationsszenarien}{46}{subsection.207}%
+\contentsline {subsubsection}{\nonumberline \cref {req:S-01} - Performanzgrenze}{47}{subsubsection*.208}%
+\contentsline {subsubsection}{\nonumberline \cref {req:S-02} - Reale Umstände}{47}{subsubsection*.210}%
+\contentsline {section}{\numberline {6.4}Inkompatibilitäten und Limitierungen}{48}{section.212}%
+\contentsline {subsection}{\numberline {6.4.1}Zero-Copy-Modus}{48}{subsection.213}%
+\contentsline {subsection}{\numberline {6.4.2}Paketrate}{48}{subsection.215}%
+\contentsline {chapter}{\numberline {7}Evaluation und Ausblick}{50}{chapter.216}%
+\contentsline {section}{\numberline {7.1}Darstellung und Reproduzierbarkeit der Messergebnisse}{50}{section.217}%
+\contentsline {subsection}{\numberline {7.1.1}Ergebnisse der Evaluationstests: Proof of Concept}{50}{subsection.218}%
+\contentsline {subsection}{\numberline {7.1.2}Ergebnisse \cref {req:S-01}: Performanzgrenzen}{51}{subsection.221}%
+\contentsline {subsection}{\numberline {7.1.3}Ergebnisse \cref {req:S-02}: Reales Szenario}{52}{subsection.223}%
+\contentsline {section}{\numberline {7.2}Diskussion der Ergebnisse}{52}{section.225}%
+\contentsline {subsection}{\numberline {7.2.1}Proof of Concept}{53}{subsection.226}%
+\contentsline {subsection}{\numberline {7.2.2}Performance-Effizienz}{53}{subsection.227}%
+\contentsline {subsubsection}{\nonumberline \cref {req:S-01}}{53}{subsubsection*.228}%
+\contentsline {subsubsection}{\nonumberline \cref {req:S-02}}{55}{subsubsection*.232}%
+\contentsline {subsection}{\numberline {7.2.3}Abgleich mit den Anforderungen}{55}{subsection.234}%
+\contentsline {subsection}{\numberline {7.2.4}Wirtschaftliche und betriebliche Implikationen}{57}{subsection.236}%
+\contentsline {section}{\numberline {7.3}Fazit}{58}{section.237}%
+\contentsline {section}{\numberline {7.4}Ausblick}{59}{section.238}%
 \def \@chapapp {\appendixname }
-\contentsline {chapter}{\numberline {A}Anhang}{61}{appendix.240}%
-\contentsline {section}{\numberline {A.1}Ergänzende Diagramme}{61}{section.241}%
-\contentsline {section}{\numberline {A.2}Netzwerkkarten-Konfiguration (Ethtool)}{61}{section.244}%
-\contentsline {section}{\numberline {A.3}Scanergebnisse \cref {req:S-01}}{61}{section.245}%
-\contentsline {chapter}{\nonumberline Abbildungsverzeichnis}{67}{chapter*.249}%
-\contentsline {chapter}{\nonumberline Tabellenverzeichnis}{68}{chapter*.250}%
-\contentsline {chapter}{\nonumberline {Quelltextverzeichnis}}{69}{chapter*.251}%
-\contentsline {chapter}{\nonumberline KI-Verzeichnis}{70}{chapter*.252}%
-\contentsline {chapter}{\nonumberline {Literaturverzeichnis}}{71}{chapter*.253}%
-\contentsline {chapter}{\nonumberline Eigenständigkeitserklärung}{77}{chapter*.254}%
+\contentsline {chapter}{\numberline {A}Anhang}{61}{appendix.239}%
+\contentsline {section}{\numberline {A.1}Ergänzende Diagramme}{61}{section.240}%
+\contentsline {section}{\numberline {A.2}Netzwerkkarten-Konfiguration (Ethtool)}{61}{section.243}%
+\contentsline {section}{\numberline {A.3}Scanergebnisse \cref {req:S-01}}{61}{section.244}%
+\contentsline {chapter}{\nonumberline Abbildungsverzeichnis}{67}{chapter*.248}%
+\contentsline {chapter}{\nonumberline Tabellenverzeichnis}{68}{chapter*.249}%
+\contentsline {chapter}{\nonumberline {Quelltextverzeichnis}}{69}{chapter*.250}%
+\contentsline {chapter}{\nonumberline KI-Verzeichnis}{70}{chapter*.251}%
+\contentsline {chapter}{\nonumberline {Literaturverzeichnis}}{71}{chapter*.252}%
+\contentsline {chapter}{\nonumberline Eigenständigkeitserklärung}{77}{chapter*.253}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

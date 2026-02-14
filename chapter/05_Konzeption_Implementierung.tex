@@ -147,7 +147,7 @@ beschreiben das \texttt{eBPF}-Programm, welches Antwortpakete abfängt, auswerte
 \eng{User-Space} weiterleitet. Das Verzeichnis \texttt{shared} dient lediglich der Steigerung der Übersichtlichkeit. Es enthält
 Hilfsfunktionen sowie Typenbeschreibungen, die mehrfach im Projekt genutzt werden. Somit dient es rein der Code-Organisation.
 
-\subsection{Übersicht genutzter \eng{Crates}}
+\subsection{Übersicht genutzter Crates}
 Für die Umsetzung der Komponenten sind die in \cref{tab:crates_all} beschriebenen \eng{Crates} aufgrund ihrer Wichtigkeit hervorzuheben.
 
 \begin{table}[htbp]
@@ -169,7 +169,7 @@ Für die Umsetzung der Komponenten sind die in \cref{tab:crates_all} beschrieben
 Die Paketemissionierung umfasst den Prozess der Durchsatzlimitierung, der Paketverarbeitung und des Paketversandes inklusive
 den dafür benötigten Vorbereitungsschritten.
 
-\subsubsection{\eng{Rate Limiter} (\texttt{rate\_limiter.rs})}
+\subsubsection{Rate Limiter (\texttt{rate\_limiter.rs})}
 Wie in \cref{fig:emitting_sequence_diag} zu sehen, führt der \eng{Rate Limiter} (\texttt{rate\_limiter.rs})
 die Funktion der Durchsatzlimitierung (\cref{req:F-08}) aus. Zuerst nimmt er die zu scannenden IP-Adressen vom \eng{Parser} (\texttt{parser\_std\_in})
 entgegen, bestimmt die Puffergröße anhand der in dieser Sekunde bereits gesendeten Datenmenge, füllt einen Puffer und erstellt 
@@ -231,7 +231,7 @@ aufwecken muss.
 	\label{fig:emitting_sequence_diag}
 \end{figure}
 
-\subsubsection{\eng{Assembler} (\texttt{assembler.rs})}
+\subsubsection{Assembler (\texttt{assembler.rs})}
 Die Rolle des \eng{Assemblers} ist recht simpel: Jeder \eng{Assembler} iteriert über die ihm verfügbaren IP-Adressen, füllt \eng{Templates} mit 
 der Ziel-IP-Adresse, dem Ziel-Port sowie der \eng{Sequence Number} und berechnet die Checksummen des \eng{IP-Header} und \eng{TCP-Header} neu. 
 Dies dient zur Erfüllung der Anforderung \cref{req:F-01}. Die \eng{Sequence Number} wird wie folgt berechnet:
@@ -256,7 +256,7 @@ In den \eng{Templates} sind die restlichen Werte bereits vorhanden. Die Änderun
 Somit können vollständige Pakete in sehr wenigen Schritten und ohne aufwendiges \eng{Parsing} oder gar komplette Neuerstellung genutzt werden. 
 Diese Pakete werden anschließend je nach Konfiguration in \eng{Batches} an den \eng{Sender} weitergeleitet.
 
-\subsubsection{\eng{Sender} (\texttt{sender.rs})}
+\subsubsection{Sender (\texttt{sender.rs})}
 Im Gegensatz zu den übrigen Subkomponenten operiert der \eng{Sender} in einem dedizierten Betriebssystem-\eng{Thread}. 
 Dies gewährleistet die exklusive Nutzung der verfügbaren Rechenkapazität und minimiert Prozesskonflikte. 
 Zur weiteren Optimierung wird mittels der \texttt{core\_affinity}-\eng{Crate} (siehe \cref{tab:crates_all}) eine feste Bindung 
@@ -287,7 +287,7 @@ Duplikatsprüfung unterzogen. Anschließend werden die endgültig korrekten Erge
 	\label{fig:capturing_sequence_diag}
 \end{figure}
 
-\subsubsection{\eng{Receiver} (\texttt{receiver.rs})}
+\subsubsection{Receiver (\texttt{receiver.rs})}
 In der initialen Entwicklungsphase (siehe \cref{fig:pcap}) operierte der \eng{Receiver}, ebenso wie der \eng{Sender}, in einem dedizierten Betriebssystem-\eng{Thread}. 
 Um Anforderung \cref{req:F-03} zu erfüllen, kam dabei die Bibliothek \texttt{pcap} zum Einsatz, welche eine komfortable Abstraktion 
 für den Netzwerkzugriff bietet und die Filterung via \textit{Berkeley Packet Filter} ermöglicht. 
@@ -312,7 +312,7 @@ und erfüllt Anforderung \cref{req:F-07}.
 
 Die Weiterleitung der Ergebnisse in eine Datei erfolgt anschließend durch das aufrufende Programm (siehe \texttt{mock\_program.rs}).
 
-\subsubsection{\eng{Bucket} (\texttt{bucket.rs})}
+\subsubsection{Bucket (\texttt{bucket.rs})}
 Zur effizienten Duplikaterkennung wird ein \textit{Timed Bucket System} genutzt, in welchem mehrere 
 \eng{Buckets}, welche intern eine \eng{DashMap} nutzen (siehe \cref{tab:crates_all}), als Zwischenspeicher für 
 die bisherigen Antworten dienen. Es wird nur in den derzeit aktiven \eng{Bucket} geschrieben, doch aus allen wird gelesen. 
@@ -357,7 +357,7 @@ benötigten Informationen gestartet.
 %für sehr viele kleine Allokationen, wie sie in dem Scanner zum Beispiel bei der Vielzahl an \eng{Batches} von IP-Adressen oder Pakete
 %geschieht, effizienter, als die Vorgehensweise des \eng{System Allocators}, welcher die genaue Speichergröße sucht.
 
-\subsubsection{\eng{Standard Input Parser} (\texttt{parser\_std\_in})} \label{jobverwaltung:parser}
+\subsubsection{Standard Input Parser (\texttt{parser\_std\_in})} \label{jobverwaltung:parser}
 Der \eng{Parser} parst zum einen die Konfigurationsparameter aus dem \eng{Standard Input} und zum anderen die Ziel-IP-Adressen. 
 %Um möglichst performant und ressourcensparend vorzugehen, wird im Allgemein ein Fokus auf die Vermeidung neuer 
 %Allokationen und die Daten, falls möglich, mit \eng{Zero-Copy}-Operationen zu verarbeiten.
@@ -423,7 +423,7 @@ loop {
 %\label{tab:parser-optimizations}
 %\end{table}
 
-\subsubsection{\eng{Scanjob} (\texttt{scanjob.rs})}
+\subsubsection{Scanjob (\texttt{scanjob.rs})}
 
 Ein \eng{Scanjob} fungiert als zentrale Orchestrierungseinheit für alle \eng{User-Space}-Komponenten des SYN-Scans. Wie in \cref{fig:scanjob_sequence_diag} dargestellt, 
 beginnt der Ablauf mit der Initialisierung der \texttt{tokio} \eng{Channels}, um die spätere Vernetzung der Komponenten zu gewährleisten. Anschließend werden die einzelnen 
